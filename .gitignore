@@ -1,0 +1,58 @@
+# Ignore bundler config.
+/backend/.bundle
+
+# Ignore all logfiles and tempfiles.
+/backend/log/*
+/backend/tmp/*
+!/backend/log/.keep
+!/backend/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/backend/tmp/pids/*
+!/backend/tmp/pids/
+!/backend/tmp/pids/.keep
+
+# Ignore uploaded files in development.
+/backend/storage/*
+!/backend/storage/.keep
+/backend/tmp/storage/*
+!/backend/tmp/storage/
+!/backend/tmp/storage/.keep
+
+# Ignore master key for decrypting credentials and more.
+/backend/config/master.key
+
+# dependencies
+/frontend/app/node_modules
+/frontend/app/.pnp
+/frontend/app/.pnp.js
+
+# testing
+/frontend/app/coverage
+
+# next.js
+/frontend/app/.next/
+/frontend/app/out/
+
+# production
+/frontend/app/build
+
+# misc
+/frontend/app/.DS_Store
+/frontend/app/*.pem
+
+# debug
+/frontend/app/npm-debug.log*
+/frontend/app/yarn-debug.log*
+/frontend/app/yarn-error.log*
+/frontend/app/.pnpm-debug.log*
+
+# local env files
+/frontend/app/.env*.local
+
+# vercel
+/frontend/app/.vercel
+
+# typescript
+/frontend/app/*.tsbuildinfo
+/frontend/app/next-env.d.ts
