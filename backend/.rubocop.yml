@@ -13,3 +13,6 @@ AllCops:
     - 'db/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
+
+Style/Documentation:
+  Enabled: false
