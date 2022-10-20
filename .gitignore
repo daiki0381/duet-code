@@ -56,3 +56,6 @@
 # typescript
 /frontend/app/*.tsbuildinfo
 /frontend/app/next-env.d.ts
+
+/data/redis/*
+/app/redis/*

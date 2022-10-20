@@ -269,6 +269,12 @@ export interface LoginUser {
    * @type {string}
    * @memberof LoginUser
    */
+  token?: string
+  /**
+   *
+   * @type {string}
+   * @memberof LoginUser
+   */
   uid: string
   /**
    *

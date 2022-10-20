@@ -29,12 +29,14 @@ paths:
             examples:
               example-1:
                 value:
+                  token: eyJhbGciOiJSUzI1NiIsImtpZCI7IjVkMzQwZGRiYzNjNWJhY2M0Y2VlMWZiOWQxNmU5ODM3ZWM2MTYzZWIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiZGFpa2kwMzgxIiwicGljdHVyZSI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS85ODU3Nzc3Mz92PTQiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZHVldC1jb2RlIiwiYXVkIjoiZHVldC1jb2RlIiwiYXV0aF90aW1lIjoxNjY2Mjc0NDk0LCJ1c2VyX3lkIjoiOU5qNW52dlhaZlNDYm9FemkwaUVoNVNXbHBqMiIsInN1YiI6IjlOajVudnZYWmZTQ2JvRXppMGlFaDVTV2xwajIiLCJpYXQiOjE2NjYyNzQ0OTQsImV5cCI6MTY2NjI3ODA5NCwiZW1haWwiOiJkYWlraTAzODEwMjE4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnaXRodWIuY29tIjpbIjk4NTc3NzczIl0sImVtYWlsIjpbImRhaWtpMDM4MTAyMThAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ2l0aHViLmNvbSJ9fQ.q8_rQez7gw-eYW7-KqxwQSKDofXoOxcIq9iDZXQuhGp7EDy76oV9d4QTeUDER5MGV7xdTCKxoeGQqZXZm_pkZJbaeIEb7jB8B8GK9fJQSHElpawVLfkT1LIFVkQSjtUZEnM8CdANIlSHP0xuU99a2R_u62yv1eMGAolHjSs-VJBQELB72lChmsyc4xQ_Pp4hgLoLm79kRA0SGt2nZ6IN3z0eyfTdMqBDEO47N_kZFo0Hxhci2HR87ZEiwFnx38DotDvetUEF3aTFiGVlbAXupRuVBKTVM8TxEfow9Rzq6fxnqboxoOVlSy352hdgGUCDCgVUlJT-diX57s91HNJ2DA
                   uid: 1n3ufRU0tcYYTdSO0BjSEUvKwsE1
                   github_access_token: gho_SjHbX2T06BwZhQPqk5DWk4zBYYoLL01YYU3X
                   name: daiki0381
                   avatar: 'https://avatars.githubusercontent.com'
       tags:
         - User
+      parameters: []
   '/api/v1/users/{user_id}':
     parameters:
       - schema:
@@ -962,11 +964,15 @@ components:
       type: object
       x-examples:
         example-1:
+          token: eyJhbGciOiJSUzI1NiIsImtpZCI7IjVkMzQwZGRiYzNjNWJhY2M0Y2VlMWZiOWQxNmU5ODM3ZWM2MTYzZWIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiZGFpa2kwMzgxIiwicGljdHVyZSI6Imh0dHBzOi8vYXZhdGFycy5naXRodWJ1c2VyY29udGVudC5jb20vdS85ODU3Nzc3Mz92PTQiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZHVldC1jb2RlIiwiYXVkIjoiZHVldC1jb2RlIiwiYXV0aF90aW1lIjoxNjY2Mjc0NDk0LCJ1c2VyX3lkIjoiOU5qNW52dlhaZlNDYm9FemkwaUVoNVNXbHBqMiIsInN1YiI6IjlOajVudnZYWmZTQ2JvRXppMGlFaDVTV2xwajIiLCJpYXQiOjE2NjYyNzQ0OTQsImV5cCI6MTY2NjI3ODA5NCwiZW1haWwiOiJkYWlraTAzODEwMjE4QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJnaXRodWIuY29tIjpbIjk4NTc3NzczIl0sImVtYWlsIjpbImRhaWtpMDM4MTAyMThAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ2l0aHViLmNvbSJ9fQ.q8_rQez7gw-eYW7-KqxwQSKDofXoOxcIq9iDZXQuhGp7EDy76oV9d4QTeUDER5MGV7xdTCKxoeGQqZXZm_pkZJbaeIEb7jB8B8GK9fJQSHElpawVLfkT1LIFVkQSjtUZEnM8CdANIlSHP0xuU99a2R_u62yv1eMGAolHjSs-VJBQELB72lChmsyc4xQ_Pp4hgLoLm79kRA0SGt2nZ6IN3z0eyfTdMqBDEO47N_kZFo0Hxhci2HR87ZEiwFnx38DotDvetUEF3aTFiGVlbAXupRuVBKTVM8TxEfow9Rzq6fxnqboxoOVlSy352hdgGUCDCgVUlJT-diX57s91HNJ2DA
           uid: 1n3ufRU0tcYYTdSO0BjSEUvKwsE1
           github_access_token: gho_SjHbX2T06BwZhQPqk5DWk4zBYYoLL01YYU3X
           name: daiki0381
           avatar: 'https://avatars.githubusercontent.com'
+      additionalProperties: false
       properties:
+        token:
+          type: string
         uid:
           type: string
         github_access_token:
@@ -975,7 +981,6 @@ components:
           type: string
         avatar:
           type: string
-      additionalProperties: false
       required:
         - uid
         - github_access_token

@@ -13,7 +13,16 @@ services:
       - 4306:3306
     volumes:
       - mysql-db:/var/lib/mysql
+  redis:
+    image: "redis:5.0.5"
+    ports:
+      - "6379:6379"
+    command: redis-server
+    volumes:
+      - "./data/redis:/data"
   backend:
+    environment:
+      REDIS_URL: redis://redis:6379/0
     tty: true
     depends_on:
       - db
