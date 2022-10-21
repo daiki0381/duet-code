@@ -1,13 +1,15 @@
 import type { NextPage } from 'next'
-import { getAuth, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
-import '@/firebase'
+import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/firebase'
 import { UserApi } from '@/openapi-generator/api'
 
 const Home: NextPage = () => {
-  const signIn = (): void => {
+  const [user, loading] = useAuthState(auth)
+
+  const signInUser = (): void => {
     const provider = new GithubAuthProvider()
     provider.addScope('repo')
-    const auth = getAuth()
     signInWithPopup(auth, provider)
       .then((result) => {
         const user: any = result.user
@@ -43,9 +45,29 @@ const Home: NextPage = () => {
       })
   }
 
+  const signOutUser = (): void => {
+    signOut(auth).catch((error) => {
+      console.error(error)
+    })
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div>
-      <button onClick={signIn}>ログイン</button>
+      {user !== null ? (
+        <div>
+          <div>ログイン後/一覧画面</div>
+          <button onClick={signOutUser}>ログアウト</button>
+        </div>
+      ) : (
+        <div>
+          <div>ログイン前/TOP画面</div>
+          <button onClick={signInUser}>ログイン</button>
+        </div>
+      )}
     </div>
   )
 }

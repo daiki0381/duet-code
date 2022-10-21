@@ -44,15 +44,6 @@ paths:
         name: user_id
         in: path
         required: true
-    delete:
-      summary: Logout user
-      operationId: logout-user
-      responses:
-        '204':
-          description: No Content
-      tags:
-        - User
-      parameters: []
     get:
       summary: Get user
       operationId: get-user
