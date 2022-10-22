@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Duet Code
+ * Duet Code API
  * Duet Code API
  *
  * The version of the OpenAPI document: 1.0.0

@@ -3,24 +3,30 @@
 module Api
   module V1
     class UsersController < ApplicationController
+      before_action :authenticate_user, only: %i[current_user_id]
+
       def create
         FirebaseIdToken::Certificates.request
         raise ArgumentError, 'BadRequest Parameter' if payload.blank?
 
-        @user = User.find_or_initialize_by(uid: payload['sub'])
-        @user.github_access_token = sign_up_params[:github_access_token]
-        @user.name = sign_up_params[:name]
-        @user.avatar = sign_up_params[:avatar]
+        @user = User.find_or_initialize_by(uid: payload['sub']) do |user|
+          user.assign_attributes(sign_up_params)
+        end
         if @user.save
-          render json: @user, status: :created
+          render status: :created
         else
-          render json: @user.errors, status: :unprocessable_entity
+          render status: :unprocessable_entity
         end
       end
 
-      def show; end
+      def show
+        @user = User.find(params[:id])
+        render json: @user, status: :ok
+      end
 
-      def delete; end
+      def current_user_id
+        render json: current_user.id, status: :ok
+      end
 
       private
 
