@@ -1,6 +1,6 @@
-class CreateReviewPosts < ActiveRecord::Migration[6.1]
+class CreateReviews < ActiveRecord::Migration[6.1]
   def change
-    create_table :review_posts do |t|
+    create_table :reviews do |t|
       t.references :reviewee, foreign_key: { to_table: 'users' }
       t.references :reviewer, foreign_key: { to_table: 'users' }
       t.string :title, comment: 'タイトル'
@@ -10,7 +10,7 @@ class CreateReviewPosts < ActiveRecord::Migration[6.1]
       t.text :review_point, comment: 'レビューしてほしい点'
       t.text :feedback, comment: 'フィードバック'
       t.text :thanks, comment: 'お礼'
-      t.datetime :accepted_datetime, comment: 'レビューする側の承諾日時'
+      t.datetime :accepted_at, comment: 'レビューする側の承諾日時'
 
       t.timestamps
     end

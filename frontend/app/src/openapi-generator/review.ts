@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ReviewPostApi } from '@/openapi-generator/api'
+import { ReviewApi } from '@/openapi-generator/api'
 import { Configuration } from '@/openapi-generator/configuration'
 import { auth } from '@/firebase'
 
@@ -21,4 +21,4 @@ axiosInstance.interceptors.request.use(async (request) => {
   return request
 })
 
-export const reviewPostApi = new ReviewPostApi(config, '', axiosInstance)
+export const reviewApi = new ReviewApi(config, '', axiosInstance)

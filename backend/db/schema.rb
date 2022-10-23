@@ -17,16 +17,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "review_post_languages", charset: "utf8mb4", force: :cascade do |t|
-    t.bigint "review_post_id"
+  create_table "review_languages", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "review_id"
     t.bigint "language_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["language_id"], name: "index_review_post_languages_on_language_id"
-    t.index ["review_post_id"], name: "index_review_post_languages_on_review_post_id"
+    t.index ["language_id"], name: "index_review_languages_on_language_id"
+    t.index ["review_id"], name: "index_review_languages_on_review_id"
   end
 
-  create_table "review_posts", charset: "utf8mb4", force: :cascade do |t|
+  create_table "reviews", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "reviewee_id"
     t.bigint "reviewer_id"
     t.string "title", comment: "タイトル"
@@ -36,11 +36,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
     t.text "review_point", comment: "レビューしてほしい点"
     t.text "feedback", comment: "フィードバック"
     t.text "thanks", comment: "お礼"
-    t.datetime "accepted_datetime", precision: nil, comment: "レビューする側の承諾日時"
+    t.datetime "accepted_at", precision: nil, comment: "レビューする側の承諾日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["reviewee_id"], name: "index_review_posts_on_reviewee_id"
-    t.index ["reviewer_id"], name: "index_review_posts_on_reviewer_id"
+    t.index ["reviewee_id"], name: "index_reviews_on_reviewee_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
@@ -52,8 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "review_post_languages", "languages"
-  add_foreign_key "review_post_languages", "review_posts"
-  add_foreign_key "review_posts", "users", column: "reviewee_id"
-  add_foreign_key "review_posts", "users", column: "reviewer_id"
+  add_foreign_key "review_languages", "languages"
+  add_foreign_key "review_languages", "reviews"
+  add_foreign_key "reviews", "users", column: "reviewee_id"
+  add_foreign_key "reviews", "users", column: "reviewer_id"
 end

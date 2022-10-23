@@ -87,10 +87,10 @@ paths:
       security:
         - JWT: []
     parameters: []
-  /api/v1/review_posts:
+  /api/v1/reviews:
     post:
-      summary: Create review post
-      operationId: create-review-post
+      summary: Create review
+      operationId: create-review
       responses:
         '201':
           description: Created
@@ -100,7 +100,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/create-review-post'
+              $ref: '#/components/schemas/create-review'
             examples:
               example-1:
                 value:
@@ -114,10 +114,10 @@ paths:
       security:
         - JWT: []
       tags:
-        - ReviewPost
+        - Review
     get:
-      summary: Get review posts
-      operationId: get-review-posts
+      summary: Get reviews
+      operationId: get-reviews
       responses:
         '200':
           description: OK
@@ -142,7 +142,7 @@ paths:
                       updated_at: '2022-10-10T10::10'
                 type: array
                 items:
-                  $ref: '#/components/schemas/review-post'
+                  $ref: '#/components/schemas/review'
               examples:
                 example-1:
                   value:
@@ -158,17 +158,17 @@ paths:
                       review_point: メソッド/変数の命名
                       feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
                       thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-                      accepted_datetime: '2022-10-22 17:00:00.000000'
+                      accepted_at: '2022-10-22 17:00:00.000000'
                       created_at: '2022-10-10T10::10'
                       updated_at: '2022-10-10T10::10'
       tags:
-        - ReviewPost
+        - Review
     parameters: []
-  '/api/v1/review_posts/{review_post_id}':
+  '/api/v1/reviews/{review_id}':
     parameters:
       - schema:
           type: string
-        name: review_post_id
+        name: review_id
         in: path
         required: true
     delete:
@@ -178,10 +178,10 @@ paths:
         '204':
           description: No Content
       tags:
-        - ReviewPost
+        - Review
     patch:
-      summary: Update review post
-      operationId: update-review-post
+      summary: Update review
+      operationId: update-review
       responses:
         '200':
           description: OK
@@ -191,7 +191,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/update-review-post'
+              $ref: '#/components/schemas/update-review'
             examples:
               example-1:
                 value:
@@ -204,20 +204,19 @@ paths:
                   review_point: メソッド/変数の命名
                   feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
                   thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-                  accepted_datetime: '2022-10-22 17:00:00.000000'
-        description: ''
+                  accepted_at: '2022-10-22 17:00:00.000000'
       tags:
-        - ReviewPost
+        - Review
     get:
-      summary: Get review post
-      operationId: get-review-post
+      summary: Get review
+      operationId: get-review
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/review-post'
+                $ref: '#/components/schemas/review'
               examples:
                 example-1:
                   value:
@@ -233,9 +232,11 @@ paths:
                     review_point: メソッド/変数の命名
                     feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
                     thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-                    accepted_datetime: '2022-10-22 17:00:00.000000'
+                    accepted_at: '2022-10-22 17:00:00.000000'
                     created_at: '2022-10-10T10::10'
                     updated_at: '2022-10-10T10::10'
+      tags:
+        - Review
   /api/v1/notifications:
     post:
       summary: Create notification
@@ -253,7 +254,7 @@ paths:
             examples:
               example-1:
                 value:
-                  review_post_id: 1
+                  review_id: 1
                   user_id: 1
                   action: feedback
                   checked: true
@@ -283,7 +284,7 @@ paths:
                 example-1:
                   value:
                     - id: 1
-                      review_post_id: 1
+                      review_id: 1
                       user_id: 1
                       action: feedback
                       checked: true
@@ -376,8 +377,25 @@ components:
         - github_access_token
         - name
         - avatar
-    review-post:
+    review:
       type: object
+      x-examples:
+        example-1:
+          id: 1
+          reviewee: 1
+          reviewer: 2
+          title: Rubyのレビューをお願いします
+          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+          languages:
+            - Ruby
+          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+          review_point: メソッド/変数の命名
+          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
+          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
+          accepted_at: '2022-10-22 17:00:00.000000'
+          created_at: '2022-10-10T10::10'
+          updated_at: '2022-10-10T10::10'
       properties:
         id:
           type: integer
@@ -403,30 +421,13 @@ components:
           type: string
         thanks:
           type: string
-        accepted_datetime:
+        accepted_at:
           type: string
         created_at:
           type: string
         updated_at:
           type: string
-      x-examples:
-        example-1:
-          id: 1
-          reviewee: 1
-          reviewer: 2
-          title: Rubyのレビューをお願いします
-          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
-          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
-          languages:
-            - Ruby
-          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
-          review_point: メソッド/変数の命名
-          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
-          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-          accepted_datetime: '2022-10-22 17:00:00.000000'
-          created_at: '2022-10-10T10::10'
-          updated_at: '2022-10-10T10::10'
-    create-review-post:
+    create-review:
       type: object
       x-examples:
         example-1:
@@ -459,7 +460,7 @@ components:
         - languages
         - pull_request_description
         - review_point
-    update-review-post:
+    update-review:
       type: object
       x-examples:
         example-1:
@@ -472,7 +473,7 @@ components:
           review_point: メソッド/変数の命名
           feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
           thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-          accepted_datetime: '2022-10-22 17:00:00.000000'
+          accepted_at: '2022-10-22 17:00:00.000000'
       properties:
         title:
           type: string
@@ -492,14 +493,23 @@ components:
           type: string
         thanks:
           type: string
-        accepted_datetime:
+        accepted_at:
           type: string
     notification:
       type: object
+      x-examples:
+        example-1:
+          id: 1
+          review_id: 1
+          user_id: 1
+          action: feedback
+          checked: true
+          created_at: '2022-10-10T10::10'
+          updated_at: '2022-10-10T10::10'
       properties:
         id:
           type: integer
-        review_post_id:
+        review_id:
           type: integer
         user_id:
           type: integer
@@ -511,25 +521,16 @@ components:
           type: string
         updated_at:
           type: string
-      x-examples:
-        example-1:
-          id: 1
-          review_post_id: 1
-          user_id: 1
-          action: feedback
-          checked: true
-          created_at: '2022-10-10T10::10'
-          updated_at: '2022-10-10T10::10'
     create-notification:
       type: object
       x-examples:
         example-1:
-          review_post_id: 1
+          review_id: 1
           user_id: 1
           action: feedback
           checked: true
       properties:
-        review_post_id:
+        review_id:
           type: integer
         user_id:
           type: integer
@@ -538,7 +539,7 @@ components:
         checked:
           type: boolean
       required:
-        - review_post_id
+        - review_id
         - user_id
         - action
         - checked
@@ -567,5 +568,5 @@ components:
       scheme: bearer
 tags:
   - name: User
-  - name: ReviewPost
+  - name: Review
   - name: GitHub

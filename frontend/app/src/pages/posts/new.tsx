@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { auth } from '@/firebase'
 import { userApi } from '@/openapi-generator/user'
-import { reviewPostApi } from '@/openapi-generator/reviewPost'
+import { reviewApi } from '@/openapi-generator/review'
 
 const New: NextPage = () => {
   type Pull = {
@@ -175,7 +175,7 @@ const New: NextPage = () => {
   const onSubmit = handleSubmit(async (data) => {
     const pull = pulls.find((pull) => pull.title === data.pull_request)
     if (pull !== undefined) {
-      await reviewPostApi.createReviewPost({
+      await reviewApi.createReview({
         title: data.title,
         pull_request_title: pull.title,
         pull_request_url: pull.url,

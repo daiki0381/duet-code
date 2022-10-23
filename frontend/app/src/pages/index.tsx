@@ -1,22 +1,18 @@
 import type { NextPage } from 'next'
-import type { ReviewPost } from '@/openapi-generator/api'
+import type { Review } from '@/openapi-generator/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import { userApi } from '@/openapi-generator/user'
-import { reviewPostApi } from '@/openapi-generator/reviewPost'
+import { reviewApi } from '@/openapi-generator/review'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
   const router = useRouter()
-  const [wantedReviewPosts, setWantedReviewPosts] = useState<ReviewPost[] | []>(
-    [],
-  )
-  const [acceptedReviewPosts, setAcceptedReviewPosts] = useState<
-    ReviewPost[] | []
-  >([])
+  const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
+  const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
 
   const signInWithGithub = async (): Promise<void> => {
     const provider = new GithubAuthProvider()
@@ -50,17 +46,17 @@ const Home: NextPage = () => {
     })
   }
 
-  const getReviewPosts = async (): Promise<void> => {
-    const response = await reviewPostApi.getReviewPosts()
-    const reviewPosts = response.data
-    const wantedReviewPosts = reviewPosts.filter((reviewPost) => {
-      return reviewPost.accepted_datetime === null
+  const getReviews = async (): Promise<void> => {
+    const response = await reviewApi.getReviews()
+    const reviews = response.data
+    const wantedReviews = reviews.filter((review) => {
+      return review.accepted_at === null
     })
-    const acceptedReviewPosts = reviewPosts.filter((reviewPost) => {
-      return reviewPost.accepted_datetime !== null
+    const acceptedReviews = reviews.filter((review) => {
+      return review.accepted_at !== null
     })
-    setWantedReviewPosts(wantedReviewPosts)
-    setAcceptedReviewPosts(acceptedReviewPosts)
+    setWantedReviews(wantedReviews)
+    setAcceptedReviews(acceptedReviews)
   }
 
   const goToPostsDetail = (id: number): void => {
@@ -71,7 +67,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (user !== null) {
-      getReviewPosts().catch((error) => {
+      getReviews().catch((error) => {
         console.error(error)
       })
     }
@@ -89,32 +85,32 @@ const Home: NextPage = () => {
           <button onClick={goToPostsNew}>レビュー募集</button>
           <button onClick={signOutWithGithub}>ログアウト</button>
           <div>レビュー募集中</div>
-          {wantedReviewPosts.map((reviewPost) => {
+          {wantedReviews.map((review) => {
             return (
               <div
-                key={reviewPost.id}
+                key={review.id}
                 onClick={() => {
-                  if (reviewPost.id !== undefined) {
-                    goToPostsDetail(reviewPost.id)
+                  if (review.id !== undefined) {
+                    goToPostsDetail(review.id)
                   }
                 }}
               >
-                <p>タイトル: {reviewPost.title}</p>
+                <p>タイトル: {review.title}</p>
               </div>
             )
           })}
           <div>レビュー募集終了</div>
-          {acceptedReviewPosts.map((reviewPost) => {
+          {acceptedReviews.map((review) => {
             return (
               <div
-                key={reviewPost.id}
+                key={review.id}
                 onClick={() => {
-                  if (reviewPost.id !== undefined) {
-                    goToPostsDetail(reviewPost.id)
+                  if (review.id !== undefined) {
+                    goToPostsDetail(review.id)
                   }
                 }}
               >
-                <p>タイトル: {reviewPost.title}</p>
+                <p>タイトル: {review.title}</p>
               </div>
             )
           })}
