@@ -1,13 +1,22 @@
 import type { NextPage } from 'next'
+import type { ReviewPost } from '@/openapi-generator/api'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import { userApi } from '@/openapi-generator/user'
+import { reviewPostApi } from '@/openapi-generator/reviewPost'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
   const router = useRouter()
+  const [wantedReviewPosts, setWantedReviewPosts] = useState<ReviewPost[] | []>(
+    [],
+  )
+  const [acceptedReviewPosts, setAcceptedReviewPosts] = useState<
+    ReviewPost[] | []
+  >([])
 
   const signInWithGithub = async (): Promise<void> => {
     const provider = new GithubAuthProvider()
@@ -41,6 +50,33 @@ const Home: NextPage = () => {
     })
   }
 
+  const getReviewPosts = async (): Promise<void> => {
+    const response = await reviewPostApi.getReviewPosts()
+    const reviewPosts = response.data
+    const wantedReviewPosts = reviewPosts.filter((reviewPost) => {
+      return reviewPost.accepted_datetime === null
+    })
+    const acceptedReviewPosts = reviewPosts.filter((reviewPost) => {
+      return reviewPost.accepted_datetime !== null
+    })
+    setWantedReviewPosts(wantedReviewPosts)
+    setAcceptedReviewPosts(acceptedReviewPosts)
+  }
+
+  const goToPostsDetail = (id: number): void => {
+    router.push(`/posts/${id}`).catch((error) => {
+      console.error(error)
+    })
+  }
+
+  useEffect(() => {
+    if (user !== null) {
+      getReviewPosts().catch((error) => {
+        console.error(error)
+      })
+    }
+  }, [user])
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -52,6 +88,36 @@ const Home: NextPage = () => {
           <div>ログイン後/一覧画面</div>
           <button onClick={goToPostsNew}>レビュー募集</button>
           <button onClick={signOutWithGithub}>ログアウト</button>
+          <div>レビュー募集中</div>
+          {wantedReviewPosts.map((reviewPost) => {
+            return (
+              <div
+                key={reviewPost.id}
+                onClick={() => {
+                  if (reviewPost.id !== undefined) {
+                    goToPostsDetail(reviewPost.id)
+                  }
+                }}
+              >
+                <p>タイトル: {reviewPost.title}</p>
+              </div>
+            )
+          })}
+          <div>レビュー募集終了</div>
+          {acceptedReviewPosts.map((reviewPost) => {
+            return (
+              <div
+                key={reviewPost.id}
+                onClick={() => {
+                  if (reviewPost.id !== undefined) {
+                    goToPostsDetail(reviewPost.id)
+                  }
+                }}
+              >
+                <p>タイトル: {reviewPost.title}</p>
+              </div>
+            )
+          })}
         </div>
       ) : (
         <div>

@@ -87,10 +87,10 @@ paths:
       security:
         - JWT: []
     parameters: []
-  /api/v1/posts:
+  /api/v1/review_posts:
     post:
-      summary: Create post
-      operationId: create-post
+      summary: Create review post
+      operationId: create-review-post
       responses:
         '201':
           description: Created
@@ -100,7 +100,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/create-post'
+              $ref: '#/components/schemas/create-review-post'
             examples:
               example-1:
                 value:
@@ -111,20 +111,19 @@ paths:
                     - Ruby
                   pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
                   review_point: メソッド/変数の命名
-      tags:
-        - Post
       security:
         - JWT: []
+      tags:
+        - ReviewPost
     get:
-      summary: Get posts
-      operationId: get-posts
+      summary: Get review posts
+      operationId: get-review-posts
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
                 x-examples:
                   example-1:
                     - id: 1
@@ -141,8 +140,84 @@ paths:
                       done: true
                       created_at: '2022-10-10T10::10'
                       updated_at: '2022-10-10T10::10'
+                type: array
                 items:
-                  $ref: '#/components/schemas/post'
+                  $ref: '#/components/schemas/review-post'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      reviewee: 1
+                      reviewer: 2
+                      title: Rubyのレビューをお願いします
+                      pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+                      pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+                      languages:
+                        - Ruby
+                      pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+                      review_point: メソッド/変数の命名
+                      feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
+                      thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
+                      accepted_datetime: '2022-10-22 17:00:00.000000'
+                      created_at: '2022-10-10T10::10'
+                      updated_at: '2022-10-10T10::10'
+      tags:
+        - ReviewPost
+    parameters: []
+  '/api/v1/review_posts/{review_post_id}':
+    parameters:
+      - schema:
+          type: string
+        name: review_post_id
+        in: path
+        required: true
+    delete:
+      summary: Delete review post
+      operationId: delete-review-post
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - ReviewPost
+    patch:
+      summary: Update review post
+      operationId: update-review-post
+      responses:
+        '200':
+          description: OK
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update-review-post'
+            examples:
+              example-1:
+                value:
+                  title: Rubyのレビューをお願いします
+                  pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+                  pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+                  languages:
+                    - Ruby
+                  pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+                  review_point: メソッド/変数の命名
+                  feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
+                  thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
+                  accepted_datetime: '2022-10-22 17:00:00.000000'
+        description: ''
+      tags:
+        - ReviewPost
+    get:
+      summary: Get review post
+      operationId: get-review-post
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/review-post'
               examples:
                 example-1:
                   value:
@@ -158,55 +233,9 @@ paths:
                     review_point: メソッド/変数の命名
                     feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
                     thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-                    done: true
+                    accepted_datetime: '2022-10-22 17:00:00.000000'
                     created_at: '2022-10-10T10::10'
                     updated_at: '2022-10-10T10::10'
-      tags:
-        - Post
-  '/api/v1/posts/{post_id}':
-    parameters:
-      - schema:
-          type: number
-        name: post_id
-        in: path
-        required: true
-    delete:
-      summary: Delete post
-      operationId: delete-post
-      responses:
-        '204':
-          description: No Content
-      tags:
-        - Post
-    patch:
-      summary: Update post
-      operationId: update-post
-      responses:
-        '200':
-          description: OK
-        '422':
-          description: Unprocessable Entity (WebDAV)
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/update-post'
-            examples:
-              example-1:
-                value:
-                  title: Rubyのレビューをお願いします
-                  pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
-                  pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
-                  languages:
-                    - Ruby
-                  pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
-                  review_point: メソッド/変数の命名
-                  feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
-                  thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-                  done: true
-        description: ''
-      tags:
-        - Post
   /api/v1/notifications:
     post:
       summary: Create notification
@@ -224,7 +253,8 @@ paths:
             examples:
               example-1:
                 value:
-                  post_id: 1
+                  review_post_id: 1
+                  user_id: 1
                   action: feedback
                   checked: true
       tags:
@@ -253,7 +283,8 @@ paths:
                 example-1:
                   value:
                     - id: 1
-                      post_id: 1
+                      review_post_id: 1
+                      user_id: 1
                       action: feedback
                       checked: true
                       created_at: '2022-10-10T10::10'
@@ -299,6 +330,7 @@ components:
           avatar: 'https://avatars.githubusercontent.com'
           created_at: '2022-10-10T10::10'
           updated_at: '2022-10-10T10::10'
+      additionalProperties: false
       properties:
         id:
           type: integer
@@ -314,15 +346,6 @@ components:
           type: string
         updated_at:
           type: string
-      additionalProperties: false
-      required:
-        - id
-        - uid
-        - github_access_token
-        - name
-        - avatar
-        - created_at
-        - updated_at
     current-user-id:
       title: current-user-id
       x-stoplight:
@@ -353,25 +376,8 @@ components:
         - github_access_token
         - name
         - avatar
-    post:
+    review-post:
       type: object
-      x-examples:
-        example-1:
-          id: 1
-          reviewee: 1
-          reviewer: 2
-          title: Rubyのレビューをお願いします
-          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
-          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
-          languages:
-            - Ruby
-          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
-          review_point: メソッド/変数の命名
-          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
-          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-          done: true
-          created_at: '2022-10-10T10::10'
-          updated_at: '2022-10-10T10::10'
       properties:
         id:
           type: integer
@@ -397,28 +403,30 @@ components:
           type: string
         thanks:
           type: string
-        done:
-          type: boolean
+        accepted_datetime:
+          type: string
         created_at:
           type: string
         updated_at:
           type: string
-      required:
-        - id
-        - reviewee
-        - reviewer
-        - title
-        - pull_request_title
-        - pull_request_url
-        - languages
-        - pull_request_description
-        - review_point
-        - feedback
-        - thanks
-        - done
-        - created_at
-        - updated_at
-    create-post:
+      x-examples:
+        example-1:
+          id: 1
+          reviewee: 1
+          reviewer: 2
+          title: Rubyのレビューをお願いします
+          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+          languages:
+            - Ruby
+          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+          review_point: メソッド/変数の命名
+          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
+          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
+          accepted_datetime: '2022-10-22 17:00:00.000000'
+          created_at: '2022-10-10T10::10'
+          updated_at: '2022-10-10T10::10'
+    create-review-post:
       type: object
       x-examples:
         example-1:
@@ -451,8 +459,20 @@ components:
         - languages
         - pull_request_description
         - review_point
-    update-post:
+    update-review-post:
       type: object
+      x-examples:
+        example-1:
+          title: Rubyのレビューをお願いします
+          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+          languages:
+            - Ruby
+          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+          review_point: メソッド/変数の命名
+          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
+          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
+          accepted_datetime: '2022-10-22 17:00:00.000000'
       properties:
         title:
           type: string
@@ -472,34 +492,16 @@ components:
           type: string
         thanks:
           type: string
-        done:
-          type: boolean
-      x-examples:
-        example-1:
-          title: Rubyのレビューをお願いします
-          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
-          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
-          languages:
-            - Ruby
-          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
-          review_point: メソッド/変数の命名
-          feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
-          thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-          done: true
+        accepted_datetime:
+          type: string
     notification:
       type: object
-      x-examples:
-        example-1:
-          id: 1
-          post_id: 1
-          action: feedback
-          checked: true
-          created_at: '2022-10-10T10::10'
-          updated_at: '2022-10-10T10::10'
       properties:
         id:
           type: integer
-        post_id:
+        review_post_id:
+          type: integer
+        user_id:
           type: integer
         action:
           type: string
@@ -509,31 +511,35 @@ components:
           type: string
         updated_at:
           type: string
-      additionalProperties: false
-      required:
-        - id
-        - post_id
-        - action
-        - checked
-        - created_at
-        - updated_at
+      x-examples:
+        example-1:
+          id: 1
+          review_post_id: 1
+          user_id: 1
+          action: feedback
+          checked: true
+          created_at: '2022-10-10T10::10'
+          updated_at: '2022-10-10T10::10'
     create-notification:
       type: object
       x-examples:
         example-1:
-          post_id: 1
+          review_post_id: 1
+          user_id: 1
           action: feedback
           checked: true
       properties:
-        post_id:
+        review_post_id:
+          type: integer
+        user_id:
           type: integer
         action:
           type: string
         checked:
           type: boolean
-      additionalProperties: false
       required:
-        - post_id
+        - review_post_id
+        - user_id
         - action
         - checked
     update-notification:
@@ -561,5 +567,5 @@ components:
       scheme: bearer
 tags:
   - name: User
-  - name: Post
+  - name: ReviewPost
   - name: GitHub

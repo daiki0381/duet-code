@@ -1,7 +1,7 @@
 class CreateLanguages < ActiveRecord::Migration[7.0]
   def change
     create_table :languages do |t|
-      t.string :language, comment: '使用言語'
+      t.string :name, comment: '言語名'
 
       t.timestamps
     end

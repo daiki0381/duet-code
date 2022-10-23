@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { PostApi } from '@/openapi-generator/api'
+import { ReviewPostApi } from '@/openapi-generator/api'
 import { Configuration } from '@/openapi-generator/configuration'
-import { getAuth } from 'firebase/auth'
+import { auth } from '@/firebase'
 
 const { NEXT_PUBLIC_BASE_PATH } = process.env
 
@@ -14,11 +14,11 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use(async (request) => {
-  const idToken = await getAuth().currentUser?.getIdToken(true)
-  if (idToken !== undefined && request.headers !== undefined) {
+  const idToken = await auth.currentUser?.getIdToken(true)
+  if (request.headers !== undefined && idToken !== undefined) {
     request.headers.Authorization = `Bearer ${idToken}`
   }
   return request
 })
 
-export const postApi = new PostApi(config, '', axiosInstance)
+export const reviewPostApi = new ReviewPostApi(config, '', axiosInstance)

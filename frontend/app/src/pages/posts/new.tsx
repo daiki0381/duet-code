@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { auth } from '@/firebase'
 import { userApi } from '@/openapi-generator/user'
-import { postApi } from '@/openapi-generator/post'
+import { reviewPostApi } from '@/openapi-generator/reviewPost'
 
 const New: NextPage = () => {
   type Pull = {
@@ -72,15 +72,21 @@ const New: NextPage = () => {
   } = useForm<FormData>()
 
   const getUserId = async (): Promise<void> => {
-    const response = await userApi.getCurrentUserId()
-    setUserId(response.data)
+    if (user !== null) {
+      const response = await userApi.getCurrentUserId()
+      setUserId(response.data)
+    }
   }
 
   const getNameAndGithubAccessToken = async (): Promise<void> => {
     if (userId !== null) {
       const response = await userApi.getUser(userId)
-      setName(response.data.name)
-      setGithubAccessToken(response.data.github_access_token)
+      const name = response.data.name
+      const githubAccessToken = response.data.github_access_token
+      if (name !== undefined && githubAccessToken !== undefined) {
+        setName(name)
+        setGithubAccessToken(githubAccessToken)
+      }
     }
   }
 
@@ -169,7 +175,7 @@ const New: NextPage = () => {
   const onSubmit = handleSubmit(async (data) => {
     const pull = pulls.find((pull) => pull.title === data.pull_request)
     if (pull !== undefined) {
-      await postApi.createPost({
+      await reviewPostApi.createReviewPost({
         title: data.title,
         pull_request_title: pull.title,
         pull_request_url: pull.url,
