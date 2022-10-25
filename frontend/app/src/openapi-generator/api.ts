@@ -49,69 +49,57 @@ import {
 export interface CreateNotification {
   /**
    *
-   * @type {number}
-   * @memberof CreateNotification
-   */
-  review_id: number
-  /**
-   *
-   * @type {number}
-   * @memberof CreateNotification
-   */
-  user_id: number
-  /**
-   *
    * @type {string}
    * @memberof CreateNotification
    */
   action: string
-  /**
-   *
-   * @type {boolean}
-   * @memberof CreateNotification
-   */
-  checked: boolean
 }
 /**
  *
  * @export
- * @interface CreateReview
+ * @interface CreateOrUpdateReview
  */
-export interface CreateReview {
+export interface CreateOrUpdateReview {
   /**
    *
    * @type {string}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
    */
   title: string
   /**
    *
    * @type {string}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
+   */
+  repository: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateOrUpdateReview
    */
   pull_request_title: string
   /**
    *
    * @type {string}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
    */
   pull_request_url: string
   /**
    *
    * @type {Array<string>}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
    */
   languages: Array<string>
   /**
    *
    * @type {string}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
    */
   pull_request_description: string
   /**
    *
    * @type {string}
-   * @memberof CreateReview
+   * @memberof CreateOrUpdateReview
    */
   review_point: string
 }
@@ -169,7 +157,13 @@ export interface Notification {
    * @type {number}
    * @memberof Notification
    */
-  user_id?: number
+  reviewee_id?: number
+  /**
+   *
+   * @type {number}
+   * @memberof Notification
+   */
+  reviewer_id?: number
   /**
    *
    * @type {string}
@@ -198,6 +192,25 @@ export interface Notification {
 /**
  *
  * @export
+ * @interface Pull
+ */
+export interface Pull {
+  /**
+   *
+   * @type {string}
+   * @memberof Pull
+   */
+  title?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Pull
+   */
+  url?: string
+}
+/**
+ *
+ * @export
  * @interface Review
  */
 export interface Review {
@@ -212,19 +225,25 @@ export interface Review {
    * @type {number}
    * @memberof Review
    */
-  reviewee?: number
+  reviewee_id?: number
   /**
    *
    * @type {number}
    * @memberof Review
    */
-  reviewer?: number
+  reviewer_id?: number
   /**
    *
    * @type {string}
    * @memberof Review
    */
   title?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Review
+   */
+  repository?: string
   /**
    *
    * @type {string}
@@ -302,63 +321,41 @@ export interface UpdateNotification {
 /**
  *
  * @export
- * @interface UpdateReview
+ * @interface UpdateReviewAccepted
  */
-export interface UpdateReview {
+export interface UpdateReviewAccepted {
   /**
    *
    * @type {string}
-   * @memberof UpdateReview
+   * @memberof UpdateReviewAccepted
    */
-  title?: string
+  accepted_at: string
+}
+/**
+ *
+ * @export
+ * @interface UpdateReviewFeedback
+ */
+export interface UpdateReviewFeedback {
   /**
    *
    * @type {string}
-   * @memberof UpdateReview
+   * @memberof UpdateReviewFeedback
    */
-  pull_request_title?: string
+  feedback: string
+}
+/**
+ *
+ * @export
+ * @interface UpdateReviewThanks
+ */
+export interface UpdateReviewThanks {
   /**
    *
    * @type {string}
-   * @memberof UpdateReview
+   * @memberof UpdateReviewThanks
    */
-  pull_request_url?: string
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof UpdateReview
-   */
-  languages?: Array<string>
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateReview
-   */
-  pull_request_description?: string
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateReview
-   */
-  review_point?: string
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateReview
-   */
-  feedback?: string
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateReview
-   */
-  thanks?: string
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateReview
-   */
-  accepted_at?: string
+  thanks: string
 }
 /**
  *
@@ -372,18 +369,6 @@ export interface User {
    * @memberof User
    */
   id?: number
-  /**
-   *
-   * @type {string}
-   * @memberof User
-   */
-  uid?: string
-  /**
-   *
-   * @type {string}
-   * @memberof User
-   */
-  github_access_token?: string
   /**
    *
    * @type {string}
@@ -411,25 +396,125 @@ export interface User {
 }
 
 /**
- * NotificationApi - axios parameter creator
+ * GitHubApi - axios parameter creator
  * @export
  */
-export const NotificationApiAxiosParamCreator = function (
+export const GitHubApiAxiosParamCreator = function (
   configuration?: Configuration,
 ) {
   return {
     /**
      *
-     * @summary Create notification
-     * @param {CreateNotification} [createNotification]
+     * @summary Get current user pulls
+     * @param {string} repo
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createNotification: async (
-      createNotification?: CreateNotification,
+    getCurrentUserPulls: async (
+      repo: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      const localVarPath = `/api/v1/notifications`
+      // verify required parameter 'repo' is not null or undefined
+      assertParamExists('getCurrentUserPulls', 'repo', repo)
+      const localVarPath = `/api/v1/current_user/pulls`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication JWT required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (repo !== undefined) {
+        localVarQueryParameter['repo'] = repo
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Get current user repos
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCurrentUserRepos: async (
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/current_user/repos`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication JWT required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Request reviewer
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    requestReviewer: async (
+      reviewId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'reviewId' is not null or undefined
+      assertParamExists('requestReviewer', 'reviewId', reviewId)
+      const localVarPath =
+        `/api/v1/reviews/{review_id}/requested_reviewers`.replace(
+          `{${'review_id'}}`,
+          encodeURIComponent(String(reviewId)),
+        )
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -445,7 +530,239 @@ export const NotificationApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
-      localVarHeaderParameter['Content-Type'] = 'application/json'
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+  }
+}
+
+/**
+ * GitHubApi - functional programming interface
+ * @export
+ */
+export const GitHubApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = GitHubApiAxiosParamCreator(configuration)
+  return {
+    /**
+     *
+     * @summary Get current user pulls
+     * @param {string} repo
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getCurrentUserPulls(
+      repo: string,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pull>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getCurrentUserPulls(repo, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Get current user repos
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getCurrentUserRepos(
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getCurrentUserRepos(options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Request reviewer
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async requestReviewer(
+      reviewId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.requestReviewer(
+        reviewId,
+        options,
+      )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+  }
+}
+
+/**
+ * GitHubApi - factory interface
+ * @export
+ */
+export const GitHubApiFactory = function (
+  configuration?: Configuration,
+  basePath?: string,
+  axios?: AxiosInstance,
+) {
+  const localVarFp = GitHubApiFp(configuration)
+  return {
+    /**
+     *
+     * @summary Get current user pulls
+     * @param {string} repo
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCurrentUserPulls(
+      repo: string,
+      options?: any,
+    ): AxiosPromise<Array<Pull>> {
+      return localVarFp
+        .getCurrentUserPulls(repo, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Get current user repos
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCurrentUserRepos(options?: any): AxiosPromise<Array<string>> {
+      return localVarFp
+        .getCurrentUserRepos(options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Request reviewer
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    requestReviewer(reviewId: number, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .requestReviewer(reviewId, options)
+        .then((request) => request(axios, basePath))
+    },
+  }
+}
+
+/**
+ * GitHubApi - object-oriented interface
+ * @export
+ * @class GitHubApi
+ * @extends {BaseAPI}
+ */
+export class GitHubApi extends BaseAPI {
+  /**
+   *
+   * @summary Get current user pulls
+   * @param {string} repo
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GitHubApi
+   */
+  public getCurrentUserPulls(repo: string, options?: AxiosRequestConfig) {
+    return GitHubApiFp(this.configuration)
+      .getCurrentUserPulls(repo, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Get current user repos
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GitHubApi
+   */
+  public getCurrentUserRepos(options?: AxiosRequestConfig) {
+    return GitHubApiFp(this.configuration)
+      .getCurrentUserRepos(options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Request reviewer
+   * @param {number} reviewId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof GitHubApi
+   */
+  public requestReviewer(reviewId: number, options?: AxiosRequestConfig) {
+    return GitHubApiFp(this.configuration)
+      .requestReviewer(reviewId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+}
+
+/**
+ * NotificationApi - axios parameter creator
+ * @export
+ */
+export const NotificationApiAxiosParamCreator = function (
+  configuration?: Configuration,
+) {
+  return {
+    /**
+     *
+     * @summary Create notification
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createNotification: async (
+      reviewId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'reviewId' is not null or undefined
+      assertParamExists('createNotification', 'reviewId', reviewId)
+      const localVarPath = `/api/v1/reviews/{review_id}/notification`.replace(
+        `{${'review_id'}}`,
+        encodeURIComponent(String(reviewId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions =
@@ -455,11 +772,6 @@ export const NotificationApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       }
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        createNotification,
-        localVarRequestOptions,
-        configuration,
-      )
 
       return {
         url: toPathString(localVarUrlObj),
@@ -574,21 +886,18 @@ export const NotificationApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create notification
-     * @param {CreateNotification} [createNotification]
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createNotification(
-      createNotification?: CreateNotification,
+      reviewId: number,
       options?: AxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.createNotification(
-          createNotification,
-          options,
-        )
+        await localVarAxiosParamCreator.createNotification(reviewId, options)
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -664,16 +973,13 @@ export const NotificationApiFactory = function (
     /**
      *
      * @summary Create notification
-     * @param {CreateNotification} [createNotification]
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    createNotification(
-      createNotification?: CreateNotification,
-      options?: any,
-    ): AxiosPromise<void> {
+    createNotification(reviewId: number, options?: any): AxiosPromise<object> {
       return localVarFp
-        .createNotification(createNotification, options)
+        .createNotification(reviewId, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -717,17 +1023,14 @@ export class NotificationApi extends BaseAPI {
   /**
    *
    * @summary Create notification
-   * @param {CreateNotification} [createNotification]
+   * @param {number} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof NotificationApi
    */
-  public createNotification(
-    createNotification?: CreateNotification,
-    options?: AxiosRequestConfig,
-  ) {
+  public createNotification(reviewId: number, options?: AxiosRequestConfig) {
     return NotificationApiFp(this.configuration)
-      .createNotification(createNotification, options)
+      .createNotification(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -775,12 +1078,12 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Create review
-     * @param {CreateReview} [createReview]
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createReview: async (
-      createReview?: CreateReview,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/api/v1/reviews`
@@ -814,7 +1117,7 @@ export const ReviewApiAxiosParamCreator = function (
         ...options.headers,
       }
       localVarRequestOptions.data = serializeDataIfNeeded(
-        createReview,
+        createOrUpdateReview,
         localVarRequestOptions,
         configuration,
       )
@@ -826,17 +1129,17 @@ export const ReviewApiAxiosParamCreator = function (
     },
     /**
      *
-     * @summary Delete review post
-     * @param {string} reviewId
+     * @summary Delete review
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteReviewPost: async (
-      reviewId: string,
+    deleteReview: async (
+      reviewId: number,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
-      assertParamExists('deleteReviewPost', 'reviewId', reviewId)
+      assertParamExists('deleteReview', 'reviewId', reviewId)
       const localVarPath = `/api/v1/reviews/{review_id}`.replace(
         `{${'review_id'}}`,
         encodeURIComponent(String(reviewId)),
@@ -873,12 +1176,12 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Get review
-     * @param {string} reviewId
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getReview: async (
-      reviewId: string,
+      reviewId: number,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -958,14 +1261,14 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Update review
-     * @param {string} reviewId
-     * @param {UpdateReview} [updateReview]
+     * @param {number} reviewId
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateReview: async (
-      reviewId: string,
-      updateReview?: UpdateReview,
+      reviewId: number,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -1000,10 +1303,152 @@ export const ReviewApiAxiosParamCreator = function (
         ...options.headers,
       }
       localVarRequestOptions.data = serializeDataIfNeeded(
-        updateReview,
+        createOrUpdateReview,
         localVarRequestOptions,
         configuration,
       )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Update review accepted
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewAccepted: async (
+      reviewId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'reviewId' is not null or undefined
+      assertParamExists('updateReviewAccepted', 'reviewId', reviewId)
+      const localVarPath = `/api/v1/reviews/{review_id}/accepted`.replace(
+        `{${'review_id'}}`,
+        encodeURIComponent(String(reviewId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication JWT required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Update review feedback
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewFeedback: async (
+      reviewId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'reviewId' is not null or undefined
+      assertParamExists('updateReviewFeedback', 'reviewId', reviewId)
+      const localVarPath = `/api/v1/reviews/{review_id}/feedback`.replace(
+        `{${'review_id'}}`,
+        encodeURIComponent(String(reviewId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Update review thanks
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewThanks: async (
+      reviewId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'reviewId' is not null or undefined
+      assertParamExists('updateReviewThanks', 'reviewId', reviewId)
+      const localVarPath = `/api/v1/reviews/{review_id}/thanks`.replace(
+        `{${'review_id'}}`,
+        encodeURIComponent(String(reviewId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
 
       return {
         url: toPathString(localVarUrlObj),
@@ -1023,18 +1468,18 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create review
-     * @param {CreateReview} [createReview]
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createReview(
-      createReview?: CreateReview,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createReview(
-        createReview,
+        createOrUpdateReview,
         options,
       )
       return createRequestFunction(
@@ -1046,19 +1491,21 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @summary Delete review post
-     * @param {string} reviewId
+     * @summary Delete review
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async deleteReviewPost(
-      reviewId: string,
+    async deleteReview(
+      reviewId: number,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.deleteReviewPost(reviewId, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteReview(
+        reviewId,
+        options,
+      )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1069,12 +1516,12 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get review
-     * @param {string} reviewId
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getReview(
-      reviewId: string,
+      reviewId: number,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Review>
@@ -1114,23 +1561,98 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Update review
-     * @param {string} reviewId
-     * @param {UpdateReview} [updateReview]
+     * @param {number} reviewId
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateReview(
-      reviewId: string,
-      updateReview?: UpdateReview,
+      reviewId: number,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateReview(
         reviewId,
-        updateReview,
+        createOrUpdateReview,
         options,
       )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Update review accepted
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateReviewAccepted(
+      reviewId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<UpdateReviewAccepted>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateReviewAccepted(reviewId, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Update review feedback
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateReviewFeedback(
+      reviewId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<UpdateReviewFeedback>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateReviewFeedback(reviewId, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Update review thanks
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateReviewThanks(
+      reviewId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<UpdateReviewThanks>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.updateReviewThanks(reviewId, options)
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1155,38 +1677,38 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Create review
-     * @param {CreateReview} [createReview]
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createReview(
-      createReview?: CreateReview,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options?: any,
     ): AxiosPromise<void> {
       return localVarFp
-        .createReview(createReview, options)
+        .createReview(createOrUpdateReview, options)
         .then((request) => request(axios, basePath))
     },
     /**
      *
-     * @summary Delete review post
-     * @param {string} reviewId
+     * @summary Delete review
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteReviewPost(reviewId: string, options?: any): AxiosPromise<void> {
+    deleteReview(reviewId: number, options?: any): AxiosPromise<void> {
       return localVarFp
-        .deleteReviewPost(reviewId, options)
+        .deleteReview(reviewId, options)
         .then((request) => request(axios, basePath))
     },
     /**
      *
      * @summary Get review
-     * @param {string} reviewId
+     * @param {number} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getReview(reviewId: string, options?: any): AxiosPromise<Review> {
+    getReview(reviewId: number, options?: any): AxiosPromise<Review> {
       return localVarFp
         .getReview(reviewId, options)
         .then((request) => request(axios, basePath))
@@ -1205,18 +1727,63 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Update review
-     * @param {string} reviewId
-     * @param {UpdateReview} [updateReview]
+     * @param {number} reviewId
+     * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateReview(
-      reviewId: string,
-      updateReview?: UpdateReview,
+      reviewId: number,
+      createOrUpdateReview?: CreateOrUpdateReview,
       options?: any,
     ): AxiosPromise<void> {
       return localVarFp
-        .updateReview(reviewId, updateReview, options)
+        .updateReview(reviewId, createOrUpdateReview, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Update review accepted
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewAccepted(
+      reviewId: number,
+      options?: any,
+    ): AxiosPromise<UpdateReviewAccepted> {
+      return localVarFp
+        .updateReviewAccepted(reviewId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Update review feedback
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewFeedback(
+      reviewId: number,
+      options?: any,
+    ): AxiosPromise<UpdateReviewFeedback> {
+      return localVarFp
+        .updateReviewFeedback(reviewId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Update review thanks
+     * @param {number} reviewId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateReviewThanks(
+      reviewId: number,
+      options?: any,
+    ): AxiosPromise<UpdateReviewThanks> {
+      return localVarFp
+        .updateReviewThanks(reviewId, options)
         .then((request) => request(axios, basePath))
     },
   }
@@ -1232,43 +1799,43 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Create review
-   * @param {CreateReview} [createReview]
+   * @param {CreateOrUpdateReview} [createOrUpdateReview]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
   public createReview(
-    createReview?: CreateReview,
+    createOrUpdateReview?: CreateOrUpdateReview,
     options?: AxiosRequestConfig,
   ) {
     return ReviewApiFp(this.configuration)
-      .createReview(createReview, options)
+      .createReview(createOrUpdateReview, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
    *
-   * @summary Delete review post
-   * @param {string} reviewId
+   * @summary Delete review
+   * @param {number} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
-  public deleteReviewPost(reviewId: string, options?: AxiosRequestConfig) {
+  public deleteReview(reviewId: number, options?: AxiosRequestConfig) {
     return ReviewApiFp(this.configuration)
-      .deleteReviewPost(reviewId, options)
+      .deleteReview(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
    *
    * @summary Get review
-   * @param {string} reviewId
+   * @param {number} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
-  public getReview(reviewId: string, options?: AxiosRequestConfig) {
+  public getReview(reviewId: number, options?: AxiosRequestConfig) {
     return ReviewApiFp(this.configuration)
       .getReview(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -1290,19 +1857,61 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Update review
-   * @param {string} reviewId
-   * @param {UpdateReview} [updateReview]
+   * @param {number} reviewId
+   * @param {CreateOrUpdateReview} [createOrUpdateReview]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
   public updateReview(
-    reviewId: string,
-    updateReview?: UpdateReview,
+    reviewId: number,
+    createOrUpdateReview?: CreateOrUpdateReview,
     options?: AxiosRequestConfig,
   ) {
     return ReviewApiFp(this.configuration)
-      .updateReview(reviewId, updateReview, options)
+      .updateReview(reviewId, createOrUpdateReview, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Update review accepted
+   * @param {number} reviewId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ReviewApi
+   */
+  public updateReviewAccepted(reviewId: number, options?: AxiosRequestConfig) {
+    return ReviewApiFp(this.configuration)
+      .updateReviewAccepted(reviewId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Update review feedback
+   * @param {number} reviewId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ReviewApi
+   */
+  public updateReviewFeedback(reviewId: number, options?: AxiosRequestConfig) {
+    return ReviewApiFp(this.configuration)
+      .updateReviewFeedback(reviewId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Update review thanks
+   * @param {number} reviewId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ReviewApi
+   */
+  public updateReviewThanks(reviewId: number, options?: AxiosRequestConfig) {
+    return ReviewApiFp(this.configuration)
+      .updateReviewThanks(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }
@@ -1372,6 +1981,98 @@ export const UserApiAxiosParamCreator = function (
       // verify required parameter 'userId' is not null or undefined
       assertParamExists('getUser', 'userId', userId)
       const localVarPath = `/api/v1/users/{user_id}`.replace(
+        `{${'user_id'}}`,
+        encodeURIComponent(String(userId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Get user accepted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserAcceptedReviews: async (
+      userId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('getUserAcceptedReviews', 'userId', userId)
+      const localVarPath = `/api/v1/users/{user_id}/accepted_reviews`.replace(
+        `{${'user_id'}}`,
+        encodeURIComponent(String(userId)),
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     *
+     * @summary Get user wanted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserWantedReviews: async (
+      userId: number,
+      options: AxiosRequestConfig = {},
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists('getUserWantedReviews', 'userId', userId)
+      const localVarPath = `/api/v1/users/{user_id}/wanted_reviews`.replace(
         `{${'user_id'}}`,
         encodeURIComponent(String(userId)),
       )
@@ -1512,6 +2213,50 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @summary Get user accepted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getUserAcceptedReviews(
+      userId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Review>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getUserAcceptedReviews(userId, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
+     * @summary Get user wanted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getUserWantedReviews(
+      userId: number,
+      options?: AxiosRequestConfig,
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Review>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getUserWantedReviews(userId, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration,
+      )
+    },
+    /**
+     *
      * @summary Login user
      * @param {LoginUser} [loginUser]
      * @param {*} [options] Override http request option.
@@ -1573,6 +2318,36 @@ export const UserApiFactory = function (
     },
     /**
      *
+     * @summary Get user accepted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserAcceptedReviews(
+      userId: number,
+      options?: any,
+    ): AxiosPromise<Array<Review>> {
+      return localVarFp
+        .getUserAcceptedReviews(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
+     * @summary Get user wanted reviews
+     * @param {number} userId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUserWantedReviews(
+      userId: number,
+      options?: any,
+    ): AxiosPromise<Array<Review>> {
+      return localVarFp
+        .getUserWantedReviews(userId, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     *
      * @summary Login user
      * @param {LoginUser} [loginUser]
      * @param {*} [options] Override http request option.
@@ -1617,6 +2392,34 @@ export class UserApi extends BaseAPI {
   public getUser(userId: number, options?: AxiosRequestConfig) {
     return UserApiFp(this.configuration)
       .getUser(userId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Get user accepted reviews
+   * @param {number} userId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUserAcceptedReviews(userId: number, options?: AxiosRequestConfig) {
+    return UserApiFp(this.configuration)
+      .getUserAcceptedReviews(userId, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @summary Get user wanted reviews
+   * @param {number} userId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public getUserWantedReviews(userId: number, options?: AxiosRequestConfig) {
+    return UserApiFp(this.configuration)
+      .getUserWantedReviews(userId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 

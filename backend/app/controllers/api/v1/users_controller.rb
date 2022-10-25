@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+require 'octokit'
+
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :authenticate_user, only: %i[current_user_id]
+      before_action :authenticate_user, only: %i[current_user_id current_user_repos current_user_pulls]
 
       def create
         FirebaseIdToken::Certificates.request
@@ -20,12 +22,35 @@ module Api
       end
 
       def show
-        @user = User.find(params[:id])
+        @user = User.find(params[:id]).attributes
+        @user.delete('github_access_token')
+        @user.delete('uid')
         render json: @user, status: :ok
       end
 
       def current_user_id
         render json: current_user.id, status: :ok
+      end
+
+      def current_user_repos
+        user_id = current_user.id
+        @user = User.find(user_id)
+        name = @user.name
+        github_access_token = @user.github_access_token
+        client = Octokit::Client.new(access_token: github_access_token)
+        repos = client.repos(name).map(&:name)
+        render json: repos, status: :ok
+      end
+
+      def current_user_pulls
+        user_id = current_user.id
+        @user = User.find(user_id)
+        name = @user.name
+        repo = params[:repo]
+        github_access_token = @user.github_access_token
+        client = Octokit::Client.new(access_token: github_access_token)
+        pulls = client.pulls("#{name}/#{repo}").map { |pull| { title: pull.title, url: pull.html_url } }
+        render json: pulls, status: :ok
       end
 
       private

@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
     t.bigint "reviewee_id"
     t.bigint "reviewer_id"
     t.string "title", comment: "タイトル"
+    t.string "repository", comment: "リポジトリ"
     t.string "pull_request_title", comment: "プルリクエストのタイトル"
     t.string "pull_request_url", comment: "プルリクエストのURL"
     t.text "pull_request_description", comment: "プルリクエストの説明"

@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
+import type { Pull } from '@/openapi-generator/api'
 import { useState, useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 import { auth } from '@/firebase'
-import { userApi } from '@/openapi-generator/user'
+import { gitHubApi } from '@/openapi-generator/github'
 import { reviewApi } from '@/openapi-generator/review'
 
 const New: NextPage = () => {
-  type Pull = {
-    title: string
-    url: string
-  }
-
   type FormData = {
     title: string
-    pull_request: string
+    repository: string
+    pull_request_title: string
     languages: string[]
     pull_request_description: string
     review_point: string
@@ -57,13 +53,10 @@ const New: NextPage = () => {
   ]
 
   const [user, loading] = useAuthState(auth)
-  const [userId, setUserId] = useState<number | null>(null)
-  const [name, setName] = useState<string | null>(null)
-  const [githubAccessToken, setGithubAccessToken] = useState<string | null>(
-    null,
-  )
-  const [publicRepos, setPublicRepos] = useState<string[] | []>([])
+  const [repos, setRepos] = useState<string[] | []>([])
+  const [repo, setRepo] = useState<string | null>(null)
   const [pulls, setPulls] = useState<Pull[] | []>([])
+
   const {
     register,
     handleSubmit,
@@ -71,112 +64,38 @@ const New: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>()
 
-  const getUserId = async (): Promise<void> => {
-    if (user !== null) {
-      const response = await userApi.getCurrentUserId()
-      setUserId(response.data)
-    }
-  }
-
-  const getNameAndGithubAccessToken = async (): Promise<void> => {
-    if (userId !== null) {
-      const response = await userApi.getUser(userId)
-      const name = response.data.name
-      const githubAccessToken = response.data.github_access_token
-      if (name !== undefined && githubAccessToken !== undefined) {
-        setName(name)
-        setGithubAccessToken(githubAccessToken)
-      }
-    }
-  }
-
-  const getPublicRepos = async (): Promise<void> => {
-    if (name !== null && githubAccessToken !== null) {
-      const response = await axios.get(
-        `https://api.github.com/users/${name}/repos`,
-        {
-          headers: {
-            Authorization: `token ${githubAccessToken}`,
-          },
-        },
-      )
-      const publicRepos = response.data.map(
-        (repo: { name: string }) => repo.name,
-      )
-      setPublicRepos(publicRepos)
-    }
-  }
-
-  const getPulls = async (): Promise<void> => {
-    if (
-      name !== null &&
-      githubAccessToken !== null &&
-      publicRepos.length !== 0
-    ) {
-      const nestedPulls = await Promise.all(
-        publicRepos.map(async (repo) => {
-          const response = await axios.get(
-            `https://api.github.com/repos/${name}/${repo}/pulls`,
-            {
-              headers: {
-                Authorization: `token ${githubAccessToken}`,
-              },
-            },
-          )
-          return response.data
-        }),
-      )
-      const pulls = nestedPulls
-        .flat()
-        .map(
-          (pull: {
-            title: string
-            base: { repo: { name: string } }
-            html_url: string
-          }) => ({
-            title: `${pull.base.repo.name}/${pull.title}`,
-            url: pull.html_url,
-          }),
-        )
-      setPulls(pulls)
-    }
+  const getRepos = async (): Promise<void> => {
+    const response = await gitHubApi.getCurrentUserRepos()
+    setRepos(response.data)
   }
 
   useEffect(() => {
     if (user !== null) {
-      getUserId().catch((error) => console.error(error))
+      getRepos().catch((error) => {
+        console.log(error)
+      })
     }
   }, [user])
 
-  useEffect(() => {
-    if (userId !== null) {
-      getNameAndGithubAccessToken().catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [userId])
+  const getPulls = async (repo: string): Promise<void> => {
+    const response = await gitHubApi.getCurrentUserPulls(repo)
+    setPulls(response.data)
+  }
 
   useEffect(() => {
-    if (name !== null) {
-      getPublicRepos().catch((error) => {
-        console.error(error)
+    if (repo !== null) {
+      getPulls(repo).catch((error) => {
+        console.log(error)
       })
     }
-  }, [name])
-
-  useEffect(() => {
-    if (publicRepos.length !== 0) {
-      getPulls().catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [publicRepos])
+  }, [repo])
 
   const onSubmit = handleSubmit(async (data) => {
-    const pull = pulls.find((pull) => pull.title === data.pull_request)
-    if (pull !== undefined) {
+    const pull = pulls.find((pull) => pull.title === data.pull_request_title)
+    if (pull?.title !== undefined && pull?.url !== undefined) {
       await reviewApi.createReview({
         title: data.title,
+        repository: data.repository,
         pull_request_title: pull.title,
         pull_request_url: pull.url,
         languages: data.languages,
@@ -201,8 +120,22 @@ const New: NextPage = () => {
         />
         {errors.title !== undefined && <p>{errors.title.message}</p>}
         <select
-          placeholder="ruby-practices/ボウリングのスコア計算オブジェクト指向版"
-          {...register('pull_request', {
+          placeholder="ruby-practices"
+          {...register('repository', {
+            required: 'リポジトリを選択してください',
+          })}
+          onChange={(e) => setRepo(e.target.value)}
+        >
+          {repos.map((repo) => (
+            <option key={repo} value={repo}>
+              {repo}
+            </option>
+          ))}
+        </select>
+        {errors.repository !== undefined && <p>{errors.repository.message}</p>}
+        <select
+          placeholder="ボウリングのスコア計算オブジェクト指向版"
+          {...register('pull_request_title', {
             required: 'プルリクエストを選択してください',
           })}
         >
@@ -212,8 +145,8 @@ const New: NextPage = () => {
             </option>
           ))}
         </select>
-        {errors.pull_request !== undefined && (
-          <p>{errors.pull_request.message}</p>
+        {errors.pull_request_title !== undefined && (
+          <p>{errors.pull_request_title.message}</p>
         )}
         <select
           placeholder="Ruby"
