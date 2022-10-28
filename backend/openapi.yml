@@ -327,19 +327,11 @@ paths:
         in: path
         required: true
     post:
-      summary: Update review accepted
-      operationId: update-review-accepted
+      summary: Accept review
+      operationId: accept-review
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/update-review-accepted'
-              examples:
-                example-1:
-                  value:
-                    accepted_at: '2022-10-22 17:00:00.000000'
         '422':
           description: Unprocessable Entity (WebDAV)
       tags:
@@ -354,23 +346,24 @@ paths:
         in: path
         required: true
     post:
-      summary: Update review feedback
-      operationId: update-review-feedback
+      summary: Create feedback
+      operationId: create-feedback
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/update-review-feedback'
-              examples:
-                example-1:
-                  value:
-                    feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
         '422':
           description: Unprocessable Entity (WebDAV)
       tags:
         - Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-feedback'
+            examples:
+              example-1:
+                value:
+                  feedback: 今回はありがとうございました。レビューした側もとても勉強になりました。また機会がありましたら、よろしくお願いします。
   '/api/v1/reviews/{review_id}/thanks':
     parameters:
       - schema:
@@ -379,23 +372,24 @@ paths:
         in: path
         required: true
     post:
-      summary: Update review thanks
-      operationId: update-review-thanks
+      summary: Create thanks
+      operationId: create-thanks
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/update-review-thanks'
-              examples:
-                example-1:
-                  value:
-                    thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
         '422':
           description: Unprocessable Entity (WebDAV)
       tags:
         - Review
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-thanks'
+            examples:
+              example-1:
+                value:
+                  thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
   /api/v1/notifications:
     get:
       summary: Get notifications
@@ -511,23 +505,6 @@ paths:
           in: query
           name: repo
           required: true
-  '/api/v1/reviews/{review_id}/requested_reviewers':
-    parameters:
-      - schema:
-          type: number
-        name: review_id
-        in: path
-        required: true
-    post:
-      summary: Request reviewer
-      operationId: request-reviewer
-      responses:
-        '201':
-          description: Created
-        '422':
-          description: Unprocessable Entity (WebDAV)
-      tags:
-        - GitHub
   /api/v1/current_user/repos:
     get:
       summary: Get current user repos
@@ -745,17 +722,7 @@ components:
       additionalProperties: false
       required:
         - checked
-    update-review-accepted:
-      type: object
-      x-examples:
-        example-1:
-          accepted_at: '2022-10-22 17:00:00.000000'
-      properties:
-        accepted_at:
-          type: string
-      required:
-        - accepted_at
-    update-review-feedback:
+    create-feedback:
       type: object
       x-examples:
         example-1:
@@ -765,7 +732,8 @@ components:
           type: string
       required:
         - feedback
-    update-review-thanks:
+      title: ''
+    create-thanks:
       type: object
       x-examples:
         example-1:

@@ -18,9 +18,9 @@ const Home: NextPage = () => {
     const provider = new GithubAuthProvider()
     provider.addScope('repo')
     const result = await signInWithPopup(auth, provider)
-    const user = result.user
+    const user: any = result.user
     const uid = user.uid
-    const name = user.displayName
+    const name = user.reloadUserInfo.screenName
     const avatar = user.photoURL
     const githubAccessToken =
       GithubAuthProvider.credentialFromResult(result)?.accessToken
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
     setAcceptedReviews(acceptedReviews)
   }
 
-  const goToPostsDetail = (id: number): void => {
+  const goToPostsDetails = (id: number): void => {
     router.push(`/posts/${id}`).catch((error) => {
       console.error(error)
     })
@@ -91,7 +91,7 @@ const Home: NextPage = () => {
                 key={review.id}
                 onClick={() => {
                   if (review.id !== undefined) {
-                    goToPostsDetail(review.id)
+                    goToPostsDetails(review.id)
                   }
                 }}
               >
@@ -106,7 +106,7 @@ const Home: NextPage = () => {
                 key={review.id}
                 onClick={() => {
                   if (review.id !== undefined) {
-                    goToPostsDetail(review.id)
+                    goToPostsDetails(review.id)
                   }
                 }}
               >
