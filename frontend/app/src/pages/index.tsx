@@ -13,6 +13,7 @@ const Home: NextPage = () => {
   const router = useRouter()
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
+  const [userId, setUserId] = useState<number | null>(null)
 
   const signInWithGithub = async (): Promise<void> => {
     const provider = new GithubAuthProvider()
@@ -65,9 +66,24 @@ const Home: NextPage = () => {
     })
   }
 
+  const getUserId = async (): Promise<void> => {
+    const response = await userApi.getCurrentUserId()
+    const userId = response.data
+    setUserId(userId)
+  }
+
+  const goToUsersDetails = (id: number): void => {
+    router.push(`/users/${id}`).catch((error) => {
+      console.error(error)
+    })
+  }
+
   useEffect(() => {
     if (user !== null) {
       getReviews().catch((error) => {
+        console.error(error)
+      })
+      getUserId().catch((error) => {
         console.error(error)
       })
     }
@@ -83,6 +99,9 @@ const Home: NextPage = () => {
         <div>
           <div>ログイン後/一覧画面</div>
           <button onClick={goToPostsNew}>レビュー募集</button>
+          <button onClick={() => goToUsersDetails(Number(userId))}>
+            マイページ
+          </button>
           <button onClick={signOutWithGithub}>ログアウト</button>
           <div>レビュー募集中</div>
           {wantedReviews.map((review) => {

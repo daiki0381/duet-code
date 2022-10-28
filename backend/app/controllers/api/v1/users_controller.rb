@@ -53,6 +53,18 @@ module Api
         render json: pulls, status: :ok
       end
 
+      def user_wanted_reviews
+        @user = User.find(params[:id])
+        @wanted_reviews = Review.where(reviewee_id: @user.id)
+        render json: @wanted_reviews, status: :ok
+      end
+
+      def user_accepted_reviews
+        @user = User.find(params[:id])
+        @accepted_reviews = Review.where(reviewer_id: @user.id)
+        render json: @accepted_reviews, status: :ok
+      end
+
       private
 
       def sign_up_params
