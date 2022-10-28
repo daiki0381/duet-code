@@ -77,7 +77,25 @@ module Api
         end
       end
 
-      def update; end
+      def update
+        @review = Review.find(params[:id])
+        review_params = {
+          title: params[:title],
+          repository: params[:repository],
+          pull_request_title: params[:pull_request_title],
+          pull_request_url: params[:pull_request_url],
+          pull_request_description: params[:pull_request_description],
+          review_point: params[:review_point]
+        }
+        if @review.update(review_params)
+          params[:languages].each do |language|
+            @review.languages.update(name: language)
+          end
+          render status: :created
+        else
+          render status: :unprocessable_entity
+        end
+      end
 
       def accept_review
         @review = Review.find(params[:id])

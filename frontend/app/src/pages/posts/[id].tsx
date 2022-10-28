@@ -41,6 +41,12 @@ const Details: NextPage = () => {
     })
   }
 
+  const goToPostsEdit = (id: number): void => {
+    router.push(`/posts/${id}/edit`).catch((error) => {
+      console.error(error)
+    })
+  }
+
   useEffect(() => {
     if (user !== null) {
       getUserId().catch((error) => {
@@ -84,7 +90,9 @@ const Details: NextPage = () => {
           return <p>完了!</p>
         }
       })()}
-      {review?.reviewee_id === userId && <button>編集する</button>}
+      {review?.reviewee_id === userId && (
+        <button onClick={() => goToPostsEdit(Number(id))}>編集する</button>
+      )}
       {review?.reviewee_id === userId && review?.accepted_at === null && (
         <button onClick={() => deleteReview(Number(id))}>削除する</button>
       )}
