@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
 import { useForm } from 'react-hook-form'
-import { reviewApi } from '@/openapi-generator/review'
-import { notificationApi } from '@/openapi-generator/notification'
+import { reviewApi, notificationApi } from '@/openapi-generator/custom-instance'
 
 type Props = {
   reviewId: number

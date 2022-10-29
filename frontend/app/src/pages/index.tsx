@@ -7,9 +7,11 @@ import { useRouter } from 'next/router'
 import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
-import { userApi } from '@/openapi-generator/user'
-import { reviewApi } from '@/openapi-generator/review'
-import { notificationApi } from '@/openapi-generator/notification'
+import {
+  userApi,
+  reviewApi,
+  notificationApi,
+} from '@/openapi-generator/custom-instance'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)

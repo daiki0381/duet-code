@@ -1,5 +1,10 @@
 import axios from 'axios'
-import { NotificationApi } from '@/openapi-generator/api'
+import {
+  UserApi,
+  ReviewApi,
+  NotificationApi,
+  GitHubApi,
+} from '@/openapi-generator/api'
 import { Configuration } from '@/openapi-generator/configuration'
 import { auth } from '@/firebase'
 
@@ -21,4 +26,9 @@ axiosInstance.interceptors.request.use(async (request) => {
   return request
 })
 
-export const notificationApi = new NotificationApi(config, '', axiosInstance)
+const userApi = new UserApi(config, '', axiosInstance)
+const reviewApi = new ReviewApi(config, '', axiosInstance)
+const notificationApi = new NotificationApi(config, '', axiosInstance)
+const gitHubApi = new GitHubApi(config, '', axiosInstance)
+
+export { userApi, reviewApi, notificationApi, gitHubApi }

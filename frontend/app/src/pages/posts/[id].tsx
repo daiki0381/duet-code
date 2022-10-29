@@ -4,9 +4,11 @@ import type { NextPage } from 'next'
 import type { Review } from '@/openapi-generator/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { reviewApi } from '@/openapi-generator/review'
-import { userApi } from '@/openapi-generator/user'
-import { notificationApi } from '@/openapi-generator/notification'
+import {
+  userApi,
+  reviewApi,
+  notificationApi,
+} from '@/openapi-generator/custom-instance'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import Feedback from '@/components/react-hook-form/Feedback'

@@ -6,8 +6,7 @@ import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
 import { auth } from '@/firebase'
-import { gitHubApi } from '@/openapi-generator/github'
-import { reviewApi } from '@/openapi-generator/review'
+import { reviewApi, gitHubApi } from '@/openapi-generator/custom-instance'
 
 const New: NextPage = () => {
   type FormData = {

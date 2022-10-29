@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import type { Review } from '@/openapi-generator/api'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { userApi } from '@/openapi-generator/user'
+import { userApi } from '@/openapi-generator/custom-instance'
 
 const Details: NextPage = () => {
   const router = useRouter()
