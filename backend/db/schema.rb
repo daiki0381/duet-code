@@ -10,11 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
   create_table "languages", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", comment: "言語名"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "review_id"
+    t.bigint "sender_id"
+    t.bigint "receiver_id"
+    t.string "action", comment: "通知の種類"
+    t.boolean "checked", default: false, comment: "通知を確認したかどうか"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_notifications_on_receiver_id"
+    t.index ["review_id"], name: "index_notifications_on_review_id"
+    t.index ["sender_id"], name: "index_notifications_on_sender_id"
   end
 
   create_table "review_languages", charset: "utf8mb4", force: :cascade do |t|
@@ -53,6 +66,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_22_150138) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "notifications", "reviews"
+  add_foreign_key "notifications", "users", column: "receiver_id"
+  add_foreign_key "notifications", "users", column: "sender_id"
   add_foreign_key "review_languages", "languages"
   add_foreign_key "review_languages", "reviews"
   add_foreign_key "reviews", "users", column: "reviewee_id"

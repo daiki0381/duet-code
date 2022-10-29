@@ -390,10 +390,10 @@ paths:
               example-1:
                 value:
                   thanks: 今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。
-  /api/v1/notifications:
+  /api/v1/current_user/notifications:
     get:
-      summary: Get notifications
-      operationId: get-notifications
+      summary: Get current user notifications
+      operationId: get-current-user-notifications
       responses:
         '200':
           description: OK
@@ -416,15 +416,18 @@ paths:
                   value:
                     - id: 1
                       review_id: 1
-                      reviewee_id: 1
-                      reviewer_id: 2
+                      sender_id: 1
+                      receiver_id: 2
                       action: feedback
                       checked: true
                       created_at: '2022-10-10T10::10'
                       updated_at: '2022-10-10T10::10'
       tags:
         - Notification
-  '/api/v1/reviews/{review_id}/notification':
+      security:
+        - JWT: []
+    parameters: []
+  '/api/v1/reviews/{review_id}/notifications/accepted':
     parameters:
       - schema:
           type: number
@@ -432,20 +435,45 @@ paths:
         in: path
         required: true
     post:
-      summary: Create notification
-      operationId: create-notification
+      summary: Create accepted notification
+      operationId: create-accepted-notification
       responses:
         '201':
           description: Created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-              examples:
-                example-1:
-                  value:
-                    action: feedback
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      tags:
+        - Notification
+  '/api/v1/reviews/{review_id}/notifications/feedback':
+    parameters:
+      - schema:
+          type: number
+        name: review_id
+        in: path
+        required: true
+    post:
+      summary: Create feedback notification
+      operationId: create-feedback-notification
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      tags:
+        - Notification
+  '/api/v1/reviews/{review_id}/notifications/thanks':
+    parameters:
+      - schema:
+          type: number
+        name: review_id
+        in: path
+        required: true
+    post:
+      summary: Create thanks notification
+      operationId: create-thanks-notification
+      responses:
+        '201':
+          description: Created
         '422':
           description: Unprocessable Entity (WebDAV)
       tags:
@@ -467,15 +495,6 @@ paths:
           description: Unprocessable Entity (WebDAV)
       tags:
         - Notification
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/update-notification'
-            examples:
-              example-1:
-                value:
-                  checked: true
   /api/v1/current_user/pulls:
     parameters: []
     get:
@@ -679,9 +698,9 @@ components:
           type: integer
         review_id:
           type: integer
-        reviewee_id:
+        sender_id:
           type: integer
-        reviewer_id:
+        receiver_id:
           type: integer
         action:
           type: string
@@ -695,33 +714,12 @@ components:
         example-1:
           id: 1
           review_id: 1
-          reviewee_id: 1
-          reviewer_id: 2
+          sender_id: 1
+          receiver_id: 2
           action: feedback
           checked: true
           created_at: '2022-10-10T10::10'
           updated_at: '2022-10-10T10::10'
-    create-notification:
-      type: object
-      x-examples:
-        example-1:
-          action: feedback
-      properties:
-        action:
-          type: string
-      required:
-        - action
-    update-notification:
-      type: object
-      x-examples:
-        example-1:
-          checked: true
-      properties:
-        checked:
-          type: boolean
-      additionalProperties: false
-      required:
-        - checked
     create-feedback:
       type: object
       x-examples:

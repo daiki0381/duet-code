@@ -5,4 +5,5 @@ class Review < ApplicationRecord
   belongs_to :reviewer, class_name: 'User', optional: true
   has_many :review_languages, dependent: :destroy
   has_many :languages, through: :review_languages
+  has_many :notifications, dependent: :destroy
 end

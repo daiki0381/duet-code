@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { reviewApi } from '@/openapi-generator/review'
 import { userApi } from '@/openapi-generator/user'
+import { notificationApi } from '@/openapi-generator/notification'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import Feedback from '@/components/react-hook-form/Feedback'
@@ -30,8 +31,15 @@ const Details: NextPage = () => {
     setReview(review)
   }
 
+  const createAcceptedNotification = async (
+    reviewId: number,
+  ): Promise<void> => {
+    await notificationApi.createAcceptedNotification(reviewId)
+  }
+
   const acceptReview = async (reviewId: number): Promise<void> => {
     await reviewApi.acceptReview(reviewId)
+    createAcceptedNotification(reviewId).catch((error) => console.error(error))
   }
 
   const deleteReview = async (reviewId: number): Promise<void> => {

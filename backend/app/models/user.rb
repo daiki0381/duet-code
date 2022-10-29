@@ -12,4 +12,15 @@ class User < ApplicationRecord
            foreign_key: 'reviewer_id',
            inverse_of: 'reviewer',
            dependent: :destroy
+  has_many :notifications_about_sender,
+           class_name: 'Notification',
+           foreign_key: 'sender_id',
+           inverse_of: 'sender',
+           dependent: :destroy
+
+  has_many :notifications_about_receiver,
+           class_name: 'Notification',
+           foreign_key: 'receiver_id',
+           inverse_of: 'receiver',
+           dependent: :destroy
 end

@@ -2,6 +2,7 @@
 import type { NextPage } from 'next'
 import { useForm } from 'react-hook-form'
 import { reviewApi } from '@/openapi-generator/review'
+import { notificationApi } from '@/openapi-generator/notification'
 
 type Props = {
   reviewId: number
@@ -18,8 +19,13 @@ const Thanks: NextPage<Props> = ({ reviewId }) => {
     formState: { errors },
   } = useForm<FormData>()
 
+  const createThanksNotification = async (reviewId: number): Promise<void> => {
+    await notificationApi.createThanksNotification(reviewId)
+  }
+
   const onSubmit = handleSubmit(async (data) => {
     await reviewApi.createThanks(reviewId, data)
+    createThanksNotification(reviewId).catch((error) => console.error(error))
     reset()
   })
 
