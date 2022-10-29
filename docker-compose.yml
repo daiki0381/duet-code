@@ -55,6 +55,14 @@ services:
     command: mock -h 0.0.0.0 /openapi.yml
     volumes:
       - ./backend/openapi.yml:/openapi.yml
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/openapi.yml:/openapi.yml
+    environment:
+      SWAGGER_JSON: /openapi.yml
 volumes:
   mysql-db:
     driver: local

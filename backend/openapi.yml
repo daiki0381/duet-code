@@ -39,6 +39,7 @@ paths:
       parameters: []
       security:
         - JWT: []
+      description: ''
   '/api/v1/users/{user_id}':
     parameters:
       - schema:
@@ -157,7 +158,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/current-user-id'
+                type: number
+                x-examples:
+                  example-1:
+                    id: 1
               examples:
                 example-1:
                   value: 1
@@ -571,11 +575,6 @@ components:
           avatar: 'https://avatars.githubusercontent.com'
           created_at: '2022-10-10T10::10'
           updated_at: '2022-10-10T10::10'
-    current-user-id:
-      type: number
-      x-examples:
-        example-1:
-          fafas: 1
     login-user:
       type: object
       x-examples:
