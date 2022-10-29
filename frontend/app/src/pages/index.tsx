@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
 import type { Review, Notification } from '@/openapi-generator/api'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
@@ -16,6 +15,8 @@ import {
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
   const [userId, setUserId] = useState<number | null>(null)
@@ -53,39 +54,10 @@ const Home: NextPage = () => {
     })
   }
 
-  const getReviews = async (): Promise<void> => {
-    const response = await reviewApi.getReviews()
-    const reviews = response.data
-    const wantedReviews = reviews.filter((review) => {
-      return review.accepted_at === null
-    })
-    const acceptedReviews = reviews.filter((review) => {
-      return review.accepted_at !== null
-    })
-    setWantedReviews(wantedReviews)
-    setAcceptedReviews(acceptedReviews)
-  }
-
-  const getNotifications = async (): Promise<void> => {
-    const response = await notificationApi.getCurrentUserNotifications()
-    const notifications = response.data
-    setNotifications(notifications)
-  }
-
-  const updateNotification = async (notificationId: number): Promise<void> => {
-    await notificationApi.updateNotification(notificationId)
-  }
-
   const goToPostsDetails = (id: number): void => {
     router.push(`/posts/${id}`).catch((error) => {
       console.error(error)
     })
-  }
-
-  const getUserId = async (): Promise<void> => {
-    const response = await userApi.getCurrentUserId()
-    const userId = response.data
-    setUserId(userId)
   }
 
   const goToUsersDetails = (id: number): void => {
@@ -94,19 +66,70 @@ const Home: NextPage = () => {
     })
   }
 
-  useEffect(() => {
-    if (user !== null) {
-      getReviews().catch((error) => {
-        console.error(error)
-      })
-      getUserId().catch((error) => {
-        console.error(error)
-      })
-      getNotifications().catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [user])
+  useQuery(
+    ['reviews'],
+    async (): Promise<Review[]> => {
+      const response = await reviewApi.getReviews()
+      const reviews = response.data
+      return reviews
+    },
+    {
+      onSuccess: (data) => {
+        const wantedReviews = data.filter((review) => {
+          return review.accepted_at === null
+        })
+        const acceptedReviews = data.filter((review) => {
+          return review.accepted_at !== null
+        })
+        setWantedReviews(wantedReviews)
+        setAcceptedReviews(acceptedReviews)
+      },
+      enabled: user !== null,
+    },
+  )
+
+  useQuery(
+    ['notifications'],
+    async (): Promise<Notification[]> => {
+      const response = await notificationApi.getCurrentUserNotifications()
+      const notifications = response.data
+      return notifications
+    },
+    {
+      onSuccess: (data) => {
+        setNotifications(data)
+      },
+      enabled: user !== null,
+    },
+  )
+
+  useQuery(
+    ['userId'],
+    async (): Promise<number> => {
+      const response = await userApi.getCurrentUserId()
+      const userId = response.data
+      return userId
+    },
+    {
+      onSuccess: (data) => {
+        setUserId(data)
+      },
+      enabled: user !== null,
+    },
+  )
+
+  const { mutate } = useMutation(
+    async (notificationId: number): Promise<void> => {
+      await notificationApi.updateNotification(notificationId)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['notifications']).catch((error) => {
+          console.error(error)
+        })
+      },
+    },
+  )
 
   if (loading) {
     return <div>Loading...</div>
@@ -128,7 +151,7 @@ const Home: NextPage = () => {
               return (
                 <li
                   key={notification.id}
-                  onClick={() => updateNotification(Number(notification.id))}
+                  onClick={() => mutate(Number(notification.id))}
                 >
                   {notification.action}
                 </li>

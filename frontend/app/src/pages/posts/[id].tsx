@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
 import type { Review } from '@/openapi-generator/api'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import {
   userApi,
   reviewApi,
@@ -21,57 +20,69 @@ const Details: NextPage = () => {
   const [userId, setUserId] = useState<number | null>(null)
   const [review, setReview] = useState<Review | null>(null)
 
-  const getUserId = async (): Promise<void> => {
-    const response = await userApi.getCurrentUserId()
-    const userId = response.data
-    setUserId(userId)
-  }
-
-  const getReview = async (reviewId: number): Promise<void> => {
-    const response = await reviewApi.getReview(reviewId)
-    const review = response.data
-    setReview(review)
-  }
-
-  const createAcceptedNotification = async (
-    reviewId: number,
-  ): Promise<void> => {
-    await notificationApi.createAcceptedNotification(reviewId)
-  }
-
-  const acceptReview = async (reviewId: number): Promise<void> => {
-    await reviewApi.acceptReview(reviewId)
-    createAcceptedNotification(reviewId).catch((error) => console.error(error))
-  }
-
-  const deleteReview = async (reviewId: number): Promise<void> => {
-    await reviewApi.deleteReview(reviewId)
-    router.push('/').catch((error) => {
-      console.error(error)
-    })
-  }
-
   const goToPostsEdit = (id: number): void => {
     router.push(`/posts/${id}/edit`).catch((error) => {
       console.error(error)
     })
   }
 
-  useEffect(() => {
-    if (user !== null) {
-      getUserId().catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [user])
+  useQuery(
+    ['userId'],
+    async (): Promise<number> => {
+      const response = await userApi.getCurrentUserId()
+      const userId = response.data
+      return userId
+    },
+    {
+      onSuccess: (data) => {
+        setUserId(data)
+      },
+      enabled: user !== null,
+    },
+  )
 
-  useEffect(() => {
-    if (id !== undefined) {
-      getReview(Number(id)).catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [id])
+  useQuery(
+    ['review'],
+    async (): Promise<Review> => {
+      const reviewId = Number(id)
+      const response = await reviewApi.getReview(reviewId)
+      const review = response.data
+      return review
+    },
+    {
+      onSuccess: (data) => {
+        setReview(data)
+      },
+      enabled: id !== undefined,
+    },
+  )
+
+  const { mutate: createAcceptedNotification } = useMutation(
+    async (): Promise<void> => {
+      const reviewId = Number(id)
+      await notificationApi.createAcceptedNotification(reviewId)
+    },
+  )
+
+  const { mutate: acceptReview } = useMutation(async (): Promise<void> => {
+    const reviewId = Number(id)
+    await reviewApi.acceptReview(reviewId)
+    createAcceptedNotification()
+  })
+
+  const { mutate: deleteReview } = useMutation(
+    async (): Promise<void> => {
+      const reviewId = Number(id)
+      await reviewApi.deleteReview(reviewId)
+    },
+    {
+      onSuccess: () => {
+        router.push('/').catch((error) => {
+          console.error(error)
+        })
+      },
+    },
+  )
 
   if (loading) {
     return <div>Loading...</div>
@@ -82,9 +93,7 @@ const Details: NextPage = () => {
       <p>{review?.title}</p>
       {(() => {
         if (review?.accepted_at === null && review.reviewee_id !== userId) {
-          return (
-            <button onClick={() => acceptReview(Number(id))}>承諾する</button>
-          )
+          return <button onClick={() => acceptReview()}>承諾する</button>
         } else if (
           review?.reviewer_id === userId &&
           review?.feedback === null
@@ -104,7 +113,7 @@ const Details: NextPage = () => {
         <button onClick={() => goToPostsEdit(Number(id))}>編集する</button>
       )}
       {review?.reviewee_id === userId && review?.accepted_at === null && (
-        <button onClick={() => deleteReview(Number(id))}>削除する</button>
+        <button onClick={() => deleteReview()}>削除する</button>
       )}
     </div>
   )

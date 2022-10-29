@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
-import type { Pull } from '@/openapi-generator/api'
-import { useState, useEffect } from 'react'
+import type { Pull, CreateOrUpdateReview } from '@/openapi-generator/api'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
 import { auth } from '@/firebase'
-import {
-  reviewApi,
-  gitHubApi,
-} from '@/openapi-generator/custom-instance'
+import { reviewApi, gitHubApi } from '@/openapi-generator/custom-instance'
 
 const New: NextPage = () => {
   type FormData = {
@@ -59,6 +58,8 @@ const New: NextPage = () => {
   const [repo, setRepo] = useState<string | null>(null)
   const [pulls, setPulls] = useState<Pull[] | []>([])
 
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -66,36 +67,52 @@ const New: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>()
 
-  const getRepos = async (): Promise<void> => {
-    const response = await gitHubApi.getCurrentUserRepos()
-    setRepos(response.data)
-  }
+  useQuery(
+    ['repos'],
+    async (): Promise<string[]> => {
+      const { data } = await gitHubApi.getCurrentUserRepos()
+      return data
+    },
+    {
+      onSuccess: (data) => {
+        setRepos(data)
+      },
+      enabled: user !== null,
+    },
+  )
 
-  useEffect(() => {
-    if (user !== null) {
-      getRepos().catch((error) => {
-        console.log(error)
-      })
-    }
-  }, [user])
+  useQuery(
+    ['pulls'],
+    async (): Promise<Pull[]> => {
+      if (repo === null) return []
+      const { data } = await gitHubApi.getCurrentUserPulls(repo)
+      return data
+    },
+    {
+      onSuccess: (data) => {
+        setPulls(data)
+      },
+      enabled: repo !== null,
+    },
+  )
 
-  const getPulls = async (repo: string): Promise<void> => {
-    const response = await gitHubApi.getCurrentUserPulls(repo)
-    setPulls(response.data)
-  }
-
-  useEffect(() => {
-    if (repo !== null) {
-      getPulls(repo).catch((error) => {
-        console.log(error)
-      })
-    }
-  }, [repo])
+  const { mutate } = useMutation(
+    async (review: CreateOrUpdateReview) => {
+      await reviewApi.createReview(review)
+    },
+    {
+      onSuccess: () => {
+        router.replace(`/`).catch((error) => {
+          console.error(error)
+        })
+      },
+    },
+  )
 
   const onSubmit = handleSubmit(async (data) => {
     const pull = pulls.find((pull) => pull.title === data.pull_request_title)
     if (pull?.title !== undefined && pull?.url !== undefined) {
-      await reviewApi.createReview({
+      mutate({
         title: data.title,
         repository: data.repository,
         pull_request_title: pull.title,

@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
-import type { Pull, Review } from '@/openapi-generator/api'
-import { useState, useEffect } from 'react'
+import type {
+  Pull,
+  Review,
+  CreateOrUpdateReview,
+} from '@/openapi-generator/api'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
 import { auth } from '@/firebase'
@@ -60,6 +65,7 @@ const New: NextPage = () => {
 
   const router = useRouter()
   const { id } = router.query
+  const queryClient = useQueryClient()
 
   const {
     register,
@@ -69,82 +75,94 @@ const New: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>()
 
-  const getReview = async (reviewId: number): Promise<void> => {
-    const response = await reviewApi.getReview(reviewId)
-    const review = response.data
-    setReview(review)
-  }
+  useQuery(
+    ['review'],
+    async (): Promise<Review> => {
+      const reviewId = Number(id)
+      const response = await reviewApi.getReview(reviewId)
+      const review = response.data
+      return review
+    },
+    {
+      onSuccess: (data) => {
+        setReview(data)
+        const title = data.title
+        const languages = data.languages
+        const pullRequestDescription = data.pull_request_description
+        const reviewPoint = data.review_point
+        if (
+          title !== undefined &&
+          languages !== undefined &&
+          pullRequestDescription !== undefined &&
+          reviewPoint !== undefined
+        ) {
+          setValue('title', title)
+          setValue('languages', languages)
+          setValue('pull_request_description', pullRequestDescription)
+          setValue('review_point', reviewPoint)
+        }
+      },
+      enabled: id !== undefined,
+    },
+  )
 
-  useEffect(() => {
-    if (id !== undefined) {
-      getReview(Number(id)).catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [id])
+  useQuery(
+    ['repos'],
+    async (): Promise<string[]> => {
+      const { data } = await gitHubApi.getCurrentUserRepos()
+      return data
+    },
+    {
+      onSuccess: (data) => {
+        setRepos(data)
+        const repository = review?.repository
+        const pullRequestTitle = review?.pull_request_title
+        if (repository !== undefined && pullRequestTitle !== undefined) {
+          setRepo(repository)
+          setValue('repository', repository)
+          setValue('pull_request_title', pullRequestTitle)
+        }
+      },
+      enabled: user !== null,
+    },
+  )
 
-  useEffect(() => {
-    if (review !== null) {
-      const title = review.title
-      const languages = review.languages
-      const pullRequestDescription = review.pull_request_description
-      const reviewPoint = review.review_point
-      if (
-        title !== undefined &&
-        languages !== undefined &&
-        pullRequestDescription !== undefined &&
-        reviewPoint !== undefined
-      ) {
-        setValue('title', title)
-        setValue('languages', languages)
-        setValue('pull_request_description', pullRequestDescription)
-        setValue('review_point', reviewPoint)
-      }
-    }
-  }, [review])
+  useQuery(
+    ['pulls'],
+    async (): Promise<Pull[]> => {
+      if (repo === null) return []
+      const { data } = await gitHubApi.getCurrentUserPulls(repo)
+      return data
+    },
+    {
+      onSuccess: (data) => {
+        setPulls(data)
+      },
+      enabled: repo !== null,
+    },
+  )
 
-  const getRepos = async (): Promise<void> => {
-    const response = await gitHubApi.getCurrentUserRepos()
-    setRepos(response.data)
-  }
-
-  useEffect(() => {
-    if (user !== null) {
-      getRepos().catch((error) => {
-        console.log(error)
-      })
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (repos !== null) {
-      const repository = review?.repository
-      const pullRequestTitle = review?.pull_request_title
-      if (repository !== undefined && pullRequestTitle !== undefined) {
-        setRepo(repository)
-        setValue('repository', repository)
-        setValue('pull_request_title', pullRequestTitle)
-      }
-    }
-  }, [repos])
-
-  const getPulls = async (repo: string): Promise<void> => {
-    const response = await gitHubApi.getCurrentUserPulls(repo)
-    setPulls(response.data)
-  }
-
-  useEffect(() => {
-    if (repo !== null) {
-      getPulls(repo).catch((error) => {
-        console.log(error)
-      })
-    }
-  }, [repo])
+  const { mutate } = useMutation(
+    async (review: CreateOrUpdateReview) => {
+      const reviewId = Number(id)
+      await reviewApi.updateReview(reviewId, review)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['reviews']).catch((error) => {
+          console.error(error)
+        })
+        router.replace(`/posts/${Number(id)}`).catch((error) => {
+          console.error(error)
+        })
+      },
+    },
+  )
 
   const onSubmit = handleSubmit(async (data) => {
     const pull = pulls.find((pull) => pull.title === data.pull_request_title)
     if (pull?.title !== undefined && pull?.url !== undefined) {
-      await reviewApi.updateReview(Number(id), {
+      mutate({
         title: data.title,
         repository: data.repository,
         pull_request_title: pull.title,

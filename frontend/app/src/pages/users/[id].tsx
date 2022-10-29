@@ -1,7 +1,8 @@
 import type { NextPage } from 'next'
 import type { Review } from '@/openapi-generator/api'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useQuery } from '@tanstack/react-query'
 import { userApi } from '@/openapi-generator/custom-instance'
 
 const Details: NextPage = () => {
@@ -13,32 +14,39 @@ const Details: NextPage = () => {
   const [thanksList, setThanksList] = useState<string[] | []>([])
   const [feedbackList, setFeedbackList] = useState<string[] | []>([])
 
-  const getWantedReviews = async (userId: number): Promise<void> => {
-    const response = await userApi.getUserWantedReviews(userId)
-    const reviews = response.data
-    setWantedReviews(reviews)
-    const thanksList: any = reviews.map((review) => review.thanks)
-    setThanksList(thanksList)
-  }
+  useQuery(
+    ['wantedReviews'],
+    async (): Promise<Review[]> => {
+      const userId = Number(id)
+      const response = await userApi.getUserWantedReviews(userId)
+      return response.data
+    },
+    {
+      onSuccess: (data) => {
+        setWantedReviews(data)
+        const thanksList: any = data.map((review) => review.thanks)
+        setThanksList(thanksList)
+      },
+      enabled: id !== undefined,
+    },
+  )
 
-  const getAcceptedReviews = async (userId: number): Promise<void> => {
-    const response = await userApi.getUserAcceptedReviews(userId)
-    const reviews = response.data
-    setAcceptedReviews(reviews)
-    const feedbackList: any = reviews.map((review) => review.feedback)
-    setFeedbackList(feedbackList)
-  }
-
-  useEffect(() => {
-    if (id !== undefined) {
-      getWantedReviews(Number(id)).catch((error) => {
-        console.error(error)
-      })
-      getAcceptedReviews(Number(id)).catch((error) => {
-        console.error(error)
-      })
-    }
-  }, [id])
+  useQuery(
+    ['acceptedReviews'],
+    async (): Promise<Review[]> => {
+      const userId = Number(id)
+      const response = await userApi.getUserAcceptedReviews(userId)
+      return response.data
+    },
+    {
+      onSuccess: (data) => {
+        setAcceptedReviews(data)
+        const feedbackList: any = data.map((review) => review.feedback)
+        setFeedbackList(feedbackList)
+      },
+      enabled: id !== undefined,
+    },
+  )
 
   return (
     <div>

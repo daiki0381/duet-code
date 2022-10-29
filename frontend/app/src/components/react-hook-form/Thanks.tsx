@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
+import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { reviewApi, notificationApi } from '@/openapi-generator/custom-instance'
 
@@ -18,13 +19,17 @@ const Thanks: NextPage<Props> = ({ reviewId }) => {
     formState: { errors },
   } = useForm<FormData>()
 
-  const createThanksNotification = async (reviewId: number): Promise<void> => {
+  const { mutate: createThanksNotification } = useMutation(async () => {
     await notificationApi.createThanksNotification(reviewId)
-  }
+  })
+
+  const { mutate: createThanks } = useMutation(async (data: FormData) => {
+    await reviewApi.createThanks(reviewId, data)
+  })
 
   const onSubmit = handleSubmit(async (data) => {
-    await reviewApi.createThanks(reviewId, data)
-    createThanksNotification(reviewId).catch((error) => console.error(error))
+    createThanks(data)
+    createThanksNotification()
     reset()
   })
 
