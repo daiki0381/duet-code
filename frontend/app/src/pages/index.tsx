@@ -8,6 +8,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
 import PreLoginHeader from '@/components/organisms/PreLoginHeader'
+import Footer from '@/components/organisms/Footer'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
@@ -167,8 +168,9 @@ const Home: NextPage = () => {
           })}
         </div>
       ) : (
-        <div>
+        <div className="flex min-h-screen flex-col">
           <PreLoginHeader />
+          <Footer />
         </div>
       )}
     </div>
