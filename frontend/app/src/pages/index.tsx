@@ -3,10 +3,11 @@ import type { Review, Notification } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
 import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
+import PreLoginHeader from '@/components/organisms/PreLoginHeader'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
@@ -17,26 +18,6 @@ const Home: NextPage = () => {
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
   const [userId, setUserId] = useState<number | null>(null)
   const [notifications, setNotifications] = useState<Notification[] | []>([])
-
-  const signInWithGithub = async (): Promise<void> => {
-    const provider = new GithubAuthProvider()
-    provider.addScope('repo')
-    const result = await signInWithPopup(auth, provider)
-    const user: any = result.user
-    const uid = user.uid
-    const name = user.reloadUserInfo.screenName
-    const avatar = user.photoURL
-    const githubAccessToken =
-      GithubAuthProvider.credentialFromResult(result)?.accessToken
-    if (name !== null && avatar !== null && githubAccessToken !== undefined) {
-      await userApi.loginUser({
-        uid,
-        name,
-        avatar,
-        github_access_token: githubAccessToken,
-      })
-    }
-  }
 
   const signOutWithGithub = (): void => {
     signOut(auth).catch((error) => {
@@ -187,16 +168,7 @@ const Home: NextPage = () => {
         </div>
       ) : (
         <div>
-          <div>ログイン前/TOP画面</div>
-          <button
-            onClick={() => {
-              signInWithGithub().catch((error) => {
-                console.error(error)
-              })
-            }}
-          >
-            ログイン
-          </button>
+          <PreLoginHeader />
         </div>
       )}
     </div>
