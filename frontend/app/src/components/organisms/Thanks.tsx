@@ -2,7 +2,7 @@
 import type { NextPage } from 'next'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { reviewApi, notificationApi } from '@/openapi-generator/custom-instance'
+import { reviewApi, notificationApi } from '@/api/custom-instance'
 
 type Props = {
   reviewId: number

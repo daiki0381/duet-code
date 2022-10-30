@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
-import type { Pull, CreateOrUpdateReview } from '@/openapi-generator/api'
+import type { Pull, CreateOrUpdateReview } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
 import { auth } from '@/firebase'
-import { reviewApi, gitHubApi } from '@/openapi-generator/custom-instance'
+import { reviewApi, gitHubApi } from '@/api/custom-instance'
 
 const New: NextPage = () => {
   type FormData = {

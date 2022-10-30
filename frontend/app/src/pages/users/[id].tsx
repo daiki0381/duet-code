@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
-import type { Review } from '@/openapi-generator/api'
+import type { Review } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { userApi } from '@/openapi-generator/custom-instance'
+import { userApi } from '@/api/custom-instance'
 
 const Details: NextPage = () => {
   const router = useRouter()

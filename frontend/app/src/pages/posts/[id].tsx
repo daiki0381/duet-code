@@ -1,17 +1,13 @@
 import type { NextPage } from 'next'
-import type { Review } from '@/openapi-generator/api'
+import type { Review } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@tanstack/react-query'
-import {
-  userApi,
-  reviewApi,
-  notificationApi,
-} from '@/openapi-generator/custom-instance'
+import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
-import Feedback from '@/components/react-hook-form/Feedback'
-import Thanks from '@/components/react-hook-form/Thanks'
+import Feedback from '@/components/organisms/Feedback'
+import Thanks from '@/components/organisms/Thanks'
 
 const Details: NextPage = () => {
   const [user, loading] = useAuthState(auth)

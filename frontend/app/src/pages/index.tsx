@@ -1,16 +1,12 @@
 import type { NextPage } from 'next'
-import type { Review, Notification } from '@/openapi-generator/api'
+import type { Review, Notification } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/firebase'
-import {
-  userApi,
-  reviewApi,
-  notificationApi,
-} from '@/openapi-generator/custom-instance'
+import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)

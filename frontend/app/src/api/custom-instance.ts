@@ -1,11 +1,6 @@
 import axios from 'axios'
-import {
-  UserApi,
-  ReviewApi,
-  NotificationApi,
-  GitHubApi,
-} from '@/openapi-generator/api'
-import { Configuration } from '@/openapi-generator/configuration'
+import { UserApi, ReviewApi, NotificationApi, GitHubApi } from '@/api/api'
+import { Configuration } from '@/api/configuration'
 import { auth } from '@/firebase'
 
 const { NEXT_PUBLIC_BASE_PATH } = process.env

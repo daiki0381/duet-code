@@ -47,7 +47,7 @@ services:
     image: openapitools/openapi-generator-cli
     volumes:
       - ./:/local
-    command: generate -g typescript-axios -i /local/backend/openapi.yml -o /local/frontend/app/src/openapi-generator
+    command: generate -g typescript-axios -i /local/backend/openapi.yml -o /local/frontend/app/src/api
   stoplight-prism:
     image: stoplight/prism
     ports:
