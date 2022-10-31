@@ -9,10 +9,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        black: '#343434',
         blue: '#00A0E2',
+        gray: '#939393',
         border: '#DDD',
         footer: '#232B33',
-        gray: '#939393',
       },
     },
   },
