@@ -9,10 +9,7 @@ import { auth } from '@/firebase'
 import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
 import PreLoginHeader from '@/components/organisms/PreLoginHeader'
 import Footer from '@/components/organisms/Footer'
-import ReviewIcon from '@/components/atoms/ReviewIcon'
-import GrowthIcon from '@/components/atoms/GrowthIcon'
-import FreeIcon from '@/components/atoms/FreeIcon'
-import Card from '@/components/molecules/Card'
+import Top from '@/components/templates/Top'
 
 const Home: NextPage = () => {
   const [user, loading] = useAuthState(auth)
@@ -174,26 +171,7 @@ const Home: NextPage = () => {
       ) : (
         <div className="flex min-h-screen flex-col">
           <PreLoginHeader />
-          <div className="flex justify-between bg-[#D6E7F7] p-10 px-[200px]">
-            <Card
-              main="無料で使える"
-              sub="レビューを募集することも、レビューを承認することも無料で使えます。"
-            >
-              <FreeIcon />
-            </Card>
-            <Card
-              main="レビュイー・レビュアーになれる"
-              sub="ログインするだけでレビュイーにもレビュアーにもなることができます。"
-            >
-              <ReviewIcon />
-            </Card>
-            <Card
-              main="技術力を高められる"
-              sub="コードレビューを通して読みやすいコードが書けるようになったり、他の人のコードが読めるようになります。"
-            >
-              <GrowthIcon />
-            </Card>
-          </div>
+          <Top />
           <Footer />
         </div>
       )}
