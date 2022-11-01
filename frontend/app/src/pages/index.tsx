@@ -1,23 +1,20 @@
 import type { NextPage } from 'next'
-import type { Review, Notification } from '@/api/api'
+import type { Review } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
-import AvatarWithMenu from '@/components/molecules/AvatarWithMenu'
-import Login from '@/components/templates/Login'
+import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
+import { reviewApi } from '@/api/custom-instance'
+import Login from '@/components/templates/Login'
 import { isLoginState } from '@/stores/isLoginState'
+import AvatarWithMenu from '@/components/molecules/AvatarWithMenu'
+import NotificationWithMenu from '@/components/molecules/NotificationWithMenu'
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const queryClient = useQueryClient()
   const isLogin = useRecoilValue(isLoginState)
-
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
-  const [userId, setUserId] = useState<number | null>(null)
-  const [notifications, setNotifications] = useState<Notification[] | []>([])
 
   const goToPostsNew = (): void => {
     router.push('/posts/new').catch((error) => {
@@ -27,12 +24,6 @@ const Home: NextPage = () => {
 
   const goToPostsDetails = (id: number): void => {
     router.push(`/posts/${id}`).catch((error) => {
-      console.error(error)
-    })
-  }
-
-  const goToUsersDetails = (id: number): void => {
-    router.push(`/users/${id}`).catch((error) => {
       console.error(error)
     })
   }
@@ -59,71 +50,12 @@ const Home: NextPage = () => {
     },
   )
 
-  useQuery(
-    ['notifications'],
-    async (): Promise<Notification[]> => {
-      const response = await notificationApi.getCurrentUserNotifications()
-      const notifications = response.data
-      return notifications
-    },
-    {
-      onSuccess: (data) => {
-        setNotifications(data)
-      },
-      enabled: isLogin,
-    },
-  )
-
-  useQuery(
-    ['userId'],
-    async (): Promise<number> => {
-      const response = await userApi.getCurrentUserId()
-      const userId = response.data
-      return userId
-    },
-    {
-      onSuccess: (data) => {
-        setUserId(data)
-      },
-      enabled: isLogin,
-    },
-  )
-
-  const { mutate } = useMutation(
-    async (notificationId: number): Promise<void> => {
-      await notificationApi.updateNotification(notificationId)
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['notifications']).catch((error) => {
-          console.error(error)
-        })
-      },
-    },
-  )
-
   return (
     <Login>
       <div>
-        <div>ログイン後/一覧画面</div>
         <AvatarWithMenu />
+        <NotificationWithMenu />
         <button onClick={goToPostsNew}>レビュー募集</button>
-        <button onClick={() => goToUsersDetails(Number(userId))}>
-          マイページ
-        </button>
-        <div>通知</div>
-        <ul>
-          {notifications.map((notification) => {
-            return (
-              <li
-                key={notification.id}
-                onClick={() => mutate(Number(notification.id))}
-              >
-                {notification.action}
-              </li>
-            )
-          })}
-        </ul>
         <div>レビュー募集中</div>
         {wantedReviews.map((review) => {
           return (

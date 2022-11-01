@@ -167,16 +167,16 @@ export interface Notification {
   review_id?: number
   /**
    *
-   * @type {number}
+   * @type {NotificationSender}
    * @memberof Notification
    */
-  sender_id?: number
+  sender?: NotificationSender
   /**
    *
-   * @type {number}
+   * @type {NotificationSender}
    * @memberof Notification
    */
-  receiver_id?: number
+  receiver?: NotificationSender
   /**
    *
    * @type {string}
@@ -201,6 +201,31 @@ export interface Notification {
    * @memberof Notification
    */
   updated_at?: string
+}
+/**
+ *
+ * @export
+ * @interface NotificationSender
+ */
+export interface NotificationSender {
+  /**
+   *
+   * @type {number}
+   * @memberof NotificationSender
+   */
+  id?: number
+  /**
+   *
+   * @type {string}
+   * @memberof NotificationSender
+   */
+  name?: string
+  /**
+   *
+   * @type {string}
+   * @memberof NotificationSender
+   */
+  avatar?: string
 }
 /**
  *
