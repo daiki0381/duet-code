@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Image from 'next/image'
 import { GithubAuthProvider, signInWithPopup } from 'firebase/auth'
+import toast from 'react-hot-toast'
 import { auth } from '@/firebase'
 import { userApi } from '@/api/custom-instance'
 import Card from '@/components/molecules/Card'
@@ -42,11 +43,19 @@ const Top: NextPage = () => {
           <p className="mb-[30px] text-sm">
             レビューしてほしいプルリクエストを投稿し、レビュアーを募集できるサービスです。ログインすることでレビュイーにもレビュアーにもなることができます。
           </p>
-          <LargeButton onClick={signInWithGithub}>無料で始める</LargeButton>
+          <LargeButton
+            onClick={async () =>
+              await signInWithGithub().then(() => {
+                toast.success('ログインしました')
+              })
+            }
+          >
+            無料で始める
+          </LargeButton>
         </div>
         <Image src="/top-hero.svg" width={480} height={300} />
       </div>
-      <div className="bg-[#D6E7F7] px-[220px] py-[80px] text-center">
+      <div className="mb-[80px] bg-[#D6E7F7] px-[220px] py-[80px] text-center">
         <div className="mb-[50px] text-[32px] font-semibold">特徴</div>
         <div className="flex items-center justify-between">
           <Card
@@ -69,7 +78,7 @@ const Top: NextPage = () => {
           </Card>
         </div>
       </div>
-      <div className="px-[220px] py-[80px] text-center">
+      <div className="mb-[80px] px-[220px] text-center">
         <div className="mb-[80px] text-[32px] font-semibold">
           メリット (レビュイー)
         </div>
@@ -98,7 +107,7 @@ const Top: NextPage = () => {
           <Image src="/top-reviewee2.svg" width={350} height={350} />
         </div>
       </div>
-      <div className="px-[220px] py-[80px] text-center">
+      <div className="mb-[80px] px-[220px] text-center">
         <div className="mb-[80px] text-[32px] font-semibold">
           メリット (レビュアー)
         </div>
@@ -130,7 +139,15 @@ const Top: NextPage = () => {
           <Image src="/top-logo.png" width={250} height={100} />
         </div>
         <div>
-          <LargeButton onClick={signInWithGithub}>無料で始める</LargeButton>
+          <LargeButton
+            onClick={async () =>
+              await signInWithGithub().then(() => {
+                toast.success('ログインしました')
+              })
+            }
+          >
+            無料で始める
+          </LargeButton>
         </div>
       </div>
     </>
