@@ -17,10 +17,14 @@ const AvatarWithMenu: NextPage = () => {
     <div>
       <Avatar
         src={avatar}
-        className="mb-[5px] cursor-pointer hover:opacity-70"
+        className="relative mb-[5px] cursor-pointer hover:opacity-70"
         onClick={onClick}
       />
-      {isOpen && <Menu />}
+      {isOpen && (
+        <div className="absolute top-[50]">
+          <Menu />
+        </div>
+      )}
     </div>
   )
 }

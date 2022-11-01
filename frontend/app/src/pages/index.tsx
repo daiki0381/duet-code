@@ -7,20 +7,12 @@ import { useRecoilValue } from 'recoil'
 import { reviewApi } from '@/api/custom-instance'
 import Login from '@/components/templates/Login'
 import { isLoginState } from '@/stores/isLoginState'
-import AvatarWithMenu from '@/components/molecules/AvatarWithMenu'
-import NotificationWithMenu from '@/components/molecules/NotificationWithMenu'
 
 const Home: NextPage = () => {
   const router = useRouter()
   const isLogin = useRecoilValue(isLoginState)
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
-
-  const goToPostsNew = (): void => {
-    router.push('/posts/new').catch((error) => {
-      console.error(error)
-    })
-  }
 
   const goToPostsDetails = (id: number): void => {
     router.push(`/posts/${id}`).catch((error) => {
@@ -53,9 +45,6 @@ const Home: NextPage = () => {
   return (
     <Login>
       <div>
-        <AvatarWithMenu />
-        <NotificationWithMenu />
-        <button onClick={goToPostsNew}>レビュー募集</button>
         <div>レビュー募集中</div>
         {wantedReviews.map((review) => {
           return (

@@ -50,7 +50,7 @@ const Menu: NextPage = () => {
   )
 
   return (
-    <div className="w-[185px] rounded-lg p-[5px] shadow-[0_3px_10px_0_rgba(0,0,0,0.15)]">
+    <div className="w-[185px] rounded-lg bg-white p-[5px] shadow-[0_3px_10px_0_rgba(0,0,0,0.15)]">
       <div
         className="cursor-pointer rounded-lg py-[15px] px-[10px] text-sm text-black hover:bg-[#F7F7F7]"
         onClick={goToUsersDetails}

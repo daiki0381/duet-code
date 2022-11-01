@@ -69,13 +69,13 @@ const NotificationWithMenu: NextPage = () => {
             .length
         }
         color="error"
-        className="mb-[5px] cursor-pointer hover:opacity-70"
+        className="relative mb-[5px] cursor-pointer hover:opacity-70"
         onClick={onClick}
       >
         <NotificationsNoneIcon className="h-[30px] w-[30px]" />
       </Badge>
       {isOpen && (
-        <div className="rounded-lg shadow-[0_3px_10px_0_rgba(0,0,0,0.15)]">
+        <div className="absolute top-[50] w-[320px] rounded-lg bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.15)]">
           {notifications.length !== 0 ? (
             <div className="max-h-[230px] overflow-scroll text-left">
               {notifications.map((notification: any) => (
@@ -126,7 +126,7 @@ const NotificationWithMenu: NextPage = () => {
               ))}
             </div>
           ) : (
-            <div className="flex h-[230px]  flex-col items-center justify-center">
+            <div className="flex h-[230px] w-[320px]  flex-col items-center justify-center">
               <Image
                 src="/notification.svg"
                 width={150}

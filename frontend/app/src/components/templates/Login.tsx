@@ -4,6 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSetRecoilState } from 'recoil'
 import { auth } from '@/firebase'
 import PreLoginHeader from '@/components/organisms/PreLoginHeader'
+import PostLoginHeader from '@/components/organisms/PostLoginHeader'
 import Top from '@/components/templates/Top'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
@@ -34,6 +35,7 @@ const Login: NextPage<Props> = ({ children }) => {
     <>
       {user !== null ? (
         <div className="flex min-h-screen flex-col">
+          <PostLoginHeader />
           {children}
           <Footer />
         </div>
