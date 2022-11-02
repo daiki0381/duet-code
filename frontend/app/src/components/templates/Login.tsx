@@ -9,13 +9,14 @@ import Top from '@/components/templates/Top'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
 import { avatarState } from '@/stores/avatarState'
+import CircularProgress from '@mui/material/CircularProgress'
 
 type Props = {
   children: JSX.Element
 }
 
 const Login: NextPage<Props> = ({ children }) => {
-  const [user] = useAuthState(auth)
+  const [user, isLoading] = useAuthState(auth)
   const setIsLogin = useSetRecoilState(isLoginState)
   const setAvatar = useSetRecoilState(avatarState)
 
@@ -30,6 +31,14 @@ const Login: NextPage<Props> = ({ children }) => {
       setIsLogin(false)
     }
   }, [user])
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[100vh] items-center justify-center">
+        <CircularProgress />
+      </div>
+    )
+  }
 
   return (
     <>

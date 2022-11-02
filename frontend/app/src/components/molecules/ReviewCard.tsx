@@ -43,7 +43,7 @@ const ReviewCard: NextPage<Props> = ({
     >
       <div className="h-[175px] rounded-t-lg bg-blue p-[15px]">
         <div className="h-[145px] rounded-lg bg-white p-5">
-          <div className="flex h-[65px] items-center  justify-center">
+          <div className="mb-[5px] flex h-[65px]  items-center justify-center">
             <p className="font-serif  text-lg font-semibold text-black line-clamp-2">
               {title}
             </p>

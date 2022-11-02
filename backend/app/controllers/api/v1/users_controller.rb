@@ -55,7 +55,7 @@ module Api
 
       def user_wanted_reviews
         @user = User.find(params[:id])
-        @wanted_reviews = Review.where(reviewee_id: @user.id).map do |review|
+        @wanted_reviews = Review.where(reviewee_id: @user.id).order(created_at: 'DESC').map do |review|
           languages = review.languages.map(&:name)
           {
             id: review.id,
@@ -88,7 +88,7 @@ module Api
 
       def user_accepted_reviews
         @user = User.find(params[:id])
-        @accepted_reviews = Review.where(reviewer_id: @user.id).map do |review|
+        @accepted_reviews = Review.where(reviewer_id: @user.id).order(created_at: 'DESC').map do |review|
           languages = review.languages.map(&:name)
           {
             id: review.id,

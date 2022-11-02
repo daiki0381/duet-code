@@ -9,7 +9,7 @@ module Api
       before_action :authenticate_user, only: %i[create accept_review]
 
       def index
-        @reviews = Review.all.map do |review|
+        @reviews = Review.all.order(created_at: 'DESC').map do |review|
           languages = review.languages.map(&:name)
           {
             id: review.id,
