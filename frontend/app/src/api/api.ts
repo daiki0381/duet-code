@@ -167,16 +167,16 @@ export interface Notification {
   review_id?: number
   /**
    *
-   * @type {NotificationSender}
+   * @type {ReviewReviewee}
    * @memberof Notification
    */
-  sender?: NotificationSender
+  sender?: ReviewReviewee
   /**
    *
-   * @type {NotificationSender}
+   * @type {ReviewReviewee}
    * @memberof Notification
    */
-  receiver?: NotificationSender
+  receiver?: ReviewReviewee
   /**
    *
    * @type {string}
@@ -201,31 +201,6 @@ export interface Notification {
    * @memberof Notification
    */
   updated_at?: string
-}
-/**
- *
- * @export
- * @interface NotificationSender
- */
-export interface NotificationSender {
-  /**
-   *
-   * @type {number}
-   * @memberof NotificationSender
-   */
-  id?: number
-  /**
-   *
-   * @type {string}
-   * @memberof NotificationSender
-   */
-  name?: string
-  /**
-   *
-   * @type {string}
-   * @memberof NotificationSender
-   */
-  avatar?: string
 }
 /**
  *
@@ -260,16 +235,16 @@ export interface Review {
   id?: number
   /**
    *
-   * @type {number}
+   * @type {ReviewReviewee}
    * @memberof Review
    */
-  reviewee_id?: number
+  reviewee?: ReviewReviewee
   /**
    *
-   * @type {number}
+   * @type {ReviewReviewee}
    * @memberof Review
    */
-  reviewer_id?: number
+  reviewer?: ReviewReviewee
   /**
    *
    * @type {string}
@@ -342,6 +317,31 @@ export interface Review {
    * @memberof Review
    */
   updated_at?: string
+}
+/**
+ *
+ * @export
+ * @interface ReviewReviewee
+ */
+export interface ReviewReviewee {
+  /**
+   *
+   * @type {number}
+   * @memberof ReviewReviewee
+   */
+  id?: number
+  /**
+   *
+   * @type {string}
+   * @memberof ReviewReviewee
+   */
+  name?: string
+  /**
+   *
+   * @type {string}
+   * @memberof ReviewReviewee
+   */
+  avatar?: string
 }
 /**
  *

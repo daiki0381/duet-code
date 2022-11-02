@@ -13,8 +13,16 @@ module Api
           languages = review.languages.map(&:name)
           {
             id: review.id,
-            reviewee_id: review.reviewee_id,
-            reviewer_id: review.reviewer_id,
+            reviewee: {
+              id: review.reviewee_id,
+              name: User.find(review.reviewee_id).name,
+              avatar: User.find(review.reviewee_id).avatar
+            },
+            reviewer: {
+              id: review.reviewer_id,
+              name: User.find(review.reviewer_id).name,
+              avatar: User.find(review.reviewer_id).avatar
+            },
             title: review.title,
             repository: review.repository,
             pull_request_title: review.pull_request_title,
@@ -37,8 +45,16 @@ module Api
         languages = @review.languages.map(&:name)
         @review = {
           id: @review.id,
-          reviewee_id: @review.reviewee_id,
-          reviewer_id: @review.reviewer_id,
+          reviewee: {
+            id: @review.reviewee_id,
+            name: User.find(@review.reviewee_id).name,
+            avatar: User.find(@review.reviewee_id).avatar
+          },
+          reviewer: {
+            id: @review.reviewer_id,
+            name: User.find(@review.reviewer_id).name,
+            avatar: User.find(@review.reviewer_id).avatar
+          },
           title: @review.title,
           repository: @review.repository,
           pull_request_title: @review.pull_request_title,

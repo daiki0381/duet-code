@@ -91,8 +91,14 @@ paths:
                 example-1:
                   value:
                     - id: 1
-                      reviewee_id: 1
-                      reviewer_id: 2
+                      reviewee:
+                        id: 1
+                        name: daiki0381
+                        avatar: 'https://avatars.githubusercontent.com'
+                      reviewer:
+                        id: 2
+                        name: daiki0218
+                        avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
                       repository: ruby-practices
                       pull_request_title: ボウリングのスコア計算オブジェクト指向版
@@ -131,8 +137,14 @@ paths:
                 example-1:
                   value:
                     - id: 1
-                      reviewee_id: 1
-                      reviewer_id: 2
+                      reviewee:
+                        id: 1
+                        name: daiki0381
+                        avatar: 'https://avatars.githubusercontent.com'
+                      reviewer:
+                        id: 2
+                        name: daiki0218
+                        avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
                       repository: ruby-practices
                       pull_request_title: ボウリングのスコア計算オブジェクト指向版
@@ -233,8 +245,14 @@ paths:
                 example-1:
                   value:
                     - id: 1
-                      reviewee_id: 1
-                      reviewer_id: 2
+                      reviewee:
+                        id: 1
+                        name: daiki0381
+                        avatar: 'https://avatars.githubusercontent.com'
+                      reviewer:
+                        id: 2
+                        name: daiki0218
+                        avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
                       repository: ruby-practices
                       pull_request_title: ボウリングのスコア計算オブジェクト指向版
@@ -306,8 +324,14 @@ paths:
                 example-1:
                   value:
                     id: 1
-                    reviewee_id: 1
-                    reviewer_id: 2
+                    reviewee:
+                      id: 1
+                      name: daiki0381
+                      avatar: 'https://avatars.githubusercontent.com'
+                    reviewer:
+                      id: 2
+                      name: daiki0218
+                      avatar: 'https://avatars.githubusercontent.com'
                     title: Rubyのレビューをお願いします
                     repository: ruby-practices
                     pull_request_title: ボウリングのスコア計算オブジェクト指向版
@@ -610,10 +634,24 @@ components:
       properties:
         id:
           type: integer
-        reviewee_id:
-          type: integer
-        reviewer_id:
-          type: integer
+        reviewee:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            avatar:
+              type: string
+        reviewer:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            avatar:
+              type: string
         title:
           type: string
         repository:
@@ -643,8 +681,14 @@ components:
       x-examples:
         example-1:
           id: 1
-          reviewee_id: 1
-          reviewer_id: 2
+          reviewee:
+            id: 1
+            name: daiki0381
+            avatar: 'https://avatars.githubusercontent.com'
+          reviewer:
+            id: 2
+            name: daiki0218
+            avatar: 'https://avatars.githubusercontent.com'
           title: Rubyのレビューをお願いします
           repository: ruby-practices
           pull_request_title: ボウリングのスコア計算オブジェクト指向版
@@ -658,7 +702,6 @@ components:
           accepted_at: '2022-10-22 17:00:00.000000'
           created_at: '2022-10-10T10::10'
           updated_at: '2022-10-10T10::10'
-      description: ''
     create-or-update-review:
       type: object
       x-examples:

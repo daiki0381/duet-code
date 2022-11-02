@@ -1,24 +1,17 @@
 import type { NextPage } from 'next'
 import type { Review } from '@/api/api'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
 import { reviewApi } from '@/api/custom-instance'
 import Login from '@/components/templates/Login'
 import { isLoginState } from '@/stores/isLoginState'
+import ReviewCard from '@/components/molecules/ReviewCard'
 
 const Home: NextPage = () => {
-  const router = useRouter()
   const isLogin = useRecoilValue(isLoginState)
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
-
-  const goToPostsDetails = (id: number): void => {
-    router.push(`/posts/${id}`).catch((error) => {
-      console.error(error)
-    })
-  }
 
   useQuery(
     ['reviews'],
@@ -45,36 +38,34 @@ const Home: NextPage = () => {
   return (
     <Login>
       <div>
-        <div>レビュー募集中</div>
-        {wantedReviews.map((review) => {
-          return (
-            <div
-              key={review.id}
-              onClick={() => {
-                if (review.id !== undefined) {
-                  goToPostsDetails(review.id)
-                }
-              }}
-            >
-              <p>タイトル: {review.title}</p>
-            </div>
-          )
-        })}
-        <div>レビュー募集終了</div>
-        {acceptedReviews.map((review) => {
-          return (
-            <div
-              key={review.id}
-              onClick={() => {
-                if (review.id !== undefined) {
-                  goToPostsDetails(review.id)
-                }
-              }}
-            >
-              <p>タイトル: {review.title}</p>
-            </div>
-          )
-        })}
+        <div className="m-auto mt-[50px] flex w-[1200px] justify-between">
+          {acceptedReviews.map((review: any) => {
+            return (
+              <ReviewCard
+                key={review.id}
+                reviewId={review.id}
+                title={review.title}
+                languages={review.languages}
+                revieweeName={review.reviewee.name}
+                revieweeAvatar={review.reviewee.avatar}
+                createdAt={review.created_at}
+              />
+            )
+          })}
+          {wantedReviews.map((review: any) => {
+            return (
+              <ReviewCard
+                key={review.id}
+                reviewId={review.id}
+                title={review.title}
+                languages={review.languages}
+                revieweeName={review.reviewee.name}
+                revieweeAvatar={review.reviewee.avatar}
+                createdAt={review.created_at}
+              />
+            )
+          })}
+        </div>
       </div>
     </Login>
   )

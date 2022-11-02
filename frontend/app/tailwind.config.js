@@ -15,8 +15,13 @@ module.exports = {
         border: '#DDD',
         footer: '#232B33',
       },
+      fontFamily: {
+        serif: ['Times New Roman', 'serif'],
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
   important: true,
 }
