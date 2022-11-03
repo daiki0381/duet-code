@@ -8,6 +8,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { useForm } from 'react-hook-form'
 import { auth } from '@/firebase'
 import { reviewApi, gitHubApi } from '@/api/custom-instance'
+import ReviewCreationHeader from '@/components/organisms/ReviewCreationHeader'
 
 const New: NextPage = () => {
   type FormData = {
@@ -131,7 +132,8 @@ const New: NextPage = () => {
 
   return (
     <>
-      <form onSubmit={onSubmit}>
+      <ReviewCreationHeader />
+      <form onSubmit={onSubmit} id="review_creation_form">
         <input
           type="text"
           placeholder="Rubyのレビューをお願いします"
@@ -199,7 +201,6 @@ const New: NextPage = () => {
         {errors.review_point !== undefined && (
           <p>{errors.review_point.message}</p>
         )}
-        <button>送信</button>
       </form>
     </>
   )
