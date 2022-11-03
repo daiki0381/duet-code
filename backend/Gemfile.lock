@@ -255,6 +255,7 @@ DEPENDENCIES
   firebase-auth-rails
   mysql2 (~> 0.5)
   octokit
+  parallel
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4)

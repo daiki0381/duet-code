@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require 'octokit'
+require 'parallel'
 
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :authenticate_user, only: %i[current_user_id current_user_repos current_user_pulls]
+      before_action :authenticate_user, only: %i[current_user_id current_user_pulls]
 
       def create
         FirebaseIdToken::Certificates.request
@@ -32,30 +33,27 @@ module Api
         render json: current_user.id, status: :ok
       end
 
-      def current_user_repos
+      def current_user_pulls
         user_id = current_user.id
         @user = User.find(user_id)
         name = @user.name
         github_access_token = @user.github_access_token
         client = Octokit::Client.new(access_token: github_access_token)
         repos = client.repos(name).map(&:name)
-        render json: repos, status: :ok
-      end
-
-      def current_user_pulls
-        user_id = current_user.id
-        @user = User.find(user_id)
-        name = @user.name
-        repo = params[:repo]
-        github_access_token = @user.github_access_token
-        client = Octokit::Client.new(access_token: github_access_token)
-        pulls = client.pulls("#{name}/#{repo}").map { |pull| { title: pull.title, url: pull.html_url } }
+        pulls = Parallel.map(repos, in_threads: 10) do |repo|
+          client.pulls("#{name}/#{repo}").map do |pull|
+            { title: "#{pull.head.repo.name}/#{pull.title}", url: pull.html_url }
+          end
+        end.flatten
         render json: pulls, status: :ok
       end
 
       def user_wanted_reviews
         @user = User.find(params[:id])
         @wanted_reviews = Review.where(reviewee_id: @user.id).order(created_at: 'DESC').map do |review|
+          reviewer = review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
+          name = reviewer ? reviewer.name : nil
+          avatar = reviewer ? reviewer.avatar : nil
           languages = review.languages.map(&:name)
           {
             id: review.id,
@@ -66,11 +64,10 @@ module Api
             },
             reviewer: {
               id: review.reviewer_id,
-              name: User.find(review.reviewer_id).name,
-              avatar: User.find(review.reviewer_id).avatar
+              name: name,
+              avatar: avatar
             },
             title: review.title,
-            repository: review.repository,
             pull_request_title: review.pull_request_title,
             pull_request_url: review.pull_request_url,
             languages: languages,
@@ -103,7 +100,6 @@ module Api
               avatar: User.find(review.reviewer_id).avatar
             },
             title: review.title,
-            repository: review.repository,
             pull_request_title: review.pull_request_title,
             pull_request_url: review.pull_request_url,
             languages: languages,

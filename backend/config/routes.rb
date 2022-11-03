@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'current_user/id', to: 'users#current_user_id'
-      get 'current_user/repos', to: 'users#current_user_repos'
       get 'current_user/pulls', to: 'users#current_user_pulls'
       get 'users/:id/wanted_reviews', to: 'users#user_wanted_reviews'
       get 'users/:id/accepted_reviews', to: 'users#user_accepted_reviews'

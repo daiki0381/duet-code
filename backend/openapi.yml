@@ -100,8 +100,7 @@ paths:
                         name: daiki0218
                         avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
-                      repository: ruby-practices
-                      pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                      pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                       pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                       languages:
                         - Ruby
@@ -146,8 +145,7 @@ paths:
                         name: daiki0218
                         avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
-                      repository: ruby-practices
-                      pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                      pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                       pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                       languages:
                         - Ruby
@@ -200,8 +198,7 @@ paths:
               example-1:
                 value:
                   title: Rubyのレビューをお願いします
-                  repository: ruby-practices
-                  pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                  pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                   pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                   languages:
                     - Ruby
@@ -254,8 +251,7 @@ paths:
                         name: daiki0218
                         avatar: 'https://avatars.githubusercontent.com'
                       title: Rubyのレビューをお願いします
-                      repository: ruby-practices
-                      pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                      pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                       pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                       languages:
                         - Ruby
@@ -268,6 +264,7 @@ paths:
                       updated_at: '2022-10-10T10::10'
       tags:
         - Review
+      description: ''
     parameters: []
   '/api/v1/reviews/{review_id}':
     parameters:
@@ -301,8 +298,7 @@ paths:
               example-1:
                 value:
                   title: Rubyのレビューをお願いします
-                  repository: ruby-practices
-                  pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                  pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                   pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                   languages:
                     - Ruby
@@ -333,8 +329,7 @@ paths:
                       name: daiki0218
                       avatar: 'https://avatars.githubusercontent.com'
                     title: Rubyのレビューをお願いします
-                    repository: ruby-practices
-                    pull_request_title: ボウリングのスコア計算オブジェクト指向版
+                    pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                     pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
                     languages:
                       - Ruby
@@ -547,39 +542,9 @@ paths:
               examples:
                 example-1:
                   value:
-                    - title: ボウリングのスコア計算オブジェクト指向版
+                    - title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
                       url: 'https://github.com/daiki0381/ruby-practices/pull/1'
       operationId: get-current-user-pulls
-      security:
-        - JWT: []
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: repo
-          required: true
-  /api/v1/current_user/repos:
-    get:
-      summary: Get current user repos
-      tags:
-        - GitHub
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                x-examples:
-                  example-1:
-                    - ruby-practices
-              examples:
-                example-1:
-                  value:
-                    - ruby-practices
-      operationId: get-current-user-repos
       security:
         - JWT: []
       parameters: []
@@ -654,8 +619,6 @@ components:
               type: string
         title:
           type: string
-        repository:
-          type: string
         pull_request_title:
           type: string
         pull_request_url:
@@ -690,8 +653,7 @@ components:
             name: daiki0218
             avatar: 'https://avatars.githubusercontent.com'
           title: Rubyのレビューをお願いします
-          repository: ruby-practices
-          pull_request_title: ボウリングのスコア計算オブジェクト指向版
+          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
           pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
           languages:
             - Ruby
@@ -704,20 +666,8 @@ components:
           updated_at: '2022-10-10T10::10'
     create-or-update-review:
       type: object
-      x-examples:
-        example-1:
-          title: Rubyのレビューをお願いします
-          repository: ruby-practices
-          pull_request_title: ボウリングのスコア計算オブジェクト指向版
-          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
-          languages:
-            - Ruby
-          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
-          review_point: メソッド/変数の命名
       properties:
         title:
-          type: string
-        repository:
           type: string
         pull_request_title:
           type: string
@@ -731,14 +681,15 @@ components:
           type: string
         review_point:
           type: string
-      required:
-        - title
-        - repository
-        - pull_request_title
-        - pull_request_url
-        - languages
-        - pull_request_description
-        - review_point
+      x-examples:
+        example-1:
+          title: Rubyのレビューをお願いします
+          pull_request_title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
+          pull_request_url: 'https://github.com/daiki0381/ruby-practices/pull/1'
+          languages:
+            - Ruby
+          pull_request_description: ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。
+          review_point: メソッド/変数の命名
     notification:
       type: object
       properties:
@@ -818,7 +769,7 @@ components:
           type: string
       x-examples:
         example-1:
-          title: ボウリングのスコア計算オブジェクト指向版
+          title: ruby-practices/ボウリングのスコア計算オブジェクト指向版
           url: 'https://github.com/daiki0381/ruby-practices/pull/1'
   headers:
     link:

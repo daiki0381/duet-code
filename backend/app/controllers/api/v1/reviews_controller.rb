@@ -10,6 +10,9 @@ module Api
 
       def index
         @reviews = Review.all.order(created_at: 'DESC').map do |review|
+          reviewer = review.reviewer_id.nil? ? nil : User.find(review.reviewer_id)
+          name = reviewer ? reviewer.name : nil
+          avatar = reviewer ? reviewer.avatar : nil
           languages = review.languages.map(&:name)
           {
             id: review.id,
@@ -20,11 +23,10 @@ module Api
             },
             reviewer: {
               id: review.reviewer_id,
-              name: User.find(review.reviewer_id).name,
-              avatar: User.find(review.reviewer_id).avatar
+              name: name,
+              avatar: avatar
             },
             title: review.title,
-            repository: review.repository,
             pull_request_title: review.pull_request_title,
             pull_request_url: review.pull_request_url,
             languages: languages,
@@ -42,6 +44,9 @@ module Api
 
       def show
         @review = Review.find(params[:id])
+        reviewer = review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
+        name = reviewer ? reviewer.name : nil
+        avatar = reviewer ? reviewer.avatar : nil
         languages = @review.languages.map(&:name)
         @review = {
           id: @review.id,
@@ -52,11 +57,10 @@ module Api
           },
           reviewer: {
             id: @review.reviewer_id,
-            name: User.find(@review.reviewer_id).name,
-            avatar: User.find(@review.reviewer_id).avatar
+            name: name,
+            avatar: avatar
           },
           title: @review.title,
-          repository: @review.repository,
           pull_request_title: @review.pull_request_title,
           pull_request_url: @review.pull_request_url,
           languages: languages,
@@ -75,11 +79,10 @@ module Api
         user_id = current_user.id
         title = params[:title]
         review_point = params[:review_point]
-        repository = params[:repository]
         pull_request_title = params[:pull_request_title]
         pull_request_url = params[:pull_request_url]
         pull_request_description = params[:pull_request_description]
-        review_params = { reviewee_id: user_id, title: title, repository: repository, review_point: review_point }
+        review_params = { reviewee_id: user_id, title: title, review_point: review_point }
         pull_request_params = { pull_request_title: pull_request_title, pull_request_url: pull_request_url,
                                 pull_request_description: pull_request_description }
         @review = Review.new(review_params.merge(pull_request_params))
@@ -97,7 +100,6 @@ module Api
         @review = Review.find(params[:id])
         review_params = {
           title: params[:title],
-          repository: params[:repository],
           pull_request_title: params[:pull_request_title],
           pull_request_url: params[:pull_request_url],
           pull_request_description: params[:pull_request_description],
@@ -120,12 +122,13 @@ module Api
           @reviewer = User.find(@review.reviewer_id)
           reviewee = Octokit::Client.new(access_token: @reviewee.github_access_token)
           reviewer = Octokit::Client.new(access_token: @reviewer.github_access_token)
-          repository = "#{@reviewee.name}/#{@review.repository}"
-          reviewee.add_collaborator(repository, @reviewer.name)
-          repository_invitations = reviewee.repository_invitations(repository)
+          repository = @review.pull_request_url.split('/')[4]
+          name_and_repository = "#{@reviewee.name}/#{repository}"
+          reviewee.add_collaborator(name_and_repository, @reviewer.name)
+          repository_invitations = reviewee.repository_invitations(name_and_repository)
           reviewer.accept_repository_invitation(repository_invitations[0].id) unless repository_invitations.empty?
           pull_request_number = @review.pull_request_url.split('/').last
-          reviewee.request_pull_request_review(repository, pull_request_number, reviewers: [@reviewer.name])
+          reviewee.request_pull_request_review(name_and_repository, pull_request_number, reviewers: [@reviewer.name])
           render status: :created
         else
           render status: :unprocessable_entity

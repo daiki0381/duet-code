@@ -65,43 +65,37 @@ export interface CreateOrUpdateReview {
    * @type {string}
    * @memberof CreateOrUpdateReview
    */
-  title: string
+  title?: string
   /**
    *
    * @type {string}
    * @memberof CreateOrUpdateReview
    */
-  repository: string
+  pull_request_title?: string
   /**
    *
    * @type {string}
    * @memberof CreateOrUpdateReview
    */
-  pull_request_title: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateOrUpdateReview
-   */
-  pull_request_url: string
+  pull_request_url?: string
   /**
    *
    * @type {Array<string>}
    * @memberof CreateOrUpdateReview
    */
-  languages: Array<string>
+  languages?: Array<string>
   /**
    *
    * @type {string}
    * @memberof CreateOrUpdateReview
    */
-  pull_request_description: string
+  pull_request_description?: string
   /**
    *
    * @type {string}
    * @memberof CreateOrUpdateReview
    */
-  review_point: string
+  review_point?: string
 }
 /**
  *
@@ -256,12 +250,6 @@ export interface Review {
    * @type {string}
    * @memberof Review
    */
-  repository?: string
-  /**
-   *
-   * @type {string}
-   * @memberof Review
-   */
   pull_request_title?: string
   /**
    *
@@ -392,64 +380,13 @@ export const GitHubApiAxiosParamCreator = function (
     /**
      *
      * @summary Get current user pulls
-     * @param {string} repo
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getCurrentUserPulls: async (
-      repo: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
-      // verify required parameter 'repo' is not null or undefined
-      assertParamExists('getCurrentUserPulls', 'repo', repo)
       const localVarPath = `/api/v1/current_user/pulls`
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = {
-        method: 'GET',
-        ...baseOptions,
-        ...options,
-      }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication JWT required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      if (repo !== undefined) {
-        localVarQueryParameter['repo'] = repo
-      }
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
-    /**
-     *
-     * @summary Get current user repos
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getCurrentUserRepos: async (
-      options: AxiosRequestConfig = {},
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/api/v1/current_user/repos`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -496,38 +433,16 @@ export const GitHubApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get current user pulls
-     * @param {string} repo
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getCurrentUserPulls(
-      repo: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pull>>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getCurrentUserPulls(repo, options)
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration,
-      )
-    },
-    /**
-     *
-     * @summary Get current user repos
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getCurrentUserRepos(
-      options?: AxiosRequestConfig,
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getCurrentUserRepos(options)
+        await localVarAxiosParamCreator.getCurrentUserPulls(options)
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -552,27 +467,12 @@ export const GitHubApiFactory = function (
     /**
      *
      * @summary Get current user pulls
-     * @param {string} repo
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getCurrentUserPulls(
-      repo: string,
-      options?: any,
-    ): AxiosPromise<Array<Pull>> {
+    getCurrentUserPulls(options?: any): AxiosPromise<Array<Pull>> {
       return localVarFp
-        .getCurrentUserPulls(repo, options)
-        .then((request) => request(axios, basePath))
-    },
-    /**
-     *
-     * @summary Get current user repos
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getCurrentUserRepos(options?: any): AxiosPromise<Array<string>> {
-      return localVarFp
-        .getCurrentUserRepos(options)
+        .getCurrentUserPulls(options)
         .then((request) => request(axios, basePath))
     },
   }
@@ -588,27 +488,13 @@ export class GitHubApi extends BaseAPI {
   /**
    *
    * @summary Get current user pulls
-   * @param {string} repo
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof GitHubApi
    */
-  public getCurrentUserPulls(repo: string, options?: AxiosRequestConfig) {
+  public getCurrentUserPulls(options?: AxiosRequestConfig) {
     return GitHubApiFp(this.configuration)
-      .getCurrentUserPulls(repo, options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
-   *
-   * @summary Get current user repos
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof GitHubApi
-   */
-  public getCurrentUserRepos(options?: AxiosRequestConfig) {
-    return GitHubApiFp(this.configuration)
-      .getCurrentUserRepos(options)
+      .getCurrentUserPulls(options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

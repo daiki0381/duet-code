@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from 'next'
-import type { Pull, Review, CreateOrUpdateReview } from '@/api/api'
+import type { Pull, CreateOrUpdateReview } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { auth } from '@/firebase'
+import { useRecoilValue } from 'recoil'
 import { reviewApi, gitHubApi } from '@/api/custom-instance'
+import { isLoginState } from '@/stores/isLoginState'
+import TextInput from '@/components/atoms/TextInput'
 
-const New: NextPage = () => {
+const ReviewCreation: NextPage = () => {
   type FormData = {
     title: string
     pull_request_title: string
@@ -52,52 +52,17 @@ const New: NextPage = () => {
     'その他',
   ]
 
-  const [user, loading] = useAuthState(auth)
   const [pulls, setPulls] = useState<Pull[] | []>([])
-  const [review, setReview] = useState<Review | null>(null)
 
   const router = useRouter()
-  const { id } = router.query
-  const queryClient = useQueryClient()
+  const isLogin = useRecoilValue(isLoginState)
 
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm<FormData>()
-
-  useQuery(
-    ['review'],
-    async (): Promise<Review> => {
-      const reviewId = Number(id)
-      const response = await reviewApi.getReview(reviewId)
-      const review = response.data
-      return review
-    },
-    {
-      onSuccess: (data) => {
-        setReview(data)
-        const title = data.title
-        const languages = data.languages
-        const pullRequestDescription = data.pull_request_description
-        const reviewPoint = data.review_point
-        if (
-          title !== undefined &&
-          languages !== undefined &&
-          pullRequestDescription !== undefined &&
-          reviewPoint !== undefined
-        ) {
-          setValue('title', title)
-          setValue('languages', languages)
-          setValue('pull_request_description', pullRequestDescription)
-          setValue('review_point', reviewPoint)
-        }
-      },
-      enabled: id !== undefined,
-    },
-  )
 
   useQuery(
     ['pulls'],
@@ -107,27 +72,19 @@ const New: NextPage = () => {
     },
     {
       onSuccess: (data) => {
-        const pullRequestTitle = review?.pull_request_title
-        if (pullRequestTitle !== undefined) {
-          setValue('pull_request_title', pullRequestTitle)
-        }
         setPulls(data)
       },
-      enabled: user !== null,
+      enabled: isLogin,
     },
   )
 
   const { mutate } = useMutation(
     async (review: CreateOrUpdateReview) => {
-      const reviewId = Number(id)
-      await reviewApi.updateReview(reviewId, review)
+      await reviewApi.createReview(review)
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['reviews']).catch((error) => {
-          console.error(error)
-        })
-        router.replace(`/posts/${Number(id)}`).catch((error) => {
+        router.replace(`/`).catch((error) => {
           console.error(error)
         })
       },
@@ -149,19 +106,24 @@ const New: NextPage = () => {
     reset()
   })
 
-  if (loading) {
-    return <p>Loading...</p>
-  }
-
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Rubyのレビューをお願いします"
-          {...register('title', { required: 'titleを入力してください' })}
-        />
-        {errors.title !== undefined && <p>{errors.title.message}</p>}
+      <form
+        onSubmit={onSubmit}
+        id="review_creation_form"
+        className="flex flex-col items-center justify-center py-[50px]"
+      >
+        <div className="mb-[30px]">
+          <TextInput
+            label="タイトル"
+            placeholder="Rubyのレビューをお願いします。"
+            register={register('title', {
+              required: 'タイトルを入力してください',
+            })}
+            error={errors.title}
+            helperText={errors.title?.message}
+          />
+        </div>
         <select
           placeholder="ボウリングのスコア計算オブジェクト指向版"
           {...register('pull_request_title', {
@@ -209,10 +171,9 @@ const New: NextPage = () => {
         {errors.review_point !== undefined && (
           <p>{errors.review_point.message}</p>
         )}
-        <button>送信</button>
       </form>
     </>
   )
 }
 
-export default New
+export default ReviewCreation
