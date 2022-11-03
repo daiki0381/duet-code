@@ -8,6 +8,7 @@ import { reviewApi } from '@/api/custom-instance'
 import ReviewCard from '@/components/molecules/ReviewCard'
 import { isLoginState } from '@/stores/isLoginState'
 import CircularProgress from '@mui/material/CircularProgress'
+import Pagination from '@mui/material/Pagination'
 
 const ReviewList: NextPage = () => {
   const isLogin = useRecoilValue(isLoginState)
@@ -16,6 +17,19 @@ const ReviewList: NextPage = () => {
   const [status, setStatus] = useState<string>('wanted')
   const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
   const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
+  const [splittedWantedReviews, setSplittedWantedReviews] = useState<
+    Review[][] | []
+  >([])
+  const [splittedAcceptedReviews, setSplittedAcceptedReviews] = useState<
+    Review[][] | []
+  >([])
+  const [wantedReviewsPageCount, setWantedReviewsPageCount] =
+    useState<number>(1)
+  const [acceptedReviewsPageCount, setAcceptedReviewsPageCount] =
+    useState<number>(1)
+  const [wantedReviewsPage, setWantedReviewsPage] = useState<number>(1)
+  const [acceptedReviewsPage, setAcceptedReviewsPage] = useState<number>(1)
+  const SPLITTED_COUNT = 15
 
   const clickWanted = (): void => {
     setStatus('wanted')
@@ -23,6 +37,22 @@ const ReviewList: NextPage = () => {
 
   const clickAccepted = (): void => {
     setStatus('accepted')
+  }
+
+  const countPage = (reviews: Review[]): number => {
+    return Math.ceil(reviews.length / SPLITTED_COUNT) === 0
+      ? 1
+      : Math.ceil(reviews.length / SPLITTED_COUNT)
+  }
+
+  const splitReviews = (reviews: Review[]): Review[][] => {
+    const splittedReviews: Review[][] = []
+    for (let i = 0; i < countPage(reviews); i++) {
+      splittedReviews.push(
+        reviews.slice(i * SPLITTED_COUNT, (i + 1) * SPLITTED_COUNT),
+      )
+    }
+    return splittedReviews
   }
 
   const { isLoading } = useQuery(
@@ -39,8 +69,16 @@ const ReviewList: NextPage = () => {
         const acceptedReviews = data.filter((review) => {
           return review.accepted_at !== null
         })
+        const wantedReviewsPageCount = countPage(wantedReviews)
+        const acceptedReviewsPageCount = countPage(acceptedReviews)
+        const splittedWantedReviews = splitReviews(wantedReviews)
+        const splittedAcceptedReviews = splitReviews(acceptedReviews)
         setWantedReviews(wantedReviews)
         setAcceptedReviews(acceptedReviews)
+        setWantedReviewsPageCount(wantedReviewsPageCount)
+        setAcceptedReviewsPageCount(acceptedReviewsPageCount)
+        setSplittedWantedReviews(splittedWantedReviews)
+        setSplittedAcceptedReviews(splittedAcceptedReviews)
         setInitialReviewsLoading(false)
       },
       enabled: isLogin,
@@ -55,7 +93,7 @@ const ReviewList: NextPage = () => {
           className={
             status === 'wanted'
               ? 'mr-5 cursor-pointer border-b-2 border-blue pb-[10px] text-lg font-semibold text-blue hover:opacity-70'
-              : 'mr-5 cursor-pointer text-lg text-black hover:opacity-70 '
+              : 'mr-5 cursor-pointer text-lg text-black hover:opacity-70'
           }
         >
           レビュー募集中
@@ -100,40 +138,72 @@ const ReviewList: NextPage = () => {
           )
         } else if (status === 'wanted' && wantedReviews.length !== 0) {
           return (
-            <div className="flex flex-wrap">
-              {wantedReviews.map((wantedReview: any) => {
-                return (
-                  <div key={wantedReview.id} className="mr-[50px] mb-[50px]">
-                    <ReviewCard
-                      reviewId={wantedReview.id}
-                      title={wantedReview.title}
-                      languages={wantedReview.languages}
-                      revieweeName={wantedReview.reviewee.name}
-                      revieweeAvatar={wantedReview.reviewee.avatar}
-                      createdAt={wantedReview.created_at}
-                    />
-                  </div>
-                )
-              })}
+            <div>
+              <div className="flex flex-wrap">
+                {splittedWantedReviews[wantedReviewsPage - 1].map(
+                  (wantedReview: any) => {
+                    return (
+                      <div
+                        key={wantedReview.id}
+                        className="mr-[50px] mb-[50px]"
+                      >
+                        <ReviewCard
+                          reviewId={wantedReview.id}
+                          title={wantedReview.title}
+                          languages={wantedReview.languages}
+                          revieweeName={wantedReview.reviewee.name}
+                          revieweeAvatar={wantedReview.reviewee.avatar}
+                          createdAt={wantedReview.created_at}
+                        />
+                      </div>
+                    )
+                  },
+                )}
+              </div>
+              <div className="flex items-center justify-center">
+                {wantedReviewsPageCount > 1 && (
+                  <Pagination
+                    count={wantedReviewsPageCount}
+                    page={wantedReviewsPage}
+                    onChange={(e, page) => setWantedReviewsPage(page)}
+                  />
+                )}
+              </div>
             </div>
           )
         } else if (status === 'accepted' && acceptedReviews.length !== 0) {
           return (
-            <div className="flex flex-wrap">
-              {acceptedReviews.map((acceptedReview: any) => {
-                return (
-                  <div key={acceptedReview.id} className="mr-[50px] mb-[50px]">
-                    <ReviewCard
-                      reviewId={acceptedReview.id}
-                      title={acceptedReview.title}
-                      languages={acceptedReview.languages}
-                      revieweeName={acceptedReview.reviewee.name}
-                      revieweeAvatar={acceptedReview.reviewee.avatar}
-                      createdAt={acceptedReview.created_at}
-                    />
-                  </div>
-                )
-              })}
+            <div>
+              <div className="flex flex-wrap">
+                {splittedAcceptedReviews[acceptedReviewsPage - 1].map(
+                  (acceptedReview: any) => {
+                    return (
+                      <div
+                        key={acceptedReview.id}
+                        className="mr-[50px] mb-[50px]"
+                      >
+                        <ReviewCard
+                          reviewId={acceptedReview.id}
+                          title={acceptedReview.title}
+                          languages={acceptedReview.languages}
+                          revieweeName={acceptedReview.reviewee.name}
+                          revieweeAvatar={acceptedReview.reviewee.avatar}
+                          createdAt={acceptedReview.created_at}
+                        />
+                      </div>
+                    )
+                  },
+                )}
+              </div>
+              <div className="flex items-center justify-center">
+                {acceptedReviewsPageCount > 1 && (
+                  <Pagination
+                    count={acceptedReviewsPageCount}
+                    page={acceptedReviewsPage}
+                    onChange={(e, page) => setAcceptedReviewsPage(page)}
+                  />
+                )}
+              </div>
             </div>
           )
         }
