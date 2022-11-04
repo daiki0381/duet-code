@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import type { Pull, CreateOrUpdateReview } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
 import { reviewApi, gitHubApi } from '@/api/custom-instance'
@@ -10,7 +10,9 @@ import { isLoginState } from '@/stores/isLoginState'
 import TextInput from '@/components/atoms/TextInput'
 import SelectMenu from '@/components/atoms/SelectMenu'
 import MultipleSelectMenu from '@/components/atoms/MultipleSelectMenu'
+import Multiline from '@/components/atoms/Multiline'
 import CircularProgress from '@mui/material/CircularProgress'
+import toast from 'react-hot-toast'
 
 const ReviewCreation: NextPage = () => {
   type FormData = {
@@ -55,18 +57,16 @@ const ReviewCreation: NextPage = () => {
     'その他',
   ]
 
-  const [pulls, setPulls] = useState<Pull[] | []>([])
-  const [initialPullsLoading, setInitialPullsLoading] = useState<boolean>(true)
-
   const router = useRouter()
   const isLogin = useRecoilValue(isLoginState)
+  const queryClient = useQueryClient()
+  const [pulls, setPulls] = useState<Pull[] | []>([])
+  const [initialPullsLoading, setInitialPullsLoading] = useState<boolean>(true)
 
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
-    register,
   } = useForm<FormData>()
 
   const { isLoading } = useQuery(
@@ -90,9 +90,11 @@ const ReviewCreation: NextPage = () => {
     },
     {
       onSuccess: () => {
-        router.replace(`/`).catch((error) => {
+        queryClient.invalidateQueries(['reviews']).catch((error) => {
           console.error(error)
         })
+        router.replace('/').catch((error) => console.error(error))
+        toast.success('レビューを作成しました')
       },
     },
   )
@@ -109,7 +111,6 @@ const ReviewCreation: NextPage = () => {
         review_point: data.review_point,
       })
     }
-    reset()
   })
 
   return (
@@ -181,24 +182,46 @@ const ReviewCreation: NextPage = () => {
               </div>
             )}
           />
-          <textarea
-            placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
-            {...register('pull_request_description', {
+          <Controller
+            name="pull_request_description"
+            defaultValue=""
+            control={control}
+            rules={{
               required: 'プルリクエストの説明を入力してください',
-            })}
-          ></textarea>
-          {errors.pull_request_description !== undefined && (
-            <p>{errors.pull_request_description.message}</p>
-          )}
-          <textarea
-            placeholder="メソッド/変数の命名"
-            {...register('review_point', {
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <Multiline
+                  label="プルリクエストの説明"
+                  placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
+                  rows={5}
+                  field={field}
+                  error={Boolean(errors.pull_request_description)}
+                  helperText={errors.pull_request_description?.message}
+                />
+              </div>
+            )}
+          />
+          <Controller
+            name="review_point"
+            defaultValue=""
+            control={control}
+            rules={{
               required: 'レビューしてほしい点を入力してください',
-            })}
-          ></textarea>
-          {errors.review_point !== undefined && (
-            <p>{errors.review_point.message}</p>
-          )}
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <Multiline
+                  label="レビューしてほしい点"
+                  placeholder="①メソッド/変数の命名は適切か②クラスの責務は適切か③インスタンス変数の使い方は適切か④オブジェクト指向になっているか"
+                  rows={5}
+                  field={field}
+                  error={Boolean(errors.review_point)}
+                  helperText={errors.review_point?.message}
+                />
+              </div>
+            )}
+          />
         </form>
       )}
     </>
