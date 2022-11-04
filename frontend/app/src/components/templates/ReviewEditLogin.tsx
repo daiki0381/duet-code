@@ -94,10 +94,8 @@ const ReviewEditLogin: NextPage<Props> = ({ children }) => {
       {(() => {
         if (user !== null && (userIdLoading || reviewLoading)) {
           return (
-            <div className="flex min-h-screen flex-col">
-              <PostLoginHeader />
+            <div className="flex h-[100vh] items-center justify-center">
               <CircularProgress />
-              <Footer />
             </div>
           )
         } else if (user !== null && review?.reviewee?.id === userId) {

@@ -3,10 +3,16 @@ import type { Pull, Review, CreateOrUpdateReview } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useForm } from 'react-hook-form'
-import { auth } from '@/firebase'
+import { useForm, Controller } from 'react-hook-form'
+import { useRecoilValue } from 'recoil'
 import { reviewApi, gitHubApi } from '@/api/custom-instance'
+import { isLoginState } from '@/stores/isLoginState'
+import TextInput from '@/components/atoms/TextInput'
+import SelectMenu from '@/components/atoms/SelectMenu'
+import MultipleSelectMenu from '@/components/atoms/MultipleSelectMenu'
+import Multiline from '@/components/atoms/Multiline'
+import CircularProgress from '@mui/material/CircularProgress'
+import toast from 'react-hot-toast'
 
 const ReviewEdit: NextPage = () => {
   type FormData = {
@@ -51,56 +57,38 @@ const ReviewEdit: NextPage = () => {
     'その他',
   ]
 
-  const [user, loading] = useAuthState(auth)
-  const [pulls, setPulls] = useState<Pull[] | []>([])
-  const [review, setReview] = useState<Review | null>(null)
-
   const router = useRouter()
   const { id } = router.query
+  const isLogin = useRecoilValue(isLoginState)
   const queryClient = useQueryClient()
+  const [pulls, setPulls] = useState<Pull[] | []>([])
+  const [initialPullsLoading, setInitialPullsLoading] = useState<boolean>(true)
+  const [review, setReview] = useState<Review | null>(null)
 
   const {
-    register,
+    control,
     handleSubmit,
-    reset,
-    setValue,
     formState: { errors },
   } = useForm<FormData>()
 
   useQuery(
     ['review'],
     async (): Promise<Review> => {
-      if (typeof id === 'string') {
-        const response = await reviewApi.getReview(id)
-        const review = response.data
-        return review
+      if (typeof id !== 'string') {
+        throw new Error('id is not string')
       }
-      throw new Error('reviewの取得に失敗しました')
+      const { data } = await reviewApi.getReview(id)
+      return data
     },
     {
       onSuccess: (data) => {
         setReview(data)
-        const title = data.title
-        const languages = data.languages
-        const pullRequestDescription = data.pull_request_description
-        const reviewPoint = data.review_point
-        if (
-          title !== undefined &&
-          languages !== undefined &&
-          pullRequestDescription !== undefined &&
-          reviewPoint !== undefined
-        ) {
-          setValue('title', title)
-          setValue('languages', languages)
-          setValue('pull_request_description', pullRequestDescription)
-          setValue('review_point', reviewPoint)
-        }
       },
-      enabled: id !== undefined,
+      enabled: isLogin && id !== undefined,
     },
   )
 
-  useQuery(
+  const { isLoading } = useQuery(
     ['pulls'],
     async (): Promise<Pull[]> => {
       const { data } = await gitHubApi.getCurrentUserPulls()
@@ -108,13 +96,10 @@ const ReviewEdit: NextPage = () => {
     },
     {
       onSuccess: (data) => {
-        const pullRequestTitle = review?.pull_request_title
-        if (pullRequestTitle !== undefined) {
-          setValue('pull_request_title', pullRequestTitle)
-        }
         setPulls(data)
+        setInitialPullsLoading(false)
       },
-      enabled: user !== null,
+      enabled: isLogin,
     },
   )
 
@@ -129,9 +114,12 @@ const ReviewEdit: NextPage = () => {
         queryClient.invalidateQueries(['reviews']).catch((error) => {
           console.error(error)
         })
-        router.replace(`/posts/${Number(id)}`).catch((error) => {
-          console.error(error)
-        })
+        if (typeof id === 'string') {
+          router.replace(`/posts/${id}`).catch((error) => {
+            console.error(error)
+          })
+          toast.success('レビューを編集しました')
+        }
       },
     },
   )
@@ -148,71 +136,119 @@ const ReviewEdit: NextPage = () => {
         review_point: data.review_point,
       })
     }
-    reset()
   })
-
-  if (loading) {
-    return <p>Loading...</p>
-  }
 
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Rubyのレビューをお願いします"
-          {...register('title', { required: 'titleを入力してください' })}
-        />
-        {errors.title !== undefined && <p>{errors.title.message}</p>}
-        <select
-          placeholder="ボウリングのスコア計算オブジェクト指向版"
-          {...register('pull_request_title', {
-            required: 'プルリクエストを選択してください',
-          })}
+      {isLoading && initialPullsLoading ? (
+        <CircularProgress />
+      ) : (
+        <form
+          onSubmit={onSubmit}
+          id="review_edit_form"
+          className="flex flex-col items-center justify-center py-[50px]"
         >
-          {pulls.map((pull) => (
-            <option key={pull.title} value={pull.title}>
-              {pull.title}
-            </option>
-          ))}
-        </select>
-        {errors.pull_request_title !== undefined && (
-          <p>{errors.pull_request_title.message}</p>
-        )}
-        <select
-          placeholder="Ruby"
-          multiple
-          {...register('languages', {
-            required: '使用言語を選択してください',
-          })}
-        >
-          {languages.map((language) => (
-            <option key={language} value={language}>
-              {language}
-            </option>
-          ))}
-        </select>
-        {errors.languages !== undefined && <p>{errors.languages.message}</p>}
-        <textarea
-          placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
-          {...register('pull_request_description', {
-            required: 'プルリクエストの説明を入力してください',
-          })}
-        ></textarea>
-        {errors.pull_request_description !== undefined && (
-          <p>{errors.pull_request_description.message}</p>
-        )}
-        <textarea
-          placeholder="メソッド/変数の命名"
-          {...register('review_point', {
-            required: 'レビューしてほしい点を入力してください',
-          })}
-        ></textarea>
-        {errors.review_point !== undefined && (
-          <p>{errors.review_point.message}</p>
-        )}
-        <button>送信</button>
-      </form>
+          <Controller
+            name="title"
+            defaultValue={review?.title}
+            control={control}
+            rules={{
+              required: 'タイトルを入力してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <TextInput
+                  label="タイトル"
+                  placeholder="Rubyのレビューをお願いします。"
+                  field={field}
+                  error={Boolean(errors.title)}
+                  helperText={errors.title?.message}
+                />
+              </div>
+            )}
+          />
+          <Controller
+            control={control}
+            defaultValue={review?.pull_request_title}
+            name="pull_request_title"
+            rules={{
+              required: 'プルリクエストを選択してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <SelectMenu
+                  label="プルリクエスト (Publicリポジトリ)"
+                  labelId="pull-request"
+                  field={field}
+                  error={Boolean(errors.pull_request_title)}
+                  helperText={errors.pull_request_title?.message}
+                  options={pulls.map((pull) => pull.title)}
+                />
+              </div>
+            )}
+          />
+          <Controller
+            control={control}
+            defaultValue={review?.languages}
+            name="languages"
+            rules={{
+              required: '使用言語を選択してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <MultipleSelectMenu
+                  label="使用言語 (複数選択可)"
+                  labelId="languages"
+                  field={field}
+                  error={Boolean(errors.languages)}
+                  helperText={errors.languages?.message}
+                  options={languages}
+                />
+              </div>
+            )}
+          />
+          <Controller
+            name="pull_request_description"
+            defaultValue={review?.pull_request_description}
+            control={control}
+            rules={{
+              required: 'プルリクエストの説明を入力してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <Multiline
+                  label="プルリクエストの説明"
+                  placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
+                  rows={5}
+                  field={field}
+                  error={Boolean(errors.pull_request_description)}
+                  helperText={errors.pull_request_description?.message}
+                />
+              </div>
+            )}
+          />
+          <Controller
+            name="review_point"
+            defaultValue={review?.review_point}
+            control={control}
+            rules={{
+              required: 'レビューしてほしい点を入力してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <Multiline
+                  label="レビューしてほしい点"
+                  placeholder="①メソッド/変数の命名は適切か②クラスの責務は適切か③インスタンス変数の使い方は適切か④オブジェクト指向になっているか"
+                  rows={5}
+                  field={field}
+                  error={Boolean(errors.review_point)}
+                  helperText={errors.review_point?.message}
+                />
+              </div>
+            )}
+          />
+        </form>
+      )}
     </>
   )
 }

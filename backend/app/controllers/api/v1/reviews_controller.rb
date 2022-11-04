@@ -106,8 +106,9 @@ module Api
           review_point: params[:review_point]
         }
         if @review.update(review_params)
+          @review.languages.destroy_all
           params[:languages].each do |language|
-            @review.languages.update(name: language)
+            @review.languages.create(name: language)
           end
           render status: :created
         else

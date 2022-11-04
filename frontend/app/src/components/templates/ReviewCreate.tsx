@@ -120,7 +120,7 @@ const ReviewCreate: NextPage = () => {
       ) : (
         <form
           onSubmit={onSubmit}
-          id="review_creation_form"
+          id="review_create_form"
           className="flex flex-col items-center justify-center py-[50px]"
         >
           <Controller

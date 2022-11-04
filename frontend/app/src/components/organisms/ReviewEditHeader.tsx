@@ -25,7 +25,7 @@ const ReviewEditHeader: NextPage = () => {
         <p className="text-sm text-black">編集終了</p>
       </div>
       <div>
-        <NormalButton form="review_creation_form">保存する</NormalButton>
+        <NormalButton form="review_edit_form">保存する</NormalButton>
       </div>
     </div>
   )
