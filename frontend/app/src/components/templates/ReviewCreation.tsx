@@ -3,11 +3,13 @@ import type { Pull, CreateOrUpdateReview } from '@/api/api'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
 import { reviewApi, gitHubApi } from '@/api/custom-instance'
 import { isLoginState } from '@/stores/isLoginState'
 import TextInput from '@/components/atoms/TextInput'
+import SelectMenu from '@/components/atoms/SelectMenu'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const ReviewCreation: NextPage = () => {
   type FormData = {
@@ -53,18 +55,20 @@ const ReviewCreation: NextPage = () => {
   ]
 
   const [pulls, setPulls] = useState<Pull[] | []>([])
+  const [initialPullsLoading, setInitialPullsLoading] = useState<boolean>(true)
 
   const router = useRouter()
   const isLogin = useRecoilValue(isLoginState)
 
   const {
-    register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
+    register,
   } = useForm<FormData>()
 
-  useQuery(
+  const { isLoading } = useQuery(
     ['pulls'],
     async (): Promise<Pull[]> => {
       const { data } = await gitHubApi.getCurrentUserPulls()
@@ -73,6 +77,7 @@ const ReviewCreation: NextPage = () => {
     {
       onSuccess: (data) => {
         setPulls(data)
+        setInitialPullsLoading(false)
       },
       enabled: isLogin,
     },
@@ -92,6 +97,7 @@ const ReviewCreation: NextPage = () => {
   )
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data)
     const pull = pulls.find((pull) => pull.title === data.pull_request_title)
     if (pull?.title !== undefined && pull?.url !== undefined) {
       mutate({
@@ -108,70 +114,87 @@ const ReviewCreation: NextPage = () => {
 
   return (
     <>
-      <form
-        onSubmit={onSubmit}
-        id="review_creation_form"
-        className="flex flex-col items-center justify-center py-[50px]"
-      >
-        <div className="mb-[30px]">
-          <TextInput
-            label="タイトル"
-            placeholder="Rubyのレビューをお願いします。"
-            register={register('title', {
+      {isLoading && initialPullsLoading ? (
+        <CircularProgress />
+      ) : (
+        <form
+          onSubmit={onSubmit}
+          id="review_creation_form"
+          className="flex flex-col items-center justify-center py-[50px]"
+        >
+          <Controller
+            name="title"
+            defaultValue=""
+            control={control}
+            rules={{
               required: 'タイトルを入力してください',
-            })}
-            error={errors.title}
-            helperText={errors.title?.message}
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <TextInput
+                  label="タイトル"
+                  placeholder="Rubyのレビューをお願いします。"
+                  field={field}
+                  error={Boolean(errors.title)}
+                  helperText={errors.title?.message}
+                />
+              </div>
+            )}
           />
-        </div>
-        <select
-          placeholder="ボウリングのスコア計算オブジェクト指向版"
-          {...register('pull_request_title', {
-            required: 'プルリクエストを選択してください',
-          })}
-        >
-          {pulls.map((pull) => (
-            <option key={pull.title} value={pull.title}>
-              {pull.title}
-            </option>
-          ))}
-        </select>
-        {errors.pull_request_title !== undefined && (
-          <p>{errors.pull_request_title.message}</p>
-        )}
-        <select
-          placeholder="Ruby"
-          multiple
-          {...register('languages', {
-            required: '使用言語を選択してください',
-          })}
-        >
-          {languages.map((language) => (
-            <option key={language} value={language}>
-              {language}
-            </option>
-          ))}
-        </select>
-        {errors.languages !== undefined && <p>{errors.languages.message}</p>}
-        <textarea
-          placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
-          {...register('pull_request_description', {
-            required: 'プルリクエストの説明を入力してください',
-          })}
-        ></textarea>
-        {errors.pull_request_description !== undefined && (
-          <p>{errors.pull_request_description.message}</p>
-        )}
-        <textarea
-          placeholder="メソッド/変数の命名"
-          {...register('review_point', {
-            required: 'レビューしてほしい点を入力してください',
-          })}
-        ></textarea>
-        {errors.review_point !== undefined && (
-          <p>{errors.review_point.message}</p>
-        )}
-      </form>
+          <Controller
+            control={control}
+            defaultValue=""
+            name="pull_request_title"
+            rules={{
+              required: 'プルリクエストを選択してください',
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <SelectMenu
+                  label="プルリクエスト (Publicリポジトリ)"
+                  labelId="pull-request"
+                  field={field}
+                  error={Boolean(errors.pull_request_title)}
+                  helperText={errors.pull_request_title?.message}
+                  options={pulls.map((pull) => pull.title)}
+                />
+              </div>
+            )}
+          />
+          <select
+            placeholder="Ruby"
+            multiple
+            {...register('languages', {
+              required: '使用言語を選択してください',
+            })}
+          >
+            {languages.map((language) => (
+              <option key={language} value={language}>
+                {language}
+              </option>
+            ))}
+          </select>
+          {errors.languages !== undefined && <p>{errors.languages.message}</p>}
+          <textarea
+            placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
+            {...register('pull_request_description', {
+              required: 'プルリクエストの説明を入力してください',
+            })}
+          ></textarea>
+          {errors.pull_request_description !== undefined && (
+            <p>{errors.pull_request_description.message}</p>
+          )}
+          <textarea
+            placeholder="メソッド/変数の命名"
+            {...register('review_point', {
+              required: 'レビューしてほしい点を入力してください',
+            })}
+          ></textarea>
+          {errors.review_point !== undefined && (
+            <p>{errors.review_point.message}</p>
+          )}
+        </form>
+      )}
     </>
   )
 }

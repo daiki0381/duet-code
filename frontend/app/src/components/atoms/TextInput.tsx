@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField'
 type Props = {
   label: string
   placeholder: string
-  register: any
+  field: any
   error: any
   helperText: any
 }
@@ -12,7 +12,7 @@ type Props = {
 const TextInput: NextPage<Props> = ({
   label,
   placeholder,
-  register,
+  field,
   error,
   helperText,
 }) => {
@@ -20,7 +20,7 @@ const TextInput: NextPage<Props> = ({
     <TextField
       label={label}
       placeholder={placeholder}
-      {...register}
+      {...field}
       error={error}
       helperText={helperText}
       className="w-[800px]"
