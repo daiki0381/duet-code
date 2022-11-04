@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSetRecoilState } from 'recoil'
 import { auth } from '@/firebase'
-import ReviewCreationHeader from '@/components/organisms/ReviewCreationHeader'
+import ReviewCreateHeader from '@/components/organisms/ReviewCreateHeader'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -14,7 +14,7 @@ type Props = {
   children: JSX.Element
 }
 
-const ReviewCreationLogin: NextPage<Props> = ({ children }) => {
+const ReviewCreateLogin: NextPage<Props> = ({ children }) => {
   const [user, isLoading] = useAuthState(auth)
   const setIsLogin = useSetRecoilState(isLoginState)
   const router = useRouter()
@@ -46,7 +46,7 @@ const ReviewCreationLogin: NextPage<Props> = ({ children }) => {
     <>
       {user !== null ? (
         <div className="flex min-h-screen flex-col">
-          <ReviewCreationHeader />
+          <ReviewCreateHeader />
           {children}
           <Footer />
         </div>
@@ -57,4 +57,4 @@ const ReviewCreationLogin: NextPage<Props> = ({ children }) => {
   )
 }
 
-export default ReviewCreationLogin
+export default ReviewCreateLogin

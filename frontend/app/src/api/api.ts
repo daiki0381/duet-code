@@ -510,12 +510,12 @@ export const NotificationApiAxiosParamCreator = function (
     /**
      *
      * @summary Create accepted notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createAcceptedNotification: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -557,12 +557,12 @@ export const NotificationApiAxiosParamCreator = function (
     /**
      *
      * @summary Create feedback notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createFeedbackNotification: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -604,12 +604,12 @@ export const NotificationApiAxiosParamCreator = function (
     /**
      *
      * @summary Create thanks notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createThanksNotification: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -751,12 +751,12 @@ export const NotificationApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create accepted notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createAcceptedNotification(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -776,12 +776,12 @@ export const NotificationApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create feedback notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createFeedbackNotification(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -801,12 +801,12 @@ export const NotificationApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create thanks notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createThanksNotification(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -888,12 +888,12 @@ export const NotificationApiFactory = function (
     /**
      *
      * @summary Create accepted notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createAcceptedNotification(
-      reviewId: number,
+      reviewId: string,
       options?: any,
     ): AxiosPromise<void> {
       return localVarFp
@@ -903,12 +903,12 @@ export const NotificationApiFactory = function (
     /**
      *
      * @summary Create feedback notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createFeedbackNotification(
-      reviewId: number,
+      reviewId: string,
       options?: any,
     ): AxiosPromise<void> {
       return localVarFp
@@ -918,12 +918,12 @@ export const NotificationApiFactory = function (
     /**
      *
      * @summary Create thanks notification
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createThanksNotification(
-      reviewId: number,
+      reviewId: string,
       options?: any,
     ): AxiosPromise<void> {
       return localVarFp
@@ -971,13 +971,13 @@ export class NotificationApi extends BaseAPI {
   /**
    *
    * @summary Create accepted notification
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof NotificationApi
    */
   public createAcceptedNotification(
-    reviewId: number,
+    reviewId: string,
     options?: AxiosRequestConfig,
   ) {
     return NotificationApiFp(this.configuration)
@@ -988,13 +988,13 @@ export class NotificationApi extends BaseAPI {
   /**
    *
    * @summary Create feedback notification
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof NotificationApi
    */
   public createFeedbackNotification(
-    reviewId: number,
+    reviewId: string,
     options?: AxiosRequestConfig,
   ) {
     return NotificationApiFp(this.configuration)
@@ -1005,13 +1005,13 @@ export class NotificationApi extends BaseAPI {
   /**
    *
    * @summary Create thanks notification
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof NotificationApi
    */
   public createThanksNotification(
-    reviewId: number,
+    reviewId: string,
     options?: AxiosRequestConfig,
   ) {
     return NotificationApiFp(this.configuration)
@@ -1061,12 +1061,12 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Accept review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     acceptReview: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -1111,13 +1111,13 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Create feedback
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateFeedback} [createFeedback]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createFeedback: async (
-      reviewId: number,
+      reviewId: string,
       createFeedback?: CreateFeedback,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -1218,13 +1218,13 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Create thanks
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateThanks} [createThanks]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createThanks: async (
-      reviewId: number,
+      reviewId: string,
       createThanks?: CreateThanks,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -1273,12 +1273,12 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Delete review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteReview: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -1319,12 +1319,12 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Get review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getReview: async (
-      reviewId: number,
+      reviewId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'reviewId' is not null or undefined
@@ -1404,13 +1404,13 @@ export const ReviewApiAxiosParamCreator = function (
     /**
      *
      * @summary Update review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateReview: async (
-      reviewId: number,
+      reviewId: string,
       createOrUpdateReview?: CreateOrUpdateReview,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -1469,12 +1469,12 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Accept review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async acceptReview(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1493,13 +1493,13 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create feedback
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateFeedback} [createFeedback]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createFeedback(
-      reviewId: number,
+      reviewId: string,
       createFeedback?: CreateFeedback,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -1544,13 +1544,13 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Create thanks
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateThanks} [createThanks]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createThanks(
-      reviewId: number,
+      reviewId: string,
       createThanks?: CreateThanks,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -1571,12 +1571,12 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Delete review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteReview(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1595,12 +1595,12 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getReview(
-      reviewId: number,
+      reviewId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Review>
@@ -1640,13 +1640,13 @@ export const ReviewApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Update review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateReview(
-      reviewId: number,
+      reviewId: string,
       createOrUpdateReview?: CreateOrUpdateReview,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -1681,11 +1681,11 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Accept review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    acceptReview(reviewId: number, options?: any): AxiosPromise<void> {
+    acceptReview(reviewId: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .acceptReview(reviewId, options)
         .then((request) => request(axios, basePath))
@@ -1693,13 +1693,13 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Create feedback
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateFeedback} [createFeedback]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createFeedback(
-      reviewId: number,
+      reviewId: string,
       createFeedback?: CreateFeedback,
       options?: any,
     ): AxiosPromise<void> {
@@ -1725,13 +1725,13 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Create thanks
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateThanks} [createThanks]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createThanks(
-      reviewId: number,
+      reviewId: string,
       createThanks?: CreateThanks,
       options?: any,
     ): AxiosPromise<void> {
@@ -1742,11 +1742,11 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Delete review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteReview(reviewId: number, options?: any): AxiosPromise<void> {
+    deleteReview(reviewId: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .deleteReview(reviewId, options)
         .then((request) => request(axios, basePath))
@@ -1754,11 +1754,11 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Get review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getReview(reviewId: number, options?: any): AxiosPromise<Review> {
+    getReview(reviewId: string, options?: any): AxiosPromise<Review> {
       return localVarFp
         .getReview(reviewId, options)
         .then((request) => request(axios, basePath))
@@ -1777,13 +1777,13 @@ export const ReviewApiFactory = function (
     /**
      *
      * @summary Update review
-     * @param {number} reviewId
+     * @param {string} reviewId
      * @param {CreateOrUpdateReview} [createOrUpdateReview]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateReview(
-      reviewId: number,
+      reviewId: string,
       createOrUpdateReview?: CreateOrUpdateReview,
       options?: any,
     ): AxiosPromise<void> {
@@ -1804,12 +1804,12 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Accept review
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
-  public acceptReview(reviewId: number, options?: AxiosRequestConfig) {
+  public acceptReview(reviewId: string, options?: AxiosRequestConfig) {
     return ReviewApiFp(this.configuration)
       .acceptReview(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -1818,14 +1818,14 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Create feedback
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {CreateFeedback} [createFeedback]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
   public createFeedback(
-    reviewId: number,
+    reviewId: string,
     createFeedback?: CreateFeedback,
     options?: AxiosRequestConfig,
   ) {
@@ -1854,14 +1854,14 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Create thanks
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {CreateThanks} [createThanks]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
   public createThanks(
-    reviewId: number,
+    reviewId: string,
     createThanks?: CreateThanks,
     options?: AxiosRequestConfig,
   ) {
@@ -1873,12 +1873,12 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Delete review
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
-  public deleteReview(reviewId: number, options?: AxiosRequestConfig) {
+  public deleteReview(reviewId: string, options?: AxiosRequestConfig) {
     return ReviewApiFp(this.configuration)
       .deleteReview(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -1887,12 +1887,12 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Get review
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
-  public getReview(reviewId: number, options?: AxiosRequestConfig) {
+  public getReview(reviewId: string, options?: AxiosRequestConfig) {
     return ReviewApiFp(this.configuration)
       .getReview(reviewId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -1914,14 +1914,14 @@ export class ReviewApi extends BaseAPI {
   /**
    *
    * @summary Update review
-   * @param {number} reviewId
+   * @param {string} reviewId
    * @param {CreateOrUpdateReview} [createOrUpdateReview]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof ReviewApi
    */
   public updateReview(
-    reviewId: number,
+    reviewId: string,
     createOrUpdateReview?: CreateOrUpdateReview,
     options?: AxiosRequestConfig,
   ) {
@@ -1985,12 +1985,12 @@ export const UserApiAxiosParamCreator = function (
     /**
      *
      * @summary Get user
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUser: async (
-      userId: number,
+      userId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
@@ -2031,12 +2031,12 @@ export const UserApiAxiosParamCreator = function (
     /**
      *
      * @summary Get user accepted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserAcceptedReviews: async (
-      userId: number,
+      userId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
@@ -2077,12 +2077,12 @@ export const UserApiAxiosParamCreator = function (
     /**
      *
      * @summary Get user wanted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserWantedReviews: async (
-      userId: number,
+      userId: string,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
@@ -2205,12 +2205,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get user
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getUser(
-      userId: number,
+      userId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
@@ -2229,12 +2229,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get user accepted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getUserAcceptedReviews(
-      userId: number,
+      userId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Review>>
@@ -2251,12 +2251,12 @@ export const UserApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get user wanted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getUserWantedReviews(
-      userId: number,
+      userId: string,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Review>>
@@ -2322,11 +2322,11 @@ export const UserApiFactory = function (
     /**
      *
      * @summary Get user
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUser(userId: number, options?: any): AxiosPromise<User> {
+    getUser(userId: string, options?: any): AxiosPromise<User> {
       return localVarFp
         .getUser(userId, options)
         .then((request) => request(axios, basePath))
@@ -2334,12 +2334,12 @@ export const UserApiFactory = function (
     /**
      *
      * @summary Get user accepted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserAcceptedReviews(
-      userId: number,
+      userId: string,
       options?: any,
     ): AxiosPromise<Array<Review>> {
       return localVarFp
@@ -2349,12 +2349,12 @@ export const UserApiFactory = function (
     /**
      *
      * @summary Get user wanted reviews
-     * @param {number} userId
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserWantedReviews(
-      userId: number,
+      userId: string,
       options?: any,
     ): AxiosPromise<Array<Review>> {
       return localVarFp
@@ -2399,12 +2399,12 @@ export class UserApi extends BaseAPI {
   /**
    *
    * @summary Get user
-   * @param {number} userId
+   * @param {string} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public getUser(userId: number, options?: AxiosRequestConfig) {
+  public getUser(userId: string, options?: AxiosRequestConfig) {
     return UserApiFp(this.configuration)
       .getUser(userId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -2413,12 +2413,12 @@ export class UserApi extends BaseAPI {
   /**
    *
    * @summary Get user accepted reviews
-   * @param {number} userId
+   * @param {string} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public getUserAcceptedReviews(userId: number, options?: AxiosRequestConfig) {
+  public getUserAcceptedReviews(userId: string, options?: AxiosRequestConfig) {
     return UserApiFp(this.configuration)
       .getUserAcceptedReviews(userId, options)
       .then((request) => request(this.axios, this.basePath))
@@ -2427,12 +2427,12 @@ export class UserApi extends BaseAPI {
   /**
    *
    * @summary Get user wanted reviews
-   * @param {number} userId
+   * @param {string} userId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public getUserWantedReviews(userId: number, options?: AxiosRequestConfig) {
+  public getUserWantedReviews(userId: string, options?: AxiosRequestConfig) {
     return UserApiFp(this.configuration)
       .getUserWantedReviews(userId, options)
       .then((request) => request(this.axios, this.basePath))

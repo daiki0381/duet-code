@@ -1,13 +1,13 @@
 import type { NextPage } from 'next'
-import ReviewCreationLogin from '@/components/templates/ReviewCreationLogin'
-import ReviewCreation from '@/components/templates/ReviewCreation'
+import ReviewCreateLogin from '@/components/templates/ReviewCreateLogin'
+import ReviewCreate from '@/components/templates/ReviewCreate'
 
 const New: NextPage = () => {
   return (
     <>
-      <ReviewCreationLogin>
-        <ReviewCreation />
-      </ReviewCreationLogin>
+      <ReviewCreateLogin>
+        <ReviewCreate />
+      </ReviewCreateLogin>
     </>
   )
 }

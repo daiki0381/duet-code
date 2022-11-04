@@ -44,7 +44,7 @@ module Api
 
       def show
         @review = Review.find(params[:id])
-        reviewer = review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
+        reviewer = @review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
         name = reviewer ? reviewer.name : nil
         avatar = reviewer ? reviewer.avatar : nil
         languages = @review.languages.map(&:name)

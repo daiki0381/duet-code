@@ -43,7 +43,7 @@ paths:
   '/api/v1/users/{user_id}':
     parameters:
       - schema:
-          type: number
+          type: string
         name: user_id
         in: path
         required: true
@@ -70,7 +70,7 @@ paths:
   '/api/v1/users/{user_id}/wanted_reviews':
     parameters:
       - schema:
-          type: number
+          type: string
         name: user_id
         in: path
         required: true
@@ -115,7 +115,7 @@ paths:
   '/api/v1/users/{user_id}/accepted_reviews':
     parameters:
       - schema:
-          type: number
+          type: string
         name: user_id
         in: path
         required: true
@@ -269,7 +269,7 @@ paths:
   '/api/v1/reviews/{review_id}':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -345,7 +345,7 @@ paths:
   '/api/v1/reviews/{review_id}/accepted':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -364,7 +364,7 @@ paths:
   '/api/v1/reviews/{review_id}/feedback':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -390,7 +390,7 @@ paths:
   '/api/v1/reviews/{review_id}/thanks':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -459,7 +459,7 @@ paths:
   '/api/v1/reviews/{review_id}/notifications/accepted':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -476,7 +476,7 @@ paths:
   '/api/v1/reviews/{review_id}/notifications/feedback':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true
@@ -493,7 +493,7 @@ paths:
   '/api/v1/reviews/{review_id}/notifications/thanks':
     parameters:
       - schema:
-          type: number
+          type: string
         name: review_id
         in: path
         required: true

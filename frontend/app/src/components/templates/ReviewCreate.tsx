@@ -14,7 +14,7 @@ import Multiline from '@/components/atoms/Multiline'
 import CircularProgress from '@mui/material/CircularProgress'
 import toast from 'react-hot-toast'
 
-const ReviewCreation: NextPage = () => {
+const ReviewCreate: NextPage = () => {
   type FormData = {
     title: string
     pull_request_title: string
@@ -228,4 +228,4 @@ const ReviewCreation: NextPage = () => {
   )
 }
 
-export default ReviewCreation
+export default ReviewCreate

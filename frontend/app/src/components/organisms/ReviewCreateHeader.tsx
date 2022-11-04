@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import NormalButton from '@/components/atoms/NormalButton'
 
-const ReviewCreationHeader: NextPage = () => {
+const ReviewCreateHeader: NextPage = () => {
   const router = useRouter()
 
   const goToHome = (): void => {
@@ -30,4 +30,4 @@ const ReviewCreationHeader: NextPage = () => {
   )
 }
 
-export default ReviewCreationHeader
+export default ReviewCreateHeader
