@@ -9,6 +9,7 @@ import { reviewApi, gitHubApi } from '@/api/custom-instance'
 import { isLoginState } from '@/stores/isLoginState'
 import TextInput from '@/components/atoms/TextInput'
 import SelectMenu from '@/components/atoms/SelectMenu'
+import MultipleSelectMenu from '@/components/atoms/MultipleSelectMenu'
 import CircularProgress from '@mui/material/CircularProgress'
 
 const ReviewCreation: NextPage = () => {
@@ -97,7 +98,6 @@ const ReviewCreation: NextPage = () => {
   )
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
     const pull = pulls.find((pull) => pull.title === data.pull_request_title)
     if (pull?.title !== undefined && pull?.url !== undefined) {
       mutate({
@@ -161,20 +161,26 @@ const ReviewCreation: NextPage = () => {
               </div>
             )}
           />
-          <select
-            placeholder="Ruby"
-            multiple
-            {...register('languages', {
+          <Controller
+            control={control}
+            defaultValue={[]}
+            name="languages"
+            rules={{
               required: '使用言語を選択してください',
-            })}
-          >
-            {languages.map((language) => (
-              <option key={language} value={language}>
-                {language}
-              </option>
-            ))}
-          </select>
-          {errors.languages !== undefined && <p>{errors.languages.message}</p>}
+            }}
+            render={({ field }) => (
+              <div className="mb-[30px]">
+                <MultipleSelectMenu
+                  label="使用言語 (複数選択可)"
+                  labelId="languages"
+                  field={field}
+                  error={Boolean(errors.languages)}
+                  helperText={errors.languages?.message}
+                  options={languages}
+                />
+              </div>
+            )}
+          />
           <textarea
             placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
             {...register('pull_request_description', {

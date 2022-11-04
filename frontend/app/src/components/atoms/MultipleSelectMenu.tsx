@@ -1,9 +1,12 @@
 import type { NextPage } from 'next'
 import { useState } from 'react'
+import Box from '@mui/material/Box'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Chip from '@mui/material/Chip'
 import FormHelperText from '@mui/material/FormHelperText'
 
 type Props = {
@@ -15,7 +18,7 @@ type Props = {
   helperText: any
 }
 
-const SelectMenu: NextPage<Props> = ({
+const MultipleSelectMenu: NextPage<Props> = ({
   label,
   labelId,
   field,
@@ -23,9 +26,12 @@ const SelectMenu: NextPage<Props> = ({
   error,
   helperText,
 }) => {
-  const [value, setValue] = useState<string>('')
-  const handleChange = (event: SelectChangeEvent): void => {
-    setValue(event.target.value)
+  const [items, setItems] = useState<string[]>([])
+  const handleChange = (event: SelectChangeEvent<typeof items>): void => {
+    const {
+      target: { value },
+    } = event
+    setItems(typeof value === 'string' ? value.split(',') : value)
   }
 
   return (
@@ -33,10 +39,18 @@ const SelectMenu: NextPage<Props> = ({
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         labelId={labelId}
-        label={label}
-        value={value}
+        multiple
+        value={items}
         onChange={handleChange}
         {...field}
+        input={<OutlinedInput label={label} />}
+        renderValue={(selected: any) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selected.map((value: any) => (
+              <Chip key={value} label={value} variant="outlined" />
+            ))}
+          </Box>
+        )}
       >
         {options.map((option: any) => (
           <MenuItem key={option} value={option}>
@@ -49,4 +63,4 @@ const SelectMenu: NextPage<Props> = ({
   )
 }
 
-export default SelectMenu
+export default MultipleSelectMenu

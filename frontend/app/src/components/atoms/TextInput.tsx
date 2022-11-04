@@ -24,7 +24,6 @@ const TextInput: NextPage<Props> = ({
       error={error}
       helperText={helperText}
       className="w-[800px]"
-      variant="filled"
     />
   )
 }
