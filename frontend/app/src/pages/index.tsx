@@ -1,12 +1,12 @@
 import type { NextPage } from 'next'
-import Login from '@/components/templates/Login'
+import TopLogin from '@/components/templates/TopLogin'
 import ReviewList from '@/components/templates/ReviewList'
 
 const Home: NextPage = () => {
   return (
-    <Login>
+    <TopLogin>
       <ReviewList />
-    </Login>
+    </TopLogin>
   )
 }
 

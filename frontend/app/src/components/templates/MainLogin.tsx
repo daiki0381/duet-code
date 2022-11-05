@@ -1,24 +1,25 @@
 import type { NextPage } from 'next'
 import { useDidUpdateEffect } from '@/hooks/useDidUpdateEffect'
+import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useSetRecoilState } from 'recoil'
 import { auth } from '@/firebase'
-import PreLoginHeader from '@/components/organisms/PreLoginHeader'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
-import Top from '@/components/templates/Top'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
 import { avatarState } from '@/stores/avatarState'
 import CircularProgress from '@mui/material/CircularProgress'
+import toast from 'react-hot-toast'
 
 type Props = {
   children: JSX.Element
 }
 
-const Login: NextPage<Props> = ({ children }) => {
+const MainLogin: NextPage<Props> = ({ children }) => {
   const [user, isLoading] = useAuthState(auth)
   const setIsLogin = useSetRecoilState(isLoginState)
   const setAvatar = useSetRecoilState(avatarState)
+  const router = useRouter()
 
   useDidUpdateEffect(() => {
     if (user !== null && user !== undefined) {
@@ -31,6 +32,13 @@ const Login: NextPage<Props> = ({ children }) => {
       setIsLogin(false)
     }
   }, [user])
+
+  const redirect = (): void => {
+    router.push('/').catch((error) => {
+      console.error(error)
+    })
+    toast.error('ログインしてください')
+  }
 
   if (isLoading) {
     return (
@@ -49,14 +57,10 @@ const Login: NextPage<Props> = ({ children }) => {
           <Footer />
         </div>
       ) : (
-        <div className="flex min-h-screen flex-col">
-          <PreLoginHeader />
-          <Top />
-          <Footer />
-        </div>
+        redirect()
       )}
     </>
   )
 }
 
-export default Login
+export default MainLogin
