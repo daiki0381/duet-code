@@ -1,7 +1,8 @@
 import type { NextPage } from 'next'
+import NotFoundLogin from '@/components/templates/NotFoundLogin'
 
-const NotFound: NextPage = () => {
-  return <div>404画面</div>
+const CustomNotFound: NextPage = () => {
+  return <NotFoundLogin />
 }
 
-export default NotFound
+export default CustomNotFound

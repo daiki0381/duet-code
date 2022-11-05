@@ -5,17 +5,13 @@ import { useSetRecoilState } from 'recoil'
 import { auth } from '@/firebase'
 import PreLoginHeader from '@/components/organisms/PreLoginHeader'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
-import Top from '@/components/templates/Top'
+import NotFound from '@/components/templates/NotFound'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
 import { avatarState } from '@/stores/avatarState'
 import CircularProgress from '@mui/material/CircularProgress'
 
-type Props = {
-  children: JSX.Element
-}
-
-const Login: NextPage<Props> = ({ children }) => {
+const NotFoundLogin: NextPage = () => {
   const [user, isLoading] = useAuthState(auth)
   const setIsLogin = useSetRecoilState(isLoginState)
   const setAvatar = useSetRecoilState(avatarState)
@@ -45,13 +41,13 @@ const Login: NextPage<Props> = ({ children }) => {
       {user !== null ? (
         <div className="flex min-h-screen flex-col">
           <PostLoginHeader />
-          {children}
+          <NotFound />
           <Footer />
         </div>
       ) : (
         <div className="flex min-h-screen flex-col">
           <PreLoginHeader />
-          <Top />
+          <NotFound />
           <Footer />
         </div>
       )}
@@ -59,4 +55,4 @@ const Login: NextPage<Props> = ({ children }) => {
   )
 }
 
-export default Login
+export default NotFoundLogin

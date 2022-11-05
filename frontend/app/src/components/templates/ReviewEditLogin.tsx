@@ -10,6 +10,7 @@ import toast from 'react-hot-toast'
 import { auth } from '@/firebase'
 import PostLoginHeader from '../organisms/PostLoginHeader'
 import ReviewEditHeader from '@/components/organisms/ReviewEditHeader'
+import NotFound from '@/components/templates/NotFound'
 import Footer from '@/components/organisms/Footer'
 import { isLoginState } from '@/stores/isLoginState'
 import { avatarState } from '@/stores/avatarState'
@@ -110,7 +111,7 @@ const ReviewEditLogin: NextPage<Props> = ({ children }) => {
           return (
             <div className="flex min-h-screen flex-col">
               <PostLoginHeader />
-              <p>404画面</p>
+              <NotFound />
               <Footer />
             </div>
           )

@@ -141,7 +141,9 @@ const ReviewEdit: NextPage = () => {
   return (
     <>
       {isLoading && initialPullsLoading ? (
-        <CircularProgress />
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress />
+        </div>
       ) : (
         <form
           onSubmit={onSubmit}
