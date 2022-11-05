@@ -86,7 +86,7 @@ const ReviewDetails: NextPage = () => {
   )
 
   return (
-    <div>
+    <div className="px-[100px] py-[50px]">
       {(() => {
         if (review?.accepted_at === null && review.reviewee?.id !== userId) {
           return <button onClick={() => acceptReview()}>承諾する</button>
