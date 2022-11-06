@@ -119,6 +119,15 @@ module Api
       def accept_review
         @review = Review.find(params[:id])
         if @review.update(accepted_at: DateTime.now, reviewer_id: current_user.id)
+          render status: :created
+        else
+          render status: :unprocessable_entity
+        end
+      end
+
+      def request_review
+        @review = Review.find(params[:id])
+        if @review
           @reviewee = User.find(@review.reviewee_id)
           @reviewer = User.find(@review.reviewer_id)
           reviewee = Octokit::Client.new(access_token: @reviewee.github_access_token)

@@ -548,6 +548,24 @@ paths:
       security:
         - JWT: []
       parameters: []
+  '/api/v1/reviews/{review_id}/request_review':
+    parameters:
+      - schema:
+          type: string
+        name: review_id
+        in: path
+        required: true
+    post:
+      summary: Request review
+      operationId: request-review
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      tags:
+        - GitHub
+      description: ''
 components:
   schemas:
     user:

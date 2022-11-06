@@ -197,6 +197,7 @@ const ReviewCreate: NextPage = () => {
                   label="プルリクエストの説明"
                   placeholder="ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。"
                   rows={5}
+                  width="w-[800px]"
                   field={field}
                   error={Boolean(errors.pull_request_description)}
                   helperText={errors.pull_request_description?.message}
@@ -217,6 +218,7 @@ const ReviewCreate: NextPage = () => {
                   label="レビューしてほしい点"
                   placeholder="①メソッド/変数の命名は適切か②クラスの責務は適切か③インスタンス変数の使い方は適切か④オブジェクト指向になっているか"
                   rows={5}
+                  width="w-[800px]"
                   field={field}
                   error={Boolean(errors.review_point)}
                   helperText={errors.review_point?.message}

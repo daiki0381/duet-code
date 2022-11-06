@@ -5,6 +5,7 @@ type Props = {
   label: string
   placeholder: string
   rows: number
+  width: string
   field: any
   error: any
   helperText: any
@@ -14,6 +15,7 @@ const Multiline: NextPage<Props> = ({
   label,
   placeholder,
   rows,
+  width,
   field,
   error,
   helperText,
@@ -27,7 +29,7 @@ const Multiline: NextPage<Props> = ({
       {...field}
       error={error}
       helperText={helperText}
-      className="w-[800px]"
+      className={width}
     />
   )
 }
