@@ -1,73 +1,198 @@
 import type { NextPage } from 'next'
-import type { Review } from '@/api/api'
-import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useQuery } from '@tanstack/react-query'
-import { userApi } from '@/api/custom-instance'
+import {
+  withAuthUser,
+  withAuthUserTokenSSR,
+  useAuthUser,
+  AuthAction,
+} from 'next-firebase-auth'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { userApi, notificationApi } from '@/api/custom-instance'
+import PostLoginHeader from '@/components/organisms/PostLoginHeader'
+import UserDetails from '@/components/templates/UserDetails'
+import PostLoginFooter from '@/components/organisms/PostLoginFooter'
 
-const Details: NextPage = () => {
+const Details: NextPage<any> = ({ avatar }) => {
+  const AuthUser = useAuthUser()
   const router = useRouter()
   const { id } = router.query
+  const goToHome = (): void => {
+    if (process.browser) {
+      router.replace('/').catch((error) => {
+        console.error(error)
+      })
+    }
+  }
 
-  const [wantedReviews, setWantedReviews] = useState<Review[] | []>([])
-  const [acceptedReviews, setAcceptedReviews] = useState<Review[] | []>([])
-  const [thanksList, setThanksList] = useState<string[] | []>([])
-  const [feedbackList, setFeedbackList] = useState<string[] | []>([])
+  const { data: userId } = useQuery(
+    ['userId'],
+    async () => {
+      const token = await AuthUser.getIdToken()
+      if (token !== null) {
+        const { data } = await userApi.getCurrentUserId({
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        return data
+      }
+    },
+    {
+      enabled: AuthUser.id !== null,
+    },
+  )
 
-  useQuery(
+  const { data: notifications } = useQuery(
+    ['notifications'],
+    async () => {
+      const token = await AuthUser.getIdToken()
+      if (token !== null) {
+        const { data } =
+          await await notificationApi.getCurrentUserNotifications({
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        return data
+      }
+    },
+    {
+      enabled: AuthUser.id !== null,
+    },
+  )
+
+  const { data: user } = useQuery(
+    ['user'],
+    async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUser(id)
+        return data
+      }
+    },
+    {
+      enabled: AuthUser.id !== null,
+      retry: false,
+    },
+  )
+
+  const { data: wantedReviews } = useQuery(
     ['wantedReviews'],
-    async (): Promise<Review[]> => {
-      const userId = Number(id)
-      const response = await userApi.getUserWantedReviews(userId)
-      return response.data
+    async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUserWantedReviews(id)
+        return data
+      }
     },
     {
-      onSuccess: (data) => {
-        setWantedReviews(data)
-        const thanksList: any = data.map((review) => review.thanks)
-        setThanksList(thanksList)
-      },
-      enabled: id !== undefined,
+      enabled: AuthUser.id !== null,
+      retry: false,
     },
   )
 
-  useQuery(
+  const { data: acceptedReviews } = useQuery(
     ['acceptedReviews'],
-    async (): Promise<Review[]> => {
-      const userId = Number(id)
-      const response = await userApi.getUserAcceptedReviews(userId)
-      return response.data
+    async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUserAcceptedReviews(id)
+        return data
+      }
     },
     {
-      onSuccess: (data) => {
-        setAcceptedReviews(data)
-        const feedbackList: any = data.map((review) => review.feedback)
-        setFeedbackList(feedbackList)
-      },
-      enabled: id !== undefined,
+      enabled: AuthUser.id !== null,
+      retry: false,
     },
   )
+
+  const currentUserId = userId !== undefined ? userId : 0
+  const reviewNotifications = notifications !== undefined ? notifications : []
+  const badgeContent = reviewNotifications.filter(
+    (notification) => notification.checked === false,
+  ).length
+  const userWantedReviews = wantedReviews !== undefined ? wantedReviews : []
+  const userAcceptedReviews =
+    acceptedReviews !== undefined ? acceptedReviews : []
 
   return (
-    <div>
-      <p>お礼</p>
-      {thanksList.map((thanks) => (
-        <p key={thanks}>{thanks}</p>
-      ))}
-      <p>フィードバック</p>
-      {feedbackList.map((feedback) => (
-        <p key={feedback}>{feedback}</p>
-      ))}
-      <p>募集したレビュー</p>
-      {wantedReviews.map((review) => (
-        <p key={review.id}>{review.title}</p>
-      ))}
-      <p>承諾したレビュー</p>
-      {acceptedReviews.map((review) => (
-        <p key={review.id}>{review.title}</p>
-      ))}
-    </div>
+    <>
+      {user !== undefined ? (
+        <div className="flex min-h-screen flex-col">
+          <PostLoginHeader
+            avatar={avatar}
+            userId={currentUserId}
+            notifications={reviewNotifications}
+            badgeContent={badgeContent}
+          />
+          <UserDetails
+            user={user}
+            wantedReviews={userWantedReviews}
+            acceptedReviews={userAcceptedReviews}
+          />
+          <PostLoginFooter />
+        </div>
+      ) : (
+        goToHome()
+      )}
+    </>
   )
 }
 
-export default Details
+export const getServerSideProps = withAuthUserTokenSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async ({ AuthUser, query }) => {
+  const queryClient = new QueryClient()
+  const token = await AuthUser.getIdToken()
+  const avatar = AuthUser.photoURL
+  const { id } = query
+
+  if (token !== null) {
+    await queryClient.prefetchQuery(['userId'], async () => {
+      const { data } = await userApi.getCurrentUserId({
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return data
+    })
+
+    await queryClient.prefetchQuery(['notifications'], async () => {
+      const { data } = await notificationApi.getCurrentUserNotifications({
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      return data
+    })
+
+    await queryClient.prefetchQuery(['user'], async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUser(id)
+        return data
+      }
+    })
+
+    await queryClient.prefetchQuery(['wantedReviews'], async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUserWantedReviews(id)
+        return data
+      }
+    })
+
+    await queryClient.prefetchQuery(['acceptedReviews'], async () => {
+      if (typeof id === 'string') {
+        const { data } = await userApi.getUserAcceptedReviews(id)
+        return data
+      }
+    })
+  }
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+      avatar,
+    },
+  }
+})
+
+export default withAuthUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(Details)

@@ -56,7 +56,7 @@ module Api
       def user_wanted_reviews
         @user = User.find(params[:id])
         @wanted_reviews = Review.where(reviewee_id: @user.id).order(created_at: 'DESC').map do |review|
-          reviewer = review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
+          reviewer = review.reviewer_id.nil? ? nil : User.find(review.reviewer_id)
           name = reviewer ? reviewer.name : nil
           avatar = reviewer ? reviewer.avatar : nil
           languages = review.languages.map(&:name)
