@@ -7,12 +7,12 @@ import {
   AuthAction,
 } from 'next-firebase-auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
-import { userApi, reviewApi, gitHubApi } from '@/api/custom-instance'
-import ReviewEditHeader from '@/components/organisms/ReviewEditHeader'
-import ReviewEdit from '@/components/templates/ReviewEdit'
+import { userApi, reviewApi } from '@/api/custom-instance'
+import ReviewThanksHeader from '@/components/organisms/ReviewThanksHeader'
+import ReviewThanks from '@/components/templates/ReviewThanks'
 import PostLoginFooter from '@/components/organisms/PostLoginFooter'
 
-const Edit: NextPage<any> = () => {
+const Thanks: NextPage<any> = () => {
   const AuthUser = useAuthUser()
   const router = useRouter()
   const { id } = router.query
@@ -23,6 +23,11 @@ const Edit: NextPage<any> = () => {
       })
     }
   }
+  const goToPostsDetails = (): void => {
+    router.push(`/posts/${id}`).catch((error) => {
+      console.error(error)
+    })
+  }
 
   const { data: userId } = useQuery(
     ['userId'],
@@ -30,24 +35,6 @@ const Edit: NextPage<any> = () => {
       const token = await AuthUser.getIdToken()
       if (token !== null) {
         const { data } = await userApi.getCurrentUserId({
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        return data
-      }
-    },
-    {
-      enabled: AuthUser.id !== null,
-    },
-  )
-
-  const { data: pulls } = useQuery(
-    ['pulls'],
-    async () => {
-      const token = await AuthUser.getIdToken()
-      if (token !== null) {
-        const { data } = await gitHubApi.getCurrentUserPulls({
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,21 +61,33 @@ const Edit: NextPage<any> = () => {
     },
   )
 
-  const reviewPulls = pulls !== undefined ? pulls : []
-
   return (
     <>
-      {review !== undefined &&
-      userId !== undefined &&
-      review.reviewee?.id === userId ? (
-        <div className="flex min-h-screen flex-col">
-          <ReviewEditHeader />
-          <ReviewEdit review={review} pulls={reviewPulls} />
-          <PostLoginFooter />
-        </div>
-      ) : (
-        goToHome()
-      )}
+      {(() => {
+        if (
+          review !== undefined &&
+          userId !== undefined &&
+          review.reviewee?.id === userId &&
+          review.feedback !== null &&
+          review.thanks === null
+        ) {
+          return (
+            <div className="flex min-h-screen flex-col">
+              <ReviewThanksHeader />
+              <ReviewThanks />
+              <PostLoginFooter />
+            </div>
+          )
+        } else if (
+          review !== undefined &&
+          userId !== undefined &&
+          review.thanks !== null
+        ) {
+          return goToPostsDetails()
+        } else {
+          return goToHome()
+        }
+      })()}
     </>
   )
 }
@@ -103,15 +102,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
   if (token !== null) {
     await queryClient.prefetchQuery(['userId'], async () => {
       const { data } = await userApi.getCurrentUserId({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
-    await queryClient.prefetchQuery(['pulls'], async () => {
-      const { data } = await gitHubApi.getCurrentUserPulls({
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -136,4 +126,4 @@ export const getServerSideProps = withAuthUserTokenSSR({
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(Edit)
+})(Thanks)

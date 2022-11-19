@@ -24,6 +24,7 @@ module.exports = {
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     'react/prop-types': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
   settings: {
     react: {

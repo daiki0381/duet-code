@@ -1,8 +1,12 @@
 import type { NextPage } from 'next'
-import NotFoundLogin from '@/components/templates/NotFoundLogin'
+import { withAuthUser, AuthAction } from 'next-firebase-auth'
 
-const CustomNotFound: NextPage = () => {
-  return <NotFoundLogin />
+const NotFound: NextPage<any> = () => {
+  return <></>
 }
 
-export default CustomNotFound
+export default withAuthUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(NotFound)

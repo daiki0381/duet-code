@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField'
 
 type Props = {
   label: string
-  placeholder: string
+  placeholder?: string
   field: any
   error: any
   helperText: any

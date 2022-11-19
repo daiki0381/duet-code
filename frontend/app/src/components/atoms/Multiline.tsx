@@ -2,8 +2,8 @@ import type { NextPage } from 'next'
 import TextField from '@mui/material/TextField'
 
 type Props = {
-  label: string
-  placeholder: string
+  label?: string
+  placeholder?: string
   rows: number
   width: string
   field: any

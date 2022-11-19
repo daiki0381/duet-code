@@ -4,25 +4,59 @@ import Alert from '@mui/material/Alert'
 
 type Props = {
   message: string
+  name?: string
+  spanClick?: () => void
   url?: string
   buttonText?: string
-  onClick?: () => void
+  buttonClick?: () => void
+  done?: boolean
 }
 
 const AlertWithActionButton: NextPage<Props> = ({
   message,
+  name,
+  spanClick,
   url,
   buttonText,
-  onClick,
+  buttonClick,
+  done,
 }) => {
   return (
-    <Alert severity="info" className="flex items-center">
-      {buttonText === undefined && onClick === undefined ? (
-        <p className="text-sm text-black">{message}</p>
-      ) : (
-        <div className="flex items-center justify-between">
-          {url !== undefined ? (
-            <p className="w-4/5 text-sm text-black">
+    <Alert
+      severity={done !== undefined ? 'success' : 'info'}
+      color={done !== undefined ? 'success' : 'warning'}
+      className="flex items-center font-serif"
+      action={
+        buttonText !== undefined &&
+        buttonClick !== undefined && (
+          <div>
+            <ActionButton onClick={buttonClick}>{buttonText}</ActionButton>
+          </div>
+        )
+      }
+    >
+      {(() => {
+        if (
+          name === undefined &&
+          spanClick === undefined &&
+          url === undefined
+        ) {
+          return <p className="text-sm text-black">{message}</p>
+        } else if (name !== undefined && spanClick !== undefined) {
+          return (
+            <p className="text-sm text-black">
+              <span
+                onClick={spanClick}
+                className="cursor-pointer hover:opacity-70"
+              >
+                {name}
+              </span>
+              {message}
+            </p>
+          )
+        } else if (url !== undefined) {
+          return (
+            <p className="text-sm text-black">
               <a
                 href={url}
                 target="_blank"
@@ -33,16 +67,9 @@ const AlertWithActionButton: NextPage<Props> = ({
               </a>
               {message}
             </p>
-          ) : (
-            <p className="w-4/5 text-sm text-black">{message}</p>
-          )}
-          {buttonText !== undefined && onClick !== undefined && (
-            <div className="ml-5">
-              <ActionButton onClick={onClick}>{buttonText}</ActionButton>
-            </div>
-          )}
-        </div>
-      )}
+          )
+        }
+      })()}
     </Alert>
   )
 }

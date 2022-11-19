@@ -16,6 +16,11 @@ module Api
           user.assign_attributes(sign_up_params)
         end
         if @user.save
+          if @user.github_access_token != sign_up_params[:github_access_token]
+            @user.update(github_access_token: sign_up_params[:github_access_token])
+          end
+          @user.update(name: sign_up_params[:name]) if @user.name != sign_up_params[:name]
+          @user.update(avatar: sign_up_params[:avatar]) if @user.avatar != sign_up_params[:avatar]
           render status: :created
         else
           render status: :unprocessable_entity

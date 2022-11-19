@@ -3,5 +3,10 @@
 @tailwind utilities;
 
 body {
-  font-family: sans-serif;
+  font-family: 'Times New Roman', serif;
+}
+
+.MuiAlert-action {
+  padding: 5px;
+  margin-left: 15px;
 }

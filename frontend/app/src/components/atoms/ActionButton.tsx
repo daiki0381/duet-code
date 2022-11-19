@@ -8,7 +8,7 @@ type Props = {
 const ActionButton: NextPage<Props> = ({ children, onClick }) => {
   return (
     <button
-      className="rounded-lg bg-[#238636] py-[10px]  px-5 text-sm text-white hover:opacity-70 "
+      className="whitespace-nowrap rounded-lg bg-[#238636]  py-[10px] px-5 text-sm text-white hover:opacity-70"
       onClick={onClick}
     >
       {children}

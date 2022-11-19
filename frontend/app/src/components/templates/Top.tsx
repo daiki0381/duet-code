@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
 import Image from 'next/image'
-import { GithubAuthProvider, signInWithPopup } from 'firebase/auth'
-import toast from 'react-hot-toast'
-import { auth } from '@/firebase'
+import { GithubAuthProvider, signInWithPopup, getAuth } from 'firebase/auth'
 import { userApi } from '@/api/custom-instance'
 import Card from '@/components/molecules/Card'
 import LargeButton from '@/components/atoms/LargeButton'
@@ -12,6 +10,7 @@ import GrowthIcon from '@/components/atoms/GrowthIcon'
 
 const Top: NextPage = () => {
   const signInWithGithub = async (): Promise<void> => {
+    const auth = getAuth()
     const provider = new GithubAuthProvider()
     provider.addScope('repo')
     const result = await signInWithPopup(auth, provider)
@@ -21,13 +20,26 @@ const Top: NextPage = () => {
     const avatar = user.photoURL
     const githubAccessToken =
       GithubAuthProvider.credentialFromResult(result)?.accessToken
-    if (name !== null && avatar !== null && githubAccessToken !== undefined) {
-      await userApi.loginUser({
-        uid,
-        name,
-        avatar,
-        github_access_token: githubAccessToken,
-      })
+    const token = await auth.currentUser?.getIdToken()
+    if (
+      name !== null &&
+      avatar !== null &&
+      githubAccessToken !== undefined &&
+      token !== undefined
+    ) {
+      await userApi.loginUser(
+        {
+          uid,
+          name,
+          avatar,
+          github_access_token: githubAccessToken,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
     }
   }
 
@@ -43,13 +55,7 @@ const Top: NextPage = () => {
           <p className="mb-[30px] text-sm">
             レビューしてほしいプルリクエストを投稿し、レビュアーを募集できるサービスです。ログインすることでレビュイーにもレビュアーにもなることができます。
           </p>
-          <LargeButton
-            onClick={async () =>
-              await signInWithGithub().then(() => {
-                toast.success('ログインしました')
-              })
-            }
-          >
+          <LargeButton onClick={async () => await signInWithGithub()}>
             無料で始める
           </LargeButton>
         </div>
@@ -139,13 +145,7 @@ const Top: NextPage = () => {
           <Image src="/top-logo.png" width={250} height={100} />
         </div>
         <div>
-          <LargeButton
-            onClick={async () =>
-              await signInWithGithub().then(() => {
-                toast.success('ログインしました')
-              })
-            }
-          >
+          <LargeButton onClick={async () => await signInWithGithub()}>
             無料で始める
           </LargeButton>
         </div>

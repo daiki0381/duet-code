@@ -6,7 +6,6 @@ import NormalButton from '@/components/atoms/NormalButton'
 const ReviewEditHeader: NextPage = () => {
   const router = useRouter()
   const { id } = router.query
-
   const goToPostsDetails = (): void => {
     if (window.confirm('保存せずに終了しますか？') && typeof id === 'string') {
       router.push(`/posts/${id}`).catch((error) => {

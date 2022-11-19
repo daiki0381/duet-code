@@ -1,16 +1,25 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { useState } from 'react'
 import { RecoilRoot } from 'recoil'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { Toaster } from 'react-hot-toast'
+import initAuth from '@/utils/initAuth'
 
-const queryClient = new QueryClient()
+initAuth()
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+function MyApp({ Component, pageProps }: any): JSX.Element {
+  const [queryClient] = useState(() => new QueryClient())
+
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
       </QueryClientProvider>
       <Toaster position="top-center" reverseOrder={false} />
     </RecoilRoot>
