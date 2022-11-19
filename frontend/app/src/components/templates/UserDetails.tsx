@@ -22,7 +22,7 @@ const UserDetails: NextPage<Props> = ({
 }) => {
   const router = useRouter()
   const [status, setStatus] = useState<string>('thanks')
-  const thanksList = wantedReviews
+  const thanksList = acceptedReviews
     .filter((review) => review.thanks)
     .map((review) => {
       return {
@@ -32,14 +32,14 @@ const UserDetails: NextPage<Props> = ({
         message: review.thanks,
       }
     })
-  const feedbackList = acceptedReviews
+  const feedbackList = wantedReviews
     .filter((review) => review.feedback)
     .map((review) => {
       return {
         id: review.id,
         name: review.reviewer?.name,
         avatar: review.reviewer?.avatar,
-        message: review.thanks,
+        message: review.feedback,
       }
     })
   console.log(feedbackList)
@@ -189,7 +189,7 @@ const UserDetails: NextPage<Props> = ({
             )
           } else if (status === 'feedback' && feedbackList.length !== 0) {
             return (
-              <div className="pt-[50px]">
+              <div className="px-[120px] pt-[50px]">
                 {feedbackList.map((feedback: any) => {
                   return (
                     <div key={feedback.id} className="pb-[50px]">
