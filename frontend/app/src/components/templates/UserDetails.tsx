@@ -127,6 +127,7 @@ const UserDetails: NextPage<Props> = ({
                   src="/user-details-thanks.svg"
                   width={350}
                   height={350}
+                  alt="お礼が無い場合のイラスト"
                 />
                 <p className="text-xl text-black">お礼はまだありません</p>
               </div>
@@ -138,6 +139,7 @@ const UserDetails: NextPage<Props> = ({
                   src="/user-details-feedback.svg"
                   width={350}
                   height={350}
+                  alt="フィードバックが無い場合のイラスト"
                 />
                 <p className="text-xl text-black">
                   フィードバックはまだありません
@@ -151,6 +153,7 @@ const UserDetails: NextPage<Props> = ({
                   src="/user-details-wanted.svg"
                   width={350}
                   height={350}
+                  alt="募集した一覧が無い場合のイラスト"
                 />
                 <p className="text-xl text-black">
                   募集した一覧はまだありません
@@ -164,6 +167,7 @@ const UserDetails: NextPage<Props> = ({
                   src="/user-details-accepted.svg"
                   width={350}
                   height={350}
+                  alt="承諾した一覧が無い場合のイラスト"
                 />
                 <p className="text-xl text-black">
                   承諾した一覧はまだありません

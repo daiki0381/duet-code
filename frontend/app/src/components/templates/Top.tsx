@@ -59,7 +59,12 @@ const Top: NextPage = () => {
             無料で始める
           </LargeButton>
         </div>
-        <Image src="/top-hero.svg" width={480} height={300} />
+        <Image
+          src="/login-hero.svg"
+          width={480}
+          height={300}
+          alt="ログイン後のホーム画面のイラスト"
+        />
       </div>
       <div className="mb-[80px] bg-[#D6E7F7] px-[220px] py-[80px] text-center">
         <div className="mb-[50px] text-[32px] font-semibold">特徴</div>
@@ -89,7 +94,12 @@ const Top: NextPage = () => {
           メリット (レビュイー)
         </div>
         <div className="mb-[50px] flex items-center justify-around">
-          <Image src="/top-reviewee1.svg" width={350} height={350} />
+          <Image
+            src="/login-reviewee1.svg"
+            width={350}
+            height={350}
+            alt="レビュイーのイラスト"
+          />
           <div className="w-[480px] text-left">
             <div className="mb-[30px] text-2xl font-semibold">
               プライベートで書いた
@@ -110,7 +120,12 @@ const Top: NextPage = () => {
               自分では読みやすいと思っているコードでも他の人が読んだら、命名がぐちゃぐちゃで、ここの処理は何をしているのか理解できないということがあります。他の人にコードを見てもらうことで、読みやすいコードが書けるようになります。
             </p>
           </div>
-          <Image src="/top-reviewee2.svg" width={350} height={350} />
+          <Image
+            src="/login-reviewee2.svg"
+            width={350}
+            height={350}
+            alt="レビュイーのイラスト"
+          />
         </div>
       </div>
       <div className="mb-[80px] px-[220px] text-center">
@@ -118,7 +133,12 @@ const Top: NextPage = () => {
           メリット (レビュアー)
         </div>
         <div className="mb-[50px] flex items-center justify-around">
-          <Image src="/top-reviewer1.svg" width={350} height={350} />
+          <Image
+            src="/login-reviewer1.svg"
+            width={350}
+            height={350}
+            alt="レビュアーのイラスト"
+          />
           <div className="w-[480px] text-left">
             <div className="mb-[30px] text-2xl font-semibold">
               他の人のコードが読めるようになる
@@ -137,12 +157,22 @@ const Top: NextPage = () => {
               他の人が書いたコードを読むことで、こういう書き方ができるのかという気付きがあり、実装の引き出しを増やすことができます。
             </p>
           </div>
-          <Image src="/top-reviewer2.svg" width={350} height={350} />
+          <Image
+            src="/login-reviewer2.svg"
+            width={350}
+            height={350}
+            alt="レビュアーのイラスト"
+          />
         </div>
       </div>
       <div className="bg-[#D6E7F7] py-[80px] text-center">
         <div className="mb-[30px]">
-          <Image src="/top-logo.png" width={250} height={100} />
+          <Image
+            src="/login-logo.png"
+            width={250}
+            height={100}
+            alt="Duet Code"
+          />
         </div>
         <div>
           <LargeButton onClick={async () => await signInWithGithub()}>

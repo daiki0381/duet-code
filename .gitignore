@@ -38,7 +38,7 @@
 /frontend/app/build
 
 # misc
-/frontend/app/.DS_Store
+/frontend/.DS_Store
 /frontend/app/*.pem
 
 # debug

@@ -51,6 +51,7 @@ const ReviewList: NextPage<Props> = ({ wantedReviews, acceptedReviews }) => {
                 src="/review-list-wanted-reviews.svg"
                 width={350}
                 height={350}
+                alt="レビュー募集が無い場合のイラスト"
               />
               <p className="text-xl text-black">レビュー募集はまだありません</p>
             </div>
@@ -62,6 +63,7 @@ const ReviewList: NextPage<Props> = ({ wantedReviews, acceptedReviews }) => {
                 src="/review-list-accepted-reviews.svg"
                 width={350}
                 height={350}
+                alt="レビュー募集終了が無い場合のイラスト"
               />
               <p className="text-xl text-black">
                 レビュー募集終了はまだありません

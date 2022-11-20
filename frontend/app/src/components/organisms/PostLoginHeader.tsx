@@ -198,6 +198,7 @@ const PostLoginHeader: NextPage<Props> = ({
                     width={150}
                     height={150}
                     className="mb-[10px]"
+                    alt="通知が無い場合のイラスト"
                   />
                   <p className="text-base text-black">通知がありません</p>
                 </div>
