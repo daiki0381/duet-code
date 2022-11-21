@@ -1,26 +1,26 @@
 # Ignore bundler config.
-/backend/.bundle
+/backend/app/.bundle
 
 # Ignore all logfiles and tempfiles.
-/backend/log/*
-/backend/tmp/*
-!/backend/log/.keep
-!/backend/tmp/.keep
+/backend/app/log/*
+/backend/app/tmp/*
+!/backend/app/log/.keep
+!/backend/app/tmp/.keep
 
 # Ignore pidfiles, but keep the directory.
-/backend/tmp/pids/*
-!/backend/tmp/pids/
-!/backend/tmp/pids/.keep
+/backend/app/tmp/pids/*
+!/backend/app/tmp/pids/
+!/backend/app/tmp/pids/.keep
 
 # Ignore uploaded files in development.
-/backend/storage/*
-!/backend/storage/.keep
-/backend/tmp/storage/*
-!/backend/tmp/storage/
-!/backend/tmp/storage/.keep
+/backend/app/storage/*
+!/backend/app/storage/.keep
+/backend/app/tmp/storage/*
+!/backend/app/tmp/storage/
+!/backend/app/tmp/storage/.keep
 
 # Ignore master key for decrypting credentials and more.
-/backend/config/master.key
+/backend/app/config/master.key
 
 # dependencies
 /frontend/app/node_modules
