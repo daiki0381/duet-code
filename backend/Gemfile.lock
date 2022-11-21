@@ -126,7 +126,6 @@ GEM
     minitest (5.16.3)
     msgpack (1.6.0)
     multi_xml (0.6.0)
-    mysql2 (0.5.4)
     net-imap (0.3.1)
       net-protocol
     net-pop (0.1.2)
@@ -146,6 +145,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    pg (1.4.5)
     public_suffix (5.0.0)
     puma (5.6.5)
       nio4r (~> 2.0)
@@ -253,9 +253,9 @@ DEPENDENCIES
   bullet
   committee-rails
   firebase-auth-rails
-  mysql2 (~> 0.5)
   octokit
   parallel
+  pg
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4)

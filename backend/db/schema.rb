@@ -11,13 +11,16 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
-  create_table "languages", charset: "utf8mb4", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "languages", force: :cascade do |t|
     t.string "name", comment: "言語名"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "notifications", charset: "utf8mb4", force: :cascade do |t|
+  create_table "notifications", force: :cascade do |t|
     t.bigint "review_id"
     t.bigint "sender_id"
     t.bigint "receiver_id"
@@ -30,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.index ["sender_id"], name: "index_notifications_on_sender_id"
   end
 
-  create_table "review_languages", charset: "utf8mb4", force: :cascade do |t|
+  create_table "review_languages", force: :cascade do |t|
     t.bigint "review_id"
     t.bigint "language_id"
     t.datetime "created_at", null: false
@@ -39,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.index ["review_id"], name: "index_review_languages_on_review_id"
   end
 
-  create_table "reviews", charset: "utf8mb4", force: :cascade do |t|
+  create_table "reviews", force: :cascade do |t|
     t.bigint "reviewee_id"
     t.bigint "reviewer_id"
     t.string "title", comment: "タイトル"
@@ -56,7 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
   end
 
-  create_table "users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "uid", comment: "Firebase AuthenticationのGitHub認証のユーザー識別子"
     t.string "github_access_token", comment: "GitHubのアクセストークン"
     t.string "name", comment: "ユーザー名"

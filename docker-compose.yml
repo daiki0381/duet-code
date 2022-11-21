@@ -1,18 +1,15 @@
-version: '3.7'
+version: "3.7"
 
 services:
   db:
-    image: mysql:5.7
-    platform: linux/amd64
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: sample
-      MYSQL_PASSWORD: password
-    ports:
-      - 4306:3306
+    image: postgres
     volumes:
-      - mysql-db:/var/lib/mysql
+      - postgresql-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
   redis:
     image: "redis:5.0.5"
     ports:
@@ -40,7 +37,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend/app:/usr/src/app
-    command: 'yarn dev'
+    command: "yarn dev"
     ports:
       - "8000:3000"
   openapi-generator:
@@ -64,5 +61,5 @@ services:
     environment:
       SWAGGER_JSON: /openapi.yml
 volumes:
-  mysql-db:
+  postgresql-data:
     driver: local
