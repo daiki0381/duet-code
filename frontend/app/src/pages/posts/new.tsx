@@ -1,20 +1,16 @@
 import type { NextPage } from 'next'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-  AuthAction,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { gitHubApi } from '@/api/custom-instance'
 import ReviewCreateHeader from '@/components/organisms/ReviewCreateHeader'
 import ReviewCreate from '@/components/templates/ReviewCreate'
 import PostLoginFooter from '@/components/organisms/PostLoginFooter'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const New: NextPage<any> = () => {
   const AuthUser = useAuthUser()
 
-  const { data: pulls } = useQuery(
+  const { data: pulls, isLoading } = useQuery(
     ['pulls'],
     async () => {
       const token = await AuthUser.getIdToken()
@@ -37,36 +33,19 @@ const New: NextPage<any> = () => {
   return (
     <div className="flex min-h-screen flex-col">
       <ReviewCreateHeader />
-      <ReviewCreate pulls={reviewPulls} authUser={AuthUser} />
+      {isLoading ? (
+        <div className="flex flex-1 items-center justify-center">
+          <CircularProgress className="text-blue" />
+        </div>
+      ) : (
+        <ReviewCreate pulls={reviewPulls} authUser={AuthUser} />
+      )}
       <PostLoginFooter />
     </div>
   )
 }
 
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser }) => {
-  const queryClient = new QueryClient()
-  const token = await AuthUser.getIdToken()
-
-  if (token !== null) {
-    await queryClient.prefetchQuery(['pulls'], async () => {
-      const { data } = await gitHubApi.getCurrentUserPulls({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-})
-
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
 })(New)

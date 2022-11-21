@@ -12,8 +12,9 @@ import PostLoginHeader from '@/components/organisms/PostLoginHeader'
 import ReviewDetails from '@/components/templates/ReviewDetails'
 import PostLoginFooter from '@/components/organisms/PostLoginFooter'
 
-const Details: NextPage<any> = ({ avatar }) => {
+const Details: NextPage<any> = () => {
   const AuthUser = useAuthUser()
+  const avatar = AuthUser.photoURL
   const router = useRouter()
   const { id } = router.query
   const goToHome = (): void => {
@@ -75,6 +76,7 @@ const Details: NextPage<any> = ({ avatar }) => {
     },
   )
 
+  const currentAvatar = avatar !== null ? avatar : ''
   const currentUserId = userId !== undefined ? userId : 0
   const reviewNotifications = notifications !== undefined ? notifications : []
   const badgeContent = reviewNotifications.filter(
@@ -86,7 +88,7 @@ const Details: NextPage<any> = ({ avatar }) => {
       {review !== undefined ? (
         <div className="flex min-h-screen flex-col">
           <PostLoginHeader
-            avatar={avatar}
+            avatar={currentAvatar}
             userId={currentUserId}
             notifications={reviewNotifications}
             badgeContent={badgeContent}
@@ -110,28 +112,9 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser, query }) => {
   const queryClient = new QueryClient()
   const token = await AuthUser.getIdToken()
-  const avatar = AuthUser.photoURL
   const { id } = query
 
   if (token !== null) {
-    await queryClient.prefetchQuery(['userId'], async () => {
-      const { data } = await userApi.getCurrentUserId({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
-    await queryClient.prefetchQuery(['notifications'], async () => {
-      const { data } = await notificationApi.getCurrentUserNotifications({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
     await queryClient.prefetchQuery(['review'], async () => {
       if (typeof id === 'string') {
         const { data } = await reviewApi.getReview(id)
@@ -143,11 +126,11 @@ export const getServerSideProps = withAuthUserTokenSSR({
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      avatar,
     },
   }
 })
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
 })(Details)

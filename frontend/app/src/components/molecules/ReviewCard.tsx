@@ -73,7 +73,7 @@ const ReviewCard: NextPage<Props> = ({
           {title}
         </div>
         <div className="flex items-center justify-end">
-          <Avatar src={revieweeAvatar} />
+          <Avatar src={revieweeAvatar} alt="アバター画像" />
           <div className="ml-[10px] flex flex-col overflow-scroll">
             <span className=" font-serif text-sm text-gray">
               {revieweeName}

@@ -188,7 +188,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
             return (
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Avatar src={review?.reviewee?.avatar} />
+                  <Avatar src={review?.reviewee?.avatar} alt="アバター画像" />
                   <div className="ml-[10px] flex flex-col">
                     <span
                       className="cursor-pointer text-sm text-black hover:opacity-70"
@@ -220,7 +220,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
             return (
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Avatar src={review?.reviewee?.avatar} />
+                  <Avatar src={review?.reviewee?.avatar} alt="アバター画像" />
                   <div className="ml-[10px] flex flex-col">
                     <span
                       className="cursor-pointer text-sm text-black hover:opacity-70"
@@ -242,7 +242,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
           } else {
             return (
               <div className="flex items-center">
-                <Avatar src={review?.reviewee?.avatar} />
+                <Avatar src={review?.reviewee?.avatar} alt="アバター画像" />
                 <div className="ml-[10px] flex flex-col">
                   <span
                     className="cursor-pointer text-sm text-black hover:opacity-70"

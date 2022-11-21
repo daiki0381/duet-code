@@ -213,7 +213,7 @@ const PostLoginHeader: NextPage<Props> = ({
             aria-haspopup="true"
             aria-expanded={accountOpen ? 'true' : undefined}
           >
-            <Avatar src={avatar} />
+            <Avatar src={avatar} alt="アバター画像" />
           </IconButton>
           <StyledMenu
             anchorEl={accountAnchorEl}

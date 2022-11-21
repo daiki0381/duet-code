@@ -17,5 +17,4 @@ const Login: NextPage<any> = () => {
 export default withAuthUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER,
 })(Login)

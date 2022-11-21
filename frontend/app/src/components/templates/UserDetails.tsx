@@ -42,7 +42,6 @@ const UserDetails: NextPage<Props> = ({
         message: review.feedback,
       }
     })
-  console.log(feedbackList)
   const clickThanks = (): void => {
     setStatus('thanks')
   }
@@ -64,7 +63,11 @@ const UserDetails: NextPage<Props> = ({
   return (
     <div className="flex-1 pt-[50px]">
       <div className="mb-[50px] flex flex-col items-center">
-        <Avatar src={user.avatar} className="mb-5 h-[100px] w-[100px]" />
+        <Avatar
+          src={user.avatar}
+          className="mb-5 h-[100px] w-[100px]"
+          alt="アバター画像"
+        />
         <h1 className="mb-5 text-2xl font-semibold">{user.name}</h1>
         <a
           href={`https://github.com/${user.name}`}

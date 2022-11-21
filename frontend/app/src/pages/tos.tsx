@@ -1,10 +1,6 @@
 import type { NextPage } from 'next'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { userApi, notificationApi } from '@/api/custom-instance'
 import PreLoginHeader from '@/components/organisms/PreLoginHeader'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
@@ -83,37 +79,6 @@ const Tos: NextPage<any> = () => {
   )
 }
 
-export const getServerSideProps = withAuthUserTokenSSR()(
-  async ({ AuthUser }) => {
-    const queryClient = new QueryClient()
-    const token = await AuthUser.getIdToken()
-
-    if (token !== null) {
-      await queryClient.prefetchQuery(['userId'], async () => {
-        const { data } = await userApi.getCurrentUserId({
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        return data
-      })
-
-      await queryClient.prefetchQuery(['notifications'], async () => {
-        const { data } = await notificationApi.getCurrentUserNotifications({
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        return data
-      })
-    }
-
-    return {
-      props: {
-        dehydratedState: dehydrate(queryClient),
-      },
-    }
-  },
-)
-
-export default withAuthUser()(Tos)
+export default withAuthUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+})(Tos)

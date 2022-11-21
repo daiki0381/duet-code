@@ -20,7 +20,7 @@ const ThanksOrFeedbackCard: NextPage<Props> = ({
       onClick={onClick}
     >
       <div className="mb-5 flex items-center">
-        <Avatar src={avatar} className="mr-[10px]" />
+        <Avatar src={avatar} className="mr-[10px]" alt="アバター画像" />
         <p className="text-sm font-semibold text-black">{name}</p>
       </div>
       <p className="text-sm text-black">{message}</p>

@@ -11,6 +11,7 @@ import { userApi, reviewApi, gitHubApi } from '@/api/custom-instance'
 import ReviewEditHeader from '@/components/organisms/ReviewEditHeader'
 import ReviewEdit from '@/components/templates/ReviewEdit'
 import PostLoginFooter from '@/components/organisms/PostLoginFooter'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const Edit: NextPage<any> = () => {
   const AuthUser = useAuthUser()
@@ -42,7 +43,7 @@ const Edit: NextPage<any> = () => {
     },
   )
 
-  const { data: pulls } = useQuery(
+  const { data: pulls, isLoading } = useQuery(
     ['pulls'],
     async () => {
       const token = await AuthUser.getIdToken()
@@ -83,7 +84,13 @@ const Edit: NextPage<any> = () => {
       review.reviewee?.id === userId ? (
         <div className="flex min-h-screen flex-col">
           <ReviewEditHeader />
-          <ReviewEdit review={review} pulls={reviewPulls} />
+          {isLoading ? (
+            <div className="flex flex-1 items-center justify-center">
+              <CircularProgress className="text-blue" />
+            </div>
+          ) : (
+            <ReviewEdit review={review} pulls={reviewPulls} />
+          )}
           <PostLoginFooter />
         </div>
       ) : (
@@ -110,15 +117,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
       return data
     })
 
-    await queryClient.prefetchQuery(['pulls'], async () => {
-      const { data } = await gitHubApi.getCurrentUserPulls({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
     await queryClient.prefetchQuery(['review'], async () => {
       if (typeof id === 'string') {
         const { data } = await reviewApi.getReview(id)
@@ -136,4 +134,5 @@ export const getServerSideProps = withAuthUserTokenSSR({
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
 })(Edit)

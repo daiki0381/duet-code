@@ -23,11 +23,6 @@ const Feedback: NextPage<any> = () => {
       })
     }
   }
-  const goToPostsDetails = (): void => {
-    router.push(`/posts/${id}`).catch((error) => {
-      console.error(error)
-    })
-  }
 
   const { data: userId } = useQuery(
     ['userId'],
@@ -63,30 +58,18 @@ const Feedback: NextPage<any> = () => {
 
   return (
     <>
-      {(() => {
-        if (
-          review !== undefined &&
-          userId !== undefined &&
-          review.reviewer?.id === userId &&
-          review.feedback === null
-        ) {
-          return (
-            <div className="flex min-h-screen flex-col">
-              <ReviewFeedbackHeader />
-              <ReviewFeedback />
-              <PostLoginFooter />
-            </div>
-          )
-        } else if (
-          review !== undefined &&
-          userId !== undefined &&
-          review.feedback !== null
-        ) {
-          return goToPostsDetails()
-        } else {
-          return goToHome()
-        }
-      })()}
+      {review !== undefined &&
+      userId !== undefined &&
+      review.reviewer?.id === userId &&
+      review.feedback === null ? (
+        <div className="flex min-h-screen flex-col">
+          <ReviewFeedbackHeader />
+          <ReviewFeedback />
+          <PostLoginFooter />
+        </div>
+      ) : (
+        goToHome()
+      )}
     </>
   )
 }
@@ -125,4 +108,5 @@ export const getServerSideProps = withAuthUserTokenSSR({
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
 })(Feedback)

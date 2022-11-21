@@ -11,9 +11,11 @@ import { userApi, notificationApi } from '@/api/custom-instance'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
 import UserDetails from '@/components/templates/UserDetails'
 import PostLoginFooter from '@/components/organisms/PostLoginFooter'
+import CircularProgress from '@mui/material/CircularProgress'
 
-const Details: NextPage<any> = ({ avatar }) => {
+const Details: NextPage<any> = () => {
   const AuthUser = useAuthUser()
+  const avatar = AuthUser.photoURL
   const router = useRouter()
   const { id } = router.query
   const goToHome = (): void => {
@@ -75,7 +77,7 @@ const Details: NextPage<any> = ({ avatar }) => {
     },
   )
 
-  const { data: wantedReviews } = useQuery(
+  const { data: wantedReviews, isLoading: wantedReviewsIsLoading } = useQuery(
     ['wantedReviews'],
     async () => {
       if (typeof id === 'string') {
@@ -89,20 +91,22 @@ const Details: NextPage<any> = ({ avatar }) => {
     },
   )
 
-  const { data: acceptedReviews } = useQuery(
-    ['acceptedReviews'],
-    async () => {
-      if (typeof id === 'string') {
-        const { data } = await userApi.getUserAcceptedReviews(id)
-        return data
-      }
-    },
-    {
-      enabled: AuthUser.id !== null,
-      retry: false,
-    },
-  )
+  const { data: acceptedReviews, isLoading: acceptedReviewsIsLoading } =
+    useQuery(
+      ['acceptedReviews'],
+      async () => {
+        if (typeof id === 'string') {
+          const { data } = await userApi.getUserAcceptedReviews(id)
+          return data
+        }
+      },
+      {
+        enabled: AuthUser.id !== null,
+        retry: false,
+      },
+    )
 
+  const currentAvatar = avatar !== null ? avatar : ''
   const currentUserId = userId !== undefined ? userId : 0
   const reviewNotifications = notifications !== undefined ? notifications : []
   const badgeContent = reviewNotifications.filter(
@@ -117,16 +121,22 @@ const Details: NextPage<any> = ({ avatar }) => {
       {user !== undefined ? (
         <div className="flex min-h-screen flex-col">
           <PostLoginHeader
-            avatar={avatar}
+            avatar={currentAvatar}
             userId={currentUserId}
             notifications={reviewNotifications}
             badgeContent={badgeContent}
           />
-          <UserDetails
-            user={user}
-            wantedReviews={userWantedReviews}
-            acceptedReviews={userAcceptedReviews}
-          />
+          {wantedReviewsIsLoading || acceptedReviewsIsLoading ? (
+            <div className="flex flex-1 items-center justify-center">
+              <CircularProgress className="text-blue" />
+            </div>
+          ) : (
+            <UserDetails
+              user={user}
+              wantedReviews={userWantedReviews}
+              acceptedReviews={userAcceptedReviews}
+            />
+          )}
           <PostLoginFooter />
         </div>
       ) : (
@@ -141,45 +151,12 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async ({ AuthUser, query }) => {
   const queryClient = new QueryClient()
   const token = await AuthUser.getIdToken()
-  const avatar = AuthUser.photoURL
   const { id } = query
 
   if (token !== null) {
-    await queryClient.prefetchQuery(['userId'], async () => {
-      const { data } = await userApi.getCurrentUserId({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
-    await queryClient.prefetchQuery(['notifications'], async () => {
-      const { data } = await notificationApi.getCurrentUserNotifications({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
     await queryClient.prefetchQuery(['user'], async () => {
       if (typeof id === 'string') {
         const { data } = await userApi.getUser(id)
-        return data
-      }
-    })
-
-    await queryClient.prefetchQuery(['wantedReviews'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await userApi.getUserWantedReviews(id)
-        return data
-      }
-    })
-
-    await queryClient.prefetchQuery(['acceptedReviews'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await userApi.getUserAcceptedReviews(id)
         return data
       }
     })
@@ -188,11 +165,11 @@ export const getServerSideProps = withAuthUserTokenSSR({
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
-      avatar,
     },
   }
 })
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
 })(Details)

@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }: any): JSX.Element {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <title>Duet Code</title>
         <meta
-          property="description"
+          name="description"
           content="Duet Codeはレビューしてほしいプルリクエストを投稿し、レビュアーを募集できるサービスです。ログインすることでレビュイーにもレビュアーにもなることができます。"
         />
         <meta property="og:title" content="Duet Code" />
