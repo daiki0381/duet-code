@@ -106,6 +106,7 @@ ENV SECRET_KEY_BASE 1
 # ENV AWS_SECRET_ACCESS_KEY=1
 
 # Run build task defined in lib/tasks/fly.rake
+RUN rm -rf /app/tmp/pids/server.pid
 ARG BUILD_COMMAND="bin/rails fly:build"
 RUN ${BUILD_COMMAND}
 
