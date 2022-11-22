@@ -1,12 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-  AuthAction,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { userApi, notificationApi } from '@/api/custom-instance'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
 import UserDetails from '@/components/templates/UserDetails'
@@ -63,7 +58,7 @@ const Details: NextPage<any> = () => {
     },
   )
 
-  const { data: user } = useQuery(
+  const { data: user, isLoading: userIsLoading } = useQuery(
     ['user'],
     async () => {
       if (typeof id === 'string') {
@@ -118,56 +113,39 @@ const Details: NextPage<any> = () => {
 
   return (
     <>
-      {user !== undefined ? (
-        <div className="flex min-h-screen flex-col">
-          <PostLoginHeader
-            avatar={currentAvatar}
-            userId={currentUserId}
-            notifications={reviewNotifications}
-            badgeContent={badgeContent}
-          />
-          {wantedReviewsIsLoading || acceptedReviewsIsLoading ? (
-            <div className="flex flex-1 items-center justify-center">
-              <CircularProgress className="text-blue" />
+      {userIsLoading ? (
+        <></>
+      ) : (
+        <>
+          {user !== undefined ? (
+            <div className="flex min-h-screen flex-col">
+              <PostLoginHeader
+                avatar={currentAvatar}
+                userId={currentUserId}
+                notifications={reviewNotifications}
+                badgeContent={badgeContent}
+              />
+              {wantedReviewsIsLoading || acceptedReviewsIsLoading ? (
+                <div className="flex flex-1 items-center justify-center">
+                  <CircularProgress className="text-blue" />
+                </div>
+              ) : (
+                <UserDetails
+                  user={user}
+                  wantedReviews={userWantedReviews}
+                  acceptedReviews={userAcceptedReviews}
+                />
+              )}
+              <PostLoginFooter />
             </div>
           ) : (
-            <UserDetails
-              user={user}
-              wantedReviews={userWantedReviews}
-              acceptedReviews={userAcceptedReviews}
-            />
+            goToHome()
           )}
-          <PostLoginFooter />
-        </div>
-      ) : (
-        goToHome()
+        </>
       )}
     </>
   )
 }
-
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser, query }) => {
-  const queryClient = new QueryClient()
-  const token = await AuthUser.getIdToken()
-  const { id } = query
-
-  if (token !== null) {
-    await queryClient.prefetchQuery(['user'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await userApi.getUser(id)
-        return data
-      }
-    })
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-})
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,

@@ -1,12 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-  AuthAction,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
 import PostLoginHeader from '@/components/organisms/PostLoginHeader'
 import ReviewDetails from '@/components/templates/ReviewDetails'
@@ -62,7 +57,7 @@ const Details: NextPage<any> = () => {
     },
   )
 
-  const { data: review } = useQuery(
+  const { data: review, isLoading: reviewIsLoading } = useQuery(
     ['review'],
     async () => {
       if (typeof id === 'string') {
@@ -73,6 +68,7 @@ const Details: NextPage<any> = () => {
     {
       enabled: AuthUser.id !== null,
       retry: false,
+      cacheTime: 0,
     },
   )
 
@@ -85,50 +81,35 @@ const Details: NextPage<any> = () => {
 
   return (
     <>
-      {review !== undefined ? (
-        <div className="flex min-h-screen flex-col">
-          <PostLoginHeader
-            avatar={currentAvatar}
-            userId={currentUserId}
-            notifications={reviewNotifications}
-            badgeContent={badgeContent}
-          />
-          <ReviewDetails
-            review={review}
-            authUser={AuthUser}
-            userId={currentUserId}
-          />
-          <PostLoginFooter />
-        </div>
+      {reviewIsLoading ? (
+        <></>
       ) : (
-        goToHome()
+        <>
+          {review !== undefined ? (
+            <>
+              <div className="flex min-h-screen flex-col">
+                <PostLoginHeader
+                  avatar={currentAvatar}
+                  userId={currentUserId}
+                  notifications={reviewNotifications}
+                  badgeContent={badgeContent}
+                />
+                <ReviewDetails
+                  review={review}
+                  authUser={AuthUser}
+                  userId={currentUserId}
+                />
+                <PostLoginFooter />
+              </div>
+            </>
+          ) : (
+            goToHome()
+          )}
+        </>
       )}
     </>
   )
 }
-
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser, query }) => {
-  const queryClient = new QueryClient()
-  const token = await AuthUser.getIdToken()
-  const { id } = query
-
-  if (token !== null) {
-    await queryClient.prefetchQuery(['review'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await reviewApi.getReview(id)
-        return data
-      }
-    })
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-})
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
