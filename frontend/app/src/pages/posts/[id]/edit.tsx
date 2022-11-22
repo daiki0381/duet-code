@@ -1,12 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-  AuthAction,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { userApi, reviewApi, gitHubApi } from '@/api/custom-instance'
 import ReviewEditHeader from '@/components/organisms/ReviewEditHeader'
 import ReviewEdit from '@/components/templates/ReviewEdit'
@@ -25,7 +20,7 @@ const Edit: NextPage<any> = () => {
     }
   }
 
-  const { data: userId } = useQuery(
+  const { data: userId, isLoading: userIdIsLoading } = useQuery(
     ['userId'],
     async () => {
       const token = await AuthUser.getIdToken()
@@ -43,7 +38,7 @@ const Edit: NextPage<any> = () => {
     },
   )
 
-  const { data: pulls, isLoading } = useQuery(
+  const { data: pulls, isLoading: pullsIsLoading } = useQuery(
     ['pulls'],
     async () => {
       const token = await AuthUser.getIdToken()
@@ -61,7 +56,7 @@ const Edit: NextPage<any> = () => {
     },
   )
 
-  const { data: review } = useQuery(
+  const { data: review, isLoading: reviewIsLoading } = useQuery(
     ['review'],
     async () => {
       if (typeof id === 'string') {
@@ -79,58 +74,32 @@ const Edit: NextPage<any> = () => {
 
   return (
     <>
-      {review !== undefined &&
-      userId !== undefined &&
-      review.reviewee?.id === userId ? (
-        <div className="flex min-h-screen flex-col">
-          <ReviewEditHeader />
-          {isLoading ? (
-            <div className="flex flex-1 items-center justify-center">
-              <CircularProgress className="text-blue" />
+      {userIdIsLoading || reviewIsLoading ? (
+        <></>
+      ) : (
+        <>
+          {review !== undefined &&
+          userId !== undefined &&
+          review.reviewee?.id === userId ? (
+            <div className="flex min-h-screen flex-col">
+              <ReviewEditHeader />
+              {pullsIsLoading ? (
+                <div className="flex flex-1 items-center justify-center">
+                  <CircularProgress className="text-blue" />
+                </div>
+              ) : (
+                <ReviewEdit review={review} pulls={reviewPulls} />
+              )}
+              <PostLoginFooter />
             </div>
           ) : (
-            <ReviewEdit review={review} pulls={reviewPulls} />
+            goToHome()
           )}
-          <PostLoginFooter />
-        </div>
-      ) : (
-        goToHome()
+        </>
       )}
     </>
   )
 }
-
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser, query }) => {
-  const queryClient = new QueryClient()
-  const token = await AuthUser.getIdToken()
-  const { id } = query
-
-  if (token !== null) {
-    await queryClient.prefetchQuery(['userId'], async () => {
-      const { data } = await userApi.getCurrentUserId({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
-    await queryClient.prefetchQuery(['review'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await reviewApi.getReview(id)
-        return data
-      }
-    })
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-})
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,

@@ -1,12 +1,7 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import {
-  withAuthUser,
-  withAuthUserTokenSSR,
-  useAuthUser,
-  AuthAction,
-} from 'next-firebase-auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
+import { useQuery } from '@tanstack/react-query'
 import { userApi, reviewApi } from '@/api/custom-instance'
 import ReviewFeedbackHeader from '@/components/organisms/ReviewFeedbackHeader'
 import ReviewFeedback from '@/components/templates/ReviewFeedback'
@@ -23,8 +18,13 @@ const Feedback: NextPage<any> = () => {
       })
     }
   }
+  const goToPostsDetails = (): void => {
+    router.push(`/posts/${id}`).catch((error) => {
+      console.error(error)
+    })
+  }
 
-  const { data: userId } = useQuery(
+  const { data: userId, isLoading: userIdIsLoading } = useQuery(
     ['userId'],
     async () => {
       const token = await AuthUser.getIdToken()
@@ -42,7 +42,7 @@ const Feedback: NextPage<any> = () => {
     },
   )
 
-  const { data: review } = useQuery(
+  const { data: review, isLoading: reviewIsLoading } = useQuery(
     ['review'],
     async () => {
       if (typeof id === 'string') {
@@ -58,53 +58,39 @@ const Feedback: NextPage<any> = () => {
 
   return (
     <>
-      {review !== undefined &&
-      userId !== undefined &&
-      review.reviewer?.id === userId &&
-      review.feedback === null ? (
-        <div className="flex min-h-screen flex-col">
-          <ReviewFeedbackHeader />
-          <ReviewFeedback />
-          <PostLoginFooter />
-        </div>
+      {userIdIsLoading || reviewIsLoading ? (
+        <></>
       ) : (
-        goToHome()
+        <>
+          {(() => {
+            if (
+              review !== undefined &&
+              userId !== undefined &&
+              review.reviewer?.id === userId &&
+              review.feedback === null
+            ) {
+              return (
+                <div className="flex min-h-screen flex-col">
+                  <ReviewFeedbackHeader />
+                  <ReviewFeedback />
+                  <PostLoginFooter />
+                </div>
+              )
+            } else if (
+              review !== undefined &&
+              userId !== undefined &&
+              review.feedback !== null
+            ) {
+              return goToPostsDetails()
+            } else {
+              return goToHome()
+            }
+          })()}
+        </>
       )}
     </>
   )
 }
-
-export const getServerSideProps = withAuthUserTokenSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser, query }) => {
-  const queryClient = new QueryClient()
-  const token = await AuthUser.getIdToken()
-  const { id } = query
-
-  if (token !== null) {
-    await queryClient.prefetchQuery(['userId'], async () => {
-      const { data } = await userApi.getCurrentUserId({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      return data
-    })
-
-    await queryClient.prefetchQuery(['review'], async () => {
-      if (typeof id === 'string') {
-        const { data } = await reviewApi.getReview(id)
-        return data
-      }
-    })
-  }
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  }
-})
 
 export default withAuthUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
