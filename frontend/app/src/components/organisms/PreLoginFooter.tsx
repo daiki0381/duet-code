@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const Footer: NextPage = () => {
   return (
-    <div className="mt-auto bg-footer px-4 py-6">
+    <div className="bg-footer px-4 py-6">
       <div className="mb-5">
         <Link href="/login">
           <a>

@@ -14,14 +14,13 @@ module.exports = {
         gray: '#939393',
         border: '#DDD',
         footer: '#232B33',
+        'pre-login-light-blue': '#D6E7F7',
       },
       fontFamily: {
         serif: ['Times New Roman', 'serif'],
-      }
+      },
     },
   },
-  plugins: [
-    require('@tailwindcss/line-clamp'),
-  ],
+  plugins: [require('@tailwindcss/line-clamp')],
   important: true,
 }

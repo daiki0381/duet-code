@@ -41,7 +41,7 @@ const PreLoginHeader: NextPage = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-white px-4 py-3">
+    <div className="sticky top-0 z-50 flex h-[73px] items-center justify-between border-b border-border bg-white px-4 py-3">
       <Link href="/login">
         <a>
           <Image
