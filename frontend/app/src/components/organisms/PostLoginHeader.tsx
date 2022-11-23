@@ -110,7 +110,7 @@ const PostLoginHeader: NextPage<Props> = ({
   )
 
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-white px-4 py-3">
+    <div className="sticky top-0 z-50 flex h-[73px] items-center justify-between border-b border-border bg-white px-4 py-3">
       <Link href="/">
         <a>
           <Image
@@ -123,7 +123,7 @@ const PostLoginHeader: NextPage<Props> = ({
         </a>
       </Link>
       <div className="flex items-center">
-        <div className="mr-5 pt-[3px]">
+        <div className="mr-[10px] sm:mr-5">
           <IconButton
             onClick={notificationHandleClick}
             aria-controls={notificationOpen ? 'notification-menu' : undefined}
@@ -131,7 +131,7 @@ const PostLoginHeader: NextPage<Props> = ({
             aria-expanded={notificationOpen ? 'true' : undefined}
           >
             <Badge badgeContent={badgeContent} color="error">
-              <NotificationsNoneIcon />
+              <NotificationsNoneIcon className="h-[30px] w-[30px]" />
             </Badge>
           </IconButton>
           <StyledMenu
@@ -141,7 +141,7 @@ const PostLoginHeader: NextPage<Props> = ({
             onClose={notificationHandleClose}
             onClick={notificationHandleClose}
           >
-            <div className="w-[320px] rounded-lg bg-white">
+            <div className="max-w-[320px] rounded-lg bg-white">
               {notifications.length !== 0 ? (
                 <div className="max-h-[230px] overflow-scroll text-left">
                   {notifications.map((notification: any) => (
@@ -192,7 +192,7 @@ const PostLoginHeader: NextPage<Props> = ({
                   ))}
                 </div>
               ) : (
-                <div className="flex h-[230px] w-[320px]  flex-col items-center justify-center">
+                <div className="flex max-h-[230px] max-w-[320px]  flex-col items-center justify-center">
                   <Image
                     src="/notification.svg"
                     width={150}
@@ -206,7 +206,7 @@ const PostLoginHeader: NextPage<Props> = ({
             </div>
           </StyledMenu>
         </div>
-        <div className="mr-5 pt-[3px]">
+        <div className="mr-[10px] sm:mr-5">
           <IconButton
             onClick={accountHandleClick}
             aria-controls={accountOpen ? 'account-menu' : undefined}
@@ -239,7 +239,7 @@ const PostLoginHeader: NextPage<Props> = ({
           </StyledMenu>
         </div>
         <div>
-          <NormalButton onClick={goToPostsNew}>レビュー募集</NormalButton>
+          <NormalButton onClick={goToPostsNew}>募集する</NormalButton>
         </div>
       </div>
     </div>
