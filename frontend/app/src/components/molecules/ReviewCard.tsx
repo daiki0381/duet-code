@@ -38,13 +38,13 @@ const ReviewCard: NextPage<Props> = ({
 
   return (
     <div
-      className="min-h-[350px] w-[350px] cursor-pointer rounded-lg bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.15)] hover:opacity-70"
+      className="mx-auto min-h-[320px] w-[320px] cursor-pointer rounded-lg bg-white shadow-[0_3px_10px_0_rgba(0,0,0,0.15)] hover:opacity-70 sm:min-h-[350px] sm:w-[350px]"
       onClick={() => goToPostsDetails(reviewId)}
     >
-      <div className="h-[175px] rounded-t-lg bg-blue p-[15px]">
-        <div className="h-[145px] rounded-lg bg-white p-5">
+      <div className="h-[160px] rounded-t-lg bg-blue p-[15px] sm:h-[175px]">
+        <div className="h-[130px] rounded-lg bg-white p-5 sm:h-[145px]">
           <div className="mb-[5px] flex h-[65px]  items-center justify-center">
-            <p className="font-serif  text-lg font-semibold text-black line-clamp-2">
+            <p className="break-words text-lg font-semibold text-black line-clamp-2">
               {title}
             </p>
           </div>
@@ -69,16 +69,14 @@ const ReviewCard: NextPage<Props> = ({
             />
           ))}
         </div>
-        <div className="mb-[15px] h-[56px] font-serif text-xl text-black line-clamp-2">
+        <div className="mb-[15px] break-words text-xl text-black line-clamp-2">
           {title}
         </div>
         <div className="flex items-center justify-end">
           <Avatar src={revieweeAvatar} alt="アバター画像" />
           <div className="ml-[10px] flex flex-col overflow-scroll">
-            <span className=" font-serif text-sm text-gray">
-              {revieweeName}
-            </span>
-            <span className="font-serif text-sm text-gray">
+            <span className="text-sm text-gray">{revieweeName}</span>
+            <span className="text-sm text-gray">
               {formatCreatedAt(createdAt)}
             </span>
           </div>

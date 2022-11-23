@@ -15,6 +15,7 @@ module.exports = {
         border: '#DDD',
         footer: '#232B33',
         'pre-login-light-blue': '#D6E7F7',
+        'post-login-light-blue': '#F1F5F9',
       },
       fontFamily: {
         serif: ['Times New Roman', 'serif'],

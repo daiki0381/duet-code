@@ -83,7 +83,7 @@ const Home: NextPage<any> = () => {
         badgeContent={badgeContent}
       />
       {isLoading ? (
-        <div className="flex flex-1 items-center justify-center bg-[#F1F5F9] ">
+        <div className="flex flex-1 items-center justify-center bg-post-login-light-blue">
           <CircularProgress className="text-blue" />
         </div>
       ) : (

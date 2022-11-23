@@ -121,7 +121,7 @@ const UserDetails: NextPage<Props> = ({
           承諾した一覧
         </p>
       </div>
-      <div className=" bg-[#F1F5F9]">
+      <div className="bg-post-login-light-blue">
         {(() => {
           if (status === 'thanks' && thanksList.length === 0) {
             return (
