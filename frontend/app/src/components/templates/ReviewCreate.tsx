@@ -171,7 +171,6 @@ const ReviewCreate: NextPage<Props> = ({ pulls, authUser }) => {
             <Multiline
               label="プルリクエストの説明"
               rows={5}
-              width="w-[800px]"
               field={field}
               error={Boolean(errors.pull_request_description)}
               helperText={errors.pull_request_description?.message}
@@ -191,7 +190,6 @@ const ReviewCreate: NextPage<Props> = ({ pulls, authUser }) => {
             <Multiline
               label="レビューしてほしい点"
               rows={5}
-              width="w-[800px]"
               field={field}
               error={Boolean(errors.review_point)}
               helperText={errors.review_point?.message}

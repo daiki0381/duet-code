@@ -23,7 +23,7 @@ const TextInput: NextPage<Props> = ({
       {...field}
       error={error}
       helperText={helperText}
-      className="w-[800px]"
+      className="w-[300px] sm:w-[500px] md:w-[600px] lg:w-[800px]"
     />
   )
 }

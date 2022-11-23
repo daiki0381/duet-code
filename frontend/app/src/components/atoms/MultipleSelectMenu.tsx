@@ -35,7 +35,10 @@ const MultipleSelectMenu: NextPage<Props> = ({
   }
 
   return (
-    <FormControl className="w-[800px]" error={error}>
+    <FormControl
+      className="w-[300px] sm:w-[500px] md:w-[600px] lg:w-[800px]"
+      error={error}
+    >
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         labelId={labelId}

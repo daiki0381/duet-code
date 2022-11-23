@@ -57,7 +57,6 @@ const ReviewThanks: NextPage = () => {
             <Multiline
               placeholder="今回はありがとうございました。ご丁寧にレビューして頂いたおかげで綺麗なコードが書けるようになりました。また機会がありましたら、よろしくお願いします。"
               rows={5}
-              width="w-[800px]"
               field={field}
               error={Boolean(errors.thanks)}
               helperText={errors.thanks?.message}
