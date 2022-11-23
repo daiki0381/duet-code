@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 
 const PrivacyPolicy: NextPage = () => {
   return (
-    <div className="flex-1 px-[120px] py-[50px]">
+    <div className="mx-auto flex-1 py-[50px] px-4 sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px]">
       <h1 className="mb-5 text-2xl font-bold text-black">
         プライバシーポリシー
       </h1>
