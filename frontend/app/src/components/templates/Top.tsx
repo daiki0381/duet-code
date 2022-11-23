@@ -45,7 +45,7 @@ const Top: NextPage = () => {
 
   return (
     <>
-      <div className="mx-auto flex max-w-[1024px] flex-col items-center py-[60px] px-4 text-center lg:flex-row lg:justify-between lg:py-[120px]">
+      <div className="mx-auto flex flex-col items-center py-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] lg:flex-row lg:justify-between lg:py-[120px]">
         <div className="mb-5 lg:mb-0 lg:w-[450px] lg:text-left">
           <h1 className="mb-5 text-2xl font-semibold lg:mb-[30px] lg:text-[32px]">
             無料で使える
@@ -100,7 +100,7 @@ const Top: NextPage = () => {
         </div>
       </div>
 
-      <div className="mx-auto mb-[60px] max-w-[1024px] px-4 text-center lg:mb-[80px]">
+      <div className="mx-auto mb-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:mb-[80px] lg:max-w-[1024px]">
         <h2 className="mb-[30px] text-2xl font-semibold lg:mb-[80px] lg:text-[32px]">
           メリット (レビュイー)
         </h2>
@@ -144,7 +144,7 @@ const Top: NextPage = () => {
         </div>
       </div>
 
-      <div className="mx-auto mb-[60px] max-w-[1024px] px-4 text-center lg:mb-[80px]">
+      <div className="mx-auto mb-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:mb-[80px] lg:max-w-[1024px]">
         <h2 className="mb-[30px] text-2xl font-semibold lg:mb-[80px] lg:text-[32px]">
           メリット (レビュアー)
         </h2>
