@@ -9,7 +9,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'http://localhost:8000', 'https://duet-code.vercel.app'
+    origins 'http://localhost:8000', 'https://www.duet-code.com'
 
     resource '*',
              headers: :any,

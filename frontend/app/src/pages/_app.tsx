@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }: any): JSX.Element {
         />
         <meta
           property="og:image"
-          content="https://duet-code.vercel.app/twitter-card.png"
+          content="https://www.duet-code.com/twitter-card.png"
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="628" />
