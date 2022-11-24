@@ -43,8 +43,8 @@ const ReviewCard: NextPage<Props> = ({
     >
       <div className="h-[160px] rounded-t-lg bg-blue p-[15px] sm:h-[175px]">
         <div className="h-[130px] rounded-lg bg-white p-5 sm:h-[145px]">
-          <div className="mb-[5px] flex h-[65px]  items-center justify-center">
-            <p className="break-words text-lg font-semibold text-black line-clamp-2">
+          <div className="mb-[5px] flex h-[56px]  items-center justify-center sm:h-[65px]">
+            <p className="break-all text-lg font-semibold text-black line-clamp-2">
               {title}
             </p>
           </div>
@@ -69,7 +69,7 @@ const ReviewCard: NextPage<Props> = ({
             />
           ))}
         </div>
-        <div className="mb-[15px] break-words text-xl text-black line-clamp-2">
+        <div className="mb-[15px] break-all text-xl text-black line-clamp-2">
           {title}
         </div>
         <div className="flex items-center justify-end">

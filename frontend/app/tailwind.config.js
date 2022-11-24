@@ -16,6 +16,8 @@ module.exports = {
         footer: '#232B33',
         'pre-login-light-blue': '#D6E7F7',
         'post-login-light-blue': '#F1F5F9',
+        info: '#FFF4E5',
+        success: '#EDF7ED',
       },
       fontFamily: {
         serif: ['Times New Roman', 'serif'],

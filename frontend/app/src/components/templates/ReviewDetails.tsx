@@ -5,8 +5,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { reviewApi, notificationApi, gitHubApi } from '@/api/custom-instance'
 import ItemTitle from '@/components/atoms/ItemTitle'
 import AlertWithActionButton from '@/components/molecules/AlertWithActionButton'
-import DeleteButton from '@/components/atoms/DeleteButton'
-import EditButton from '@/components/atoms/EditButton'
+import EditMenu from '@/components/atoms/EditMenu'
+import EditWithDeleteMenu from '@/components/atoms/EditWithDeleteMenu'
 import Avatar from '@mui/material/Avatar'
 import Chip from '@mui/material/Chip'
 
@@ -91,7 +91,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
   })
 
   return (
-    <div className="px-[100px] pt-[50px]">
+    <div className="px-4 pt-[50px] sm:mx-auto sm:w-[640px] md:w-[768px] lg:w-[1024px] xl:w-[1280px]">
       <div className="mb-[50px]">
         {(() => {
           if (review?.accepted_at === null && review.reviewee?.id !== userId) {
@@ -202,14 +202,10 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <div className="mr-5">
-                    <EditButton onClick={goToPostsEdit} />
-                  </div>
-                  <div>
-                    <DeleteButton onClick={deleteReview} />
-                  </div>
-                </div>
+                <EditWithDeleteMenu
+                  editOnClick={goToPostsEdit}
+                  deleteOnClick={deleteReview}
+                />
               </div>
             )
           } else if (
@@ -234,9 +230,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
                     </span>
                   </div>
                 </div>
-                <div>
-                  <EditButton onClick={goToPostsEdit} />
-                </div>
+                <EditMenu editOnClick={goToPostsEdit} />
               </div>
             )
           } else {
@@ -260,14 +254,16 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
           }
         })()}
       </div>
-      <div className="mb-[50px] text-3xl text-black">{review?.title}</div>
+      <h1 className="mb-[50px] break-all text-3xl text-black">
+        {review?.title}
+      </h1>
       <div className="mb-[50px]">
         <div className="mb-[30px]">
           <ItemTitle>プルリクエスト</ItemTitle>
         </div>
         <a
           href={review?.pull_request_url}
-          className="text-sm text-blue"
+          className="break-all text-sm text-blue"
           target="_blank"
           rel="noreferrer"
         >
@@ -293,7 +289,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
         <div className="mb-[30px]">
           <ItemTitle>プルリクエストの説明</ItemTitle>
         </div>
-        <p className="whitespace-pre-wrap text-sm text-black">
+        <p className="whitespace-pre-wrap break-all text-sm text-black">
           {review?.pull_request_description}
         </p>
       </div>
@@ -301,7 +297,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
         <div className="mb-[30px]">
           <ItemTitle>レビューしてほしい点</ItemTitle>
         </div>
-        <p className="whitespace-pre-wrap text-sm text-black">
+        <p className="whitespace-pre-wrap break-all text-sm text-black">
           {review?.review_point}
         </p>
       </div>

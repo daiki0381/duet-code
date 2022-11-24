@@ -23,7 +23,7 @@ const ThanksOrFeedbackCard: NextPage<Props> = ({
         <Avatar src={avatar} className="mr-[10px]" alt="アバター画像" />
         <p className="text-sm font-semibold text-black">{name}</p>
       </div>
-      <p className="text-sm text-black">{message}</p>
+      <p className="break-all text-sm text-black">{message}</p>
     </div>
   )
 }
