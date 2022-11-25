@@ -455,6 +455,7 @@ paths:
         - Notification
       security:
         - JWT: []
+      parameters: []
     parameters: []
   '/api/v1/reviews/{review_id}/notifications/accepted':
     parameters:
@@ -561,8 +562,6 @@ paths:
       responses:
         '201':
           description: Created
-        '422':
-          description: Unprocessable Entity (WebDAV)
       tags:
         - GitHub
       description: ''
