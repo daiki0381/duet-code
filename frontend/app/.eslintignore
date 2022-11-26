@@ -8,3 +8,4 @@ postcss.config.js
 src/pages/api/login.ts
 src/pages/api/logout.ts
 src/utils/initAuth.js
+cypress/support
