@@ -1,6 +1,11 @@
 name: Frontend Test
 
-on: [push]
+on:
+  push:
+    paths:
+      - "frontend/app/**"
+    branches:
+      - main
 
 jobs:
   cypress-run:
