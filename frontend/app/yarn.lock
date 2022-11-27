@@ -1926,6 +1926,11 @@ csstype@^3.0.2, csstype@^3.1.1:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
+cypress-firebase@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/cypress-firebase/-/cypress-firebase-2.2.2.tgz#493c8736cb80aceb7b3548d690a547b02cf72aa5"
+  integrity sha512-EfpSJ8z8WXnIM1ezbxFUk51Kt6jaFFnEZp6uOoSgb9DF58hwxJ+MoSw1rpyX8Kwuiv/14pFpDiI1U+ZvSTK5fg==
+
 cypress@^11.2.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-11.2.0.tgz#63edef8c387b687066c5493f6f0ad7b9ced4b2b7"

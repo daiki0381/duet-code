@@ -49,6 +49,8 @@
 
 # local env files
 /frontend/app/.env*.local
+/frontend/app/cypress.env.json
+/frontend/app/serviceAccount.json
 
 # vercel
 /frontend/app/.vercel

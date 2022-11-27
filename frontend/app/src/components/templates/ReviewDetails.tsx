@@ -116,14 +116,12 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
             review?.feedback === null
           ) {
             return (
-              <>
-                <AlertWithActionButton
-                  message="からレビューリクエストが届いています。プルリクエストをApproveしたら、評価するをクリックして、レビューの評価をしてください。"
-                  buttonText="評価する"
-                  buttonClick={goToFeedback}
-                  url={review?.pull_request_url}
-                />
-              </>
+              <AlertWithActionButton
+                message="からレビューリクエストが届いています。プルリクエストをApproveしたら、評価するをクリックして、レビューの評価をしてください。"
+                buttonText="評価する"
+                buttonClick={goToFeedback}
+                url={review?.pull_request_url}
+              />
             )
           } else if (
             review?.reviewee?.id === userId &&
@@ -154,24 +152,20 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
             review?.thanks === null
           ) {
             return (
-              <>
-                <AlertWithActionButton
-                  name={review?.reviewer?.name}
-                  spanClick={() => goToUsersDetails(review?.reviewer?.id)}
-                  message="さんがレビューに対する評価を送信しました。お礼するをクリックして、レビューに対するお礼をしてください。"
-                  buttonText="お礼する"
-                  buttonClick={goToThanks}
-                />
-              </>
+              <AlertWithActionButton
+                name={review?.reviewer?.name}
+                spanClick={() => goToUsersDetails(review?.reviewer?.id)}
+                message="さんがレビューに対する評価を送信しました。お礼するをクリックして、レビューに対するお礼をしてください。"
+                buttonText="お礼する"
+                buttonClick={goToThanks}
+              />
             )
           } else if (review.thanks !== null) {
             return (
-              <>
-                <AlertWithActionButton
-                  message="レビューが完了しました。"
-                  done={true}
-                />
-              </>
+              <AlertWithActionButton
+                message="レビューが完了しました。"
+                done={true}
+              />
             )
           } else if (review.thanks === null && review.reviewer?.id !== userId) {
             return (

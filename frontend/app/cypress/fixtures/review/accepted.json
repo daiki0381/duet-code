@@ -1,0 +1,24 @@
+{
+  "id": 1,
+  "reviewee": {
+    "id": 1,
+    "name": "daiki0381",
+    "avatar": "https://avatars.githubusercontent.com"
+  },
+  "reviewer": {
+    "id": 2,
+    "name": "daiki0218",
+    "avatar": "https://avatars.githubusercontent.com"
+  },
+  "title": "Rubyのレビューをお願いします",
+  "pull_request_title": "ruby-practices/ボウリングのスコア計算オブジェクト指向版",
+  "pull_request_url": "https://github.com/daiki0381/ruby-practices/pull/1",
+  "languages": ["Ruby"],
+  "pull_request_description": "ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。",
+  "review_point": "メソッド/変数の命名",
+  "feedback": null,
+  "thanks": null,
+  "accepted_at": "2022-10-22 17:00:00.000000",
+  "created_at": "2022-10-10T10::10",
+  "updated_at": "2022-10-10T10::10"
+}
