@@ -61,3 +61,5 @@ describe('Notifications', () => {
     cy.logout()
   })
 })
+
+export {}

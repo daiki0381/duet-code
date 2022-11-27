@@ -86,3 +86,5 @@ describe('User', () => {
     cy.logout()
   })
 })
+
+export {}

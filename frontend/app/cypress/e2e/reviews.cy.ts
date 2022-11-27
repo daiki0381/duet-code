@@ -43,3 +43,5 @@ describe('Reviews', () => {
     cy.logout()
   })
 })
+
+export {}

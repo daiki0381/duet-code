@@ -48,3 +48,5 @@ describe('Update review', () => {
     cy.logout()
   })
 })
+
+export {}

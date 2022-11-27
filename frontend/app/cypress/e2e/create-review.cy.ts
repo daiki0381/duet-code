@@ -45,3 +45,5 @@ describe('Create review', () => {
     cy.logout()
   })
 })
+
+export {}

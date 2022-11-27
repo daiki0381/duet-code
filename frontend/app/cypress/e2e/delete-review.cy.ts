@@ -64,3 +64,5 @@ describe('Delete review', () => {
     cy.logout()
   })
 })
+
+export {}

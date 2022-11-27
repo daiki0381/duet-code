@@ -14,3 +14,5 @@ describe('Authentication', () => {
     cy.logout()
   })
 })
+
+export {}
