@@ -29,6 +29,7 @@
 
 # testing
 /frontend/app/coverage
+/frontend/app/cypress/videos
 
 # next.js
 /frontend/app/.next/

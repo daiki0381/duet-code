@@ -9,7 +9,7 @@ describe('User', () => {
   })
 
   it('If user exists', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/users/1', {
+    cy.intercept('GET', '**/api/v1/users/1', {
       fixture: 'user/1.json',
     })
     cy.visit('/users/1')
@@ -17,19 +17,15 @@ describe('User', () => {
   })
 
   it('If there is not user wanted reviews and user accepted reviews', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/users/1', {
+    cy.intercept('GET', '**/api/v1/users/1', {
       fixture: 'user/1.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/users/1/wanted_reviews', {
+    cy.intercept('GET', '**/api/v1/users/1/wanted_reviews', {
       fixture: 'user/none-user-wanted-reviews.json',
     })
-    cy.intercept(
-      'GET',
-      'http://localhost:3000/api/v1/users/1/accepted_reviews',
-      {
-        fixture: 'user/none-user-accepted-reviews.json',
-      },
-    )
+    cy.intercept('GET', '**/api/v1/users/1/accepted_reviews', {
+      fixture: 'user/none-user-accepted-reviews.json',
+    })
     cy.visit('/users/1')
     cy.contains('daiki0381')
     cy.contains('お礼はまだありません')
@@ -50,19 +46,15 @@ describe('User', () => {
   })
 
   it('If there is user wanted reviews and user accepted reviews', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/users/1', {
+    cy.intercept('GET', '**/api/v1/users/1', {
       fixture: 'user/1.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/users/1/wanted_reviews', {
+    cy.intercept('GET', '**/api/v1/users/1/wanted_reviews', {
       fixture: 'user/user-wanted-reviews.json',
     })
-    cy.intercept(
-      'GET',
-      'http://localhost:3000/api/v1/users/1/accepted_reviews',
-      {
-        fixture: 'user/user-accepted-reviews.json',
-      },
-    )
+    cy.intercept('GET', '**/api/v1/users/1/accepted_reviews', {
+      fixture: 'user/user-accepted-reviews.json',
+    })
     cy.visit('/users/1')
     cy.contains('daiki0381')
     cy.contains(

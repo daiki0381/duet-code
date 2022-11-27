@@ -5,7 +5,7 @@ describe('Reviews', () => {
 
   it('If there is not review', () => {
     cy.visit('/')
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews', {
+    cy.intercept('GET', '**/api/v1/reviews', {
       fixture: 'reviews/none.json',
     })
     cy.contains('レビュー募集はまだありません')
@@ -17,7 +17,7 @@ describe('Reviews', () => {
 
   it('If there is wanted reviews', () => {
     cy.visit('/')
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews', {
+    cy.intercept('GET', '**/api/v1/reviews', {
       fixture: 'reviews/wanted.json',
     })
     cy.contains('Rubyのレビューをお願いします')
@@ -29,7 +29,7 @@ describe('Reviews', () => {
 
   it('If there is accepted reviews', () => {
     cy.visit('/')
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews', {
+    cy.intercept('GET', '**/api/v1/reviews', {
       fixture: 'reviews/accepted.json',
     })
     cy.contains('レビュー募集はまだありません')

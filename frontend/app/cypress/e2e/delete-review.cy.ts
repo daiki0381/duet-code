@@ -4,10 +4,10 @@ describe('Delete review', () => {
   })
 
   it('If reviewee accesses no accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/no_accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('posts/1')
@@ -16,10 +16,10 @@ describe('Delete review', () => {
   })
 
   it('If other user accesses no accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/no_accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('posts/1')
@@ -27,10 +27,10 @@ describe('Delete review', () => {
   })
 
   it('If reviewee accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('posts/1')
@@ -39,10 +39,10 @@ describe('Delete review', () => {
   })
 
   it('If reviewer accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('posts/1')
@@ -50,10 +50,10 @@ describe('Delete review', () => {
   })
 
   it('If other user accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/3.json',
     })
     cy.visit('posts/1')

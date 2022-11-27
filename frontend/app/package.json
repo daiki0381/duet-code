@@ -11,7 +11,8 @@
     "lint-fix": "eslint --fix './src/**/*.{ts,tsx}'",
     "format": "prettier --write './src/**/*.{ts,tsx}'",
     "lint-all": "yarn check-lint && yarn lint-fix && yarn format",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

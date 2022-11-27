@@ -9,10 +9,10 @@ describe('Review', () => {
   })
 
   it('If reviewee accesses no accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/no_accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('/posts/1')
@@ -22,10 +22,10 @@ describe('Review', () => {
   })
 
   it('If other user accesses no accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/no_accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('/posts/1')
@@ -35,10 +35,10 @@ describe('Review', () => {
   })
 
   it('If reviewee accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('/posts/1')
@@ -48,10 +48,10 @@ describe('Review', () => {
   })
 
   it('If reviewer accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('/posts/1')
@@ -61,10 +61,10 @@ describe('Review', () => {
   })
 
   it('If other user accesses accepted review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/accepted.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/3.json',
     })
     cy.visit('/posts/1')
@@ -72,10 +72,10 @@ describe('Review', () => {
   })
 
   it('If reviewee accesses feedback review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/feedback.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('/posts/1')
@@ -85,10 +85,10 @@ describe('Review', () => {
   })
 
   it('If reviewer accesses feedback review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/feedback.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('/posts/1')
@@ -96,10 +96,10 @@ describe('Review', () => {
   })
 
   it('If other user accesses feedback review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/feedback.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/3.json',
     })
     cy.visit('/posts/1')
@@ -107,10 +107,10 @@ describe('Review', () => {
   })
 
   it('If reviewee accesses thanks review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/thanks.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/1.json',
     })
     cy.visit('/posts/1')
@@ -118,10 +118,10 @@ describe('Review', () => {
   })
 
   it('If reviewer accesses thanks review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/thanks.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/2.json',
     })
     cy.visit('/posts/1')
@@ -129,10 +129,10 @@ describe('Review', () => {
   })
 
   it('If other user accesses thanks review', () => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/reviews/1', {
+    cy.intercept('GET', '**/api/v1/reviews/1', {
       fixture: 'review/thanks.json',
     })
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/id', {
+    cy.intercept('GET', '**/api/v1/current_user/id', {
       fixture: 'current-user-id/3.json',
     })
     cy.visit('/posts/1')

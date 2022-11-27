@@ -4,13 +4,14 @@ describe('Create review', () => {
   })
 
   beforeEach(() => {
-    cy.intercept('GET', 'http://localhost:3000/api/v1/current_user/pulls', {
+    cy.intercept('GET', '**/api/v1/current_user/pulls', {
       fixture: 'current-user-pulls.json',
     })
   })
 
   it('If you save without entering anything', () => {
     cy.visit('posts/new')
+    cy.contains('保存する')
     cy.wait(1000)
     cy.get('[form="review_create_form"]').click()
     cy.contains('タイトルを入力してください')
@@ -34,7 +35,7 @@ describe('Create review', () => {
       'ボウリングのスコア計算をオブジェクト指向プログラミングで書きました。',
     )
     cy.get('[name="review_point"]').type('メソッド/変数の命名')
-    cy.intercept('POST', 'http://localhost:3000/api/v1/reviews', {
+    cy.intercept('POST', '**/api/v1/reviews', {
       statusCode: 201,
     })
     cy.get('[form="review_create_form"]').click()
