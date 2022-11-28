@@ -192,7 +192,7 @@ const PostLoginHeader: NextPage<Props> = ({
                   ))}
                 </div>
               ) : (
-                <div className="flex max-h-[230px] max-w-[320px]  flex-col items-center justify-center">
+                <div className="flex h-[230px] w-[230px] flex-col items-center justify-center sm:w-[320px]">
                   <Image
                     src="/notification.svg"
                     width={150}
