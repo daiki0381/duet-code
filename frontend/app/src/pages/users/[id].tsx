@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
 import { useQuery } from '@tanstack/react-query'
@@ -113,6 +114,9 @@ const Details: NextPage<any> = () => {
 
   return (
     <>
+      <Head>
+        <title>Duet Code | ユーザー詳細</title>
+      </Head>
       {userIsLoading ? (
         <></>
       ) : (

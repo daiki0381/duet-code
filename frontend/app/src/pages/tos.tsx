@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
 import { useQuery } from '@tanstack/react-query'
 import { userApi, notificationApi } from '@/api/custom-instance'
@@ -56,26 +57,31 @@ const Tos: NextPage<any> = () => {
   ).length
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {avatar !== null ? (
-        <>
-          <PostLoginHeader
-            avatar={avatar}
-            userId={currentUserId}
-            notifications={reviewNotifications}
-            badgeContent={badgeContent}
-          />
-          <TermsOfService />
-          <PostLoginFooter />
-        </>
-      ) : (
-        <>
-          <PreLoginHeader />
-          <TermsOfService />
-          <PreLoginFooter />
-        </>
-      )}
-    </div>
+    <>
+      <Head>
+        <title>Duet Code | 利用規約</title>
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        {avatar !== null ? (
+          <>
+            <PostLoginHeader
+              avatar={avatar}
+              userId={currentUserId}
+              notifications={reviewNotifications}
+              badgeContent={badgeContent}
+            />
+            <TermsOfService />
+            <PostLoginFooter />
+          </>
+        ) : (
+          <>
+            <PreLoginHeader />
+            <TermsOfService />
+            <PreLoginFooter />
+          </>
+        )}
+      </div>
+    </>
   )
 }
 

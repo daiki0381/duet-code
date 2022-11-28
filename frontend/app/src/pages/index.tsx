@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
 import { useQuery } from '@tanstack/react-query'
 import { userApi, reviewApi, notificationApi } from '@/api/custom-instance'
@@ -75,25 +76,30 @@ const Home: NextPage<any> = () => {
   ).length
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <PostLoginHeader
-        avatar={currentAvatar}
-        userId={currentUserId}
-        notifications={reviewNotifications}
-        badgeContent={badgeContent}
-      />
-      {isLoading ? (
-        <div className="flex flex-1 items-center justify-center bg-post-login-light-blue">
-          <CircularProgress className="text-blue" />
-        </div>
-      ) : (
-        <ReviewList
-          wantedReviews={wantedReviews}
-          acceptedReviews={acceptedReviews}
+    <>
+      <Head>
+        <title>Duet Code | ホーム</title>
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <PostLoginHeader
+          avatar={currentAvatar}
+          userId={currentUserId}
+          notifications={reviewNotifications}
+          badgeContent={badgeContent}
         />
-      )}
-      <PostLoginFooter />
-    </div>
+        {isLoading ? (
+          <div className="flex flex-1 items-center justify-center bg-post-login-light-blue">
+            <CircularProgress className="text-blue" />
+          </div>
+        ) : (
+          <ReviewList
+            wantedReviews={wantedReviews}
+            acceptedReviews={acceptedReviews}
+          />
+        )}
+        <PostLoginFooter />
+      </div>
+    </>
   )
 }
 

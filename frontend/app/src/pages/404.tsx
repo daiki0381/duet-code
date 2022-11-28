@@ -1,8 +1,15 @@
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { withAuthUser, AuthAction } from 'next-firebase-auth'
 
 const NotFound: NextPage<any> = () => {
-  return <></>
+  return (
+    <>
+      <Head>
+        <title>Duet Code | 404 Not Found</title>
+      </Head>
+    </>
+  )
 }
 
 export default withAuthUser({

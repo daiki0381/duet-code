@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { withAuthUser, useAuthUser, AuthAction } from 'next-firebase-auth'
 import { useQuery } from '@tanstack/react-query'
 import { gitHubApi } from '@/api/custom-instance'
@@ -31,17 +32,22 @@ const New: NextPage<any> = () => {
   const reviewPulls = pulls !== undefined ? pulls : []
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <ReviewCreateHeader />
-      {isLoading ? (
-        <div className="flex flex-1 items-center justify-center">
-          <CircularProgress className="text-blue" />
-        </div>
-      ) : (
-        <ReviewCreate pulls={reviewPulls} authUser={AuthUser} />
-      )}
-      <PostLoginFooter />
-    </div>
+    <>
+      <Head>
+        <title>Duet Code | レビュー作成</title>
+      </Head>
+      <div className="flex min-h-screen flex-col">
+        <ReviewCreateHeader />
+        {isLoading ? (
+          <div className="flex flex-1 items-center justify-center">
+            <CircularProgress className="text-blue" />
+          </div>
+        ) : (
+          <ReviewCreate pulls={reviewPulls} authUser={AuthUser} />
+        )}
+        <PostLoginFooter />
+      </div>
+    </>
   )
 }
 
