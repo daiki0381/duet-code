@@ -11,7 +11,7 @@ jobs:
     name: Backend Test
     runs-on: ubuntu-latest
     services:
-      postgres:
+      db:
         image: postgres:12
         ports:
           - 5432:5432
@@ -24,7 +24,7 @@ jobs:
       image: ruby:2.7.6
       env:
         RAILS_ENV: test
-        POSTGRES_HOST: postgres
+        POSTGRES_HOST: db
         RAILS_DATABASE_USER: postgres
         RAILS_DATABASE_PASSWORD: password
     steps:

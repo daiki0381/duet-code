@@ -1,9 +1,141 @@
-# エレベーターピッチ
+# Duet Code
 
-[1.サービス名：**Duet Code**] というサービスは、
-[2.解決する問題：**①プライベートで書いたコードをレビューしてもらう機会がない問題②他人の書いたコードを読んだり、自分の書いたコードに意見を貰うことで、技術力を上げたいニーズ**] を解決したい
-[3.このサービスを使うターゲット：**コードレビューを通して技術力を上げたい人**] 向けの、
-[4.サービスのカテゴリー：**個人間のコードレビューサービス**]です。
-ユーザーは [5.このサービスでできること：**レビューしてほしいプルリクエストを投稿し、ユーザー登録でレビュイーにもレビュアーにもなること**] ができ、
-[6.競合サービス；**MENTAでお金を払ってレビューしてもらうの**] とは違って、
-[7.差別化要素：**無料でレビュイーにもレビュアーにもなれる機能**] が備わっている事が特徴です。
+Duet Code というサービスは、① プライベートで書いたコードをレビューしてもらう機会がない問題 ② 他人の書いたコードを読んだり、自分の書いたコードに意見を貰うことで、技術力を上げたいニーズを解決したいコードレビューを通して技術力を上げたい人向けの、個人間のコードレビューサービスです。ユーザーはレビューしてほしいプルリクエストを投稿し、ユーザー登録でレビュイーにもレビュアーにもなることができ、MENTA でお金を払ってレビューしてもらうのとは違って、無料でレビュイーにもレビュアーにもなれる機能が備わっている事が特徴です。
+
+▼ サービス URL
+
+https://www.duet-code.com
+
+![duet-code](https://user-images.githubusercontent.com/98577773/204183233-e4833ffd-a553-4d98-ba5f-d0e339072620.png)
+
+## 使用技術
+
+### バックエンド
+
+- [Ruby on Rails (API モード)](https://rubyonrails.org/)
+
+### フロントエンド
+
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [MUI](https://mui.com/)
+
+※API 関連のコードは [OpenAPI Generator TypeScript Axios](https://openapi-generator.tech/) で自動生成しています。
+
+### インフラ
+
+- バックエンド
+  - [Fly.io](https://fly.io/)
+- フロントエンド
+  - [Vercel](https://vercel.com/)
+
+### テスト
+
+- API テスト
+  - [committee-rails](https://github.com/willnet/committee-rails) + [RSpec](https://github.com/rspec)
+- E2E テスト
+  - [Cypress](https://www.cypress.io/)
+
+### CI/CD
+
+- [GitHub Actions](https://docs.github.com/ja/actions)
+
+### 環境構築
+
+- [Docker](https://www.docker.com/)
+
+### 外部サービス
+
+- [Firebase Authentication](https://firebase.google.com/docs/auth)
+- [GitHub API](https://docs.github.com/ja/rest)
+
+## 環境構築
+
+```
+$ git clone https://github.com/daiki0381/duet-code.git
+$ cd duet-code
+$ docker-compose build
+$ docker-compose run --rm frontend yarn install
+$ docker-compose up
+```
+
+※Docker を使用する場合、[Docker Desktop](https://www.docker.com/products/docker-desktop/)のダウンロードが必要です。
+
+### 環境変数
+
+#### Firebase Authentication を使用する場合、下記の環境変数を frontend/app/.env.local に設定してください。.env.local の記載方法は frontend/app/.env.local.example を参考にしてください。
+
+| 環境変数名                          |
+| ----------------------------------- |
+| FIREBASE_CLIENT_EMAIL               |
+| NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY |
+| NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN    |
+| NEXT_PUBLIC_FIREBASE_DATABASE_URL   |
+| NEXT_PUBLIC_FIREBASE_PROJECT_ID     |
+| FIREBASE_PRIVATE_KEY                |
+| COOKIE_SECRET_CURRENT               |
+| COOKIE_SECRET_PREVIOUS              |
+| NEXT_PUBLIC_COOKIE_SECURE           |
+
+#### Cypress を使用する場合、下記の環境変数を設定してください。
+
+frontend/app/cypress.env.json に設定してください。cypress.env.json の記載方法は frontend/app/cypress.env.json.example を参考にしてください。
+
+| 環境変数名                   |
+| ---------------------------- |
+| FIREBASE_API_KEY             |
+| FIREBASE_AUTH_DOMAIN         |
+| FIREBASE_DATABASE_URL        |
+| FIREBASE_PROJECT_ID          |
+| FIREBASE_STORAGE_BUCKET      |
+| FIREBASE_MESSAGING_SENDER_ID |
+| FIREBASE_APP_ID              |
+| TEST_UID                     |
+
+frontend/app/serviceAccount.json に設定してください。serviceAccount.json の記載方法は frontend/app/serviceAccount.json.example を参考にしてください。
+
+| 環境変数名                  |
+| --------------------------- |
+| type                        |
+| project_id                  |
+| private_key_id              |
+| private_key                 |
+| client_email                |
+| client_id                   |
+| auth_uri                    |
+| token_uri                   |
+| auth_provider_x509_cert_url |
+| client_x509_cert_url        |
+
+## テスト・リント
+
+### バックエンド
+
+リントの実行
+
+```
+$ docker-compose run --rm backend bundle exec rubocop
+```
+
+API テストの実行
+
+```
+$ docker-compose run --rm backend bundle exec rspec
+```
+
+### フロントエンド
+
+リントの実行
+
+```
+$ docker-compose run --rm frontend yarn lint-all
+```
+
+E2E テストの実行
+
+```
+$ cd frontend/app
+$ yarn dev
+$ yarn cypress:run
+```

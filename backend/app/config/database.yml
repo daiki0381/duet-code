@@ -12,7 +12,6 @@ development:
 
 test:
   <<: *default
-  host: postgres
   database: myapp_test
 
 production:
