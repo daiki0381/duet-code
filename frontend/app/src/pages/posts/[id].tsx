@@ -59,7 +59,7 @@ const Details: NextPage<any> = () => {
   )
 
   const { data: review, isLoading: reviewIsLoading } = useQuery(
-    ['review'],
+    ['review', id],
     async () => {
       if (typeof id === 'string') {
         const { data } = await reviewApi.getReview(id)
@@ -69,7 +69,6 @@ const Details: NextPage<any> = () => {
     {
       enabled: AuthUser.id !== null,
       retry: false,
-      cacheTime: 0,
     },
   )
 
