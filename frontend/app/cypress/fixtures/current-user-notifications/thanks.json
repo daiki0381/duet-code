@@ -3,13 +3,13 @@
     "id": 1,
     "review_id": 1,
     "sender": {
-      "id": 1,
-      "name": "daiki0381",
+      "id": 2,
+      "name": "daiki0218",
       "avatar": "https://avatars.githubusercontent.com"
     },
     "receiver": {
-      "id": 2,
-      "name": "daiki0218",
+      "id": 1,
+      "name": "daiki0381",
       "avatar": "https://avatars.githubusercontent.com"
     },
     "action": "thanks",

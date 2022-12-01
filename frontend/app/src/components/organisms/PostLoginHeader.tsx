@@ -178,7 +178,7 @@ const PostLoginHeader: NextPage<Props> = ({
                           } else if (notification.action === 'thanks') {
                             return (
                               <div>
-                                {notification.receiver.name}
+                                {notification.sender.name}
                                 さんがお礼を送信しました。
                               </div>
                             )
