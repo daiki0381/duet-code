@@ -64,7 +64,9 @@ $ docker-compose up
 
 ### 環境変数
 
-#### Firebase Authentication を使用する場合、下記の環境変数を frontend/app/.env.local に設定してください。.env.local の記載方法は frontend/app/.env.local.example を参考にしてください。
+#### Firebase Authentication を使用する場合、下記の環境変数を設定してください。
+
+frontend/app/.env.local に設定してください。.env.local の記述方法は frontend/app/.env.local.example を参考にしてください。
 
 | 環境変数名                          |
 | ----------------------------------- |
@@ -78,9 +80,9 @@ $ docker-compose up
 | COOKIE_SECRET_PREVIOUS              |
 | NEXT_PUBLIC_COOKIE_SECURE           |
 
-#### Cypress を使用する場合、下記の環境変数を設定してください。
+#### Cypress を使用する場合、下記の環境変数・JSON を設定してください。
 
-frontend/app/cypress.env.json に設定してください。cypress.env.json の記載方法は frontend/app/cypress.env.json.example を参考にしてください。
+frontend/app/cypress.env.json に設定してください。cypress.env.json の記述方法は frontend/app/cypress.env.json.example を参考にしてください。
 
 | 環境変数名                   |
 | ---------------------------- |
@@ -93,9 +95,9 @@ frontend/app/cypress.env.json に設定してください。cypress.env.json の
 | FIREBASE_APP_ID              |
 | TEST_UID                     |
 
-frontend/app/serviceAccount.json に設定してください。serviceAccount.json の記載方法は frontend/app/serviceAccount.json.example を参考にしてください。
+frontend/app/serviceAccount.json に設定してください。serviceAccount.json の記述方法は frontend/app/serviceAccount.json.example を参考にしてください。
 
-| 環境変数名                  |
+| JSON名                  |
 | --------------------------- |
 | type                        |
 | project_id                  |
