@@ -3,21 +3,30 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      get 'current_user/id', to: 'users#current_user_id'
-      get 'current_user/pulls', to: 'users#current_user_pulls'
-      get 'users/:id/wanted_reviews', to: 'users#user_wanted_reviews', as: 'user_wanted_reviews'
-      get 'users/:id/accepted_reviews', to: 'users#user_accepted_reviews', as: 'user_accepted_reviews'
-      post 'reviews/:id/accepted', to: 'reviews#accept_review', as: 'accept_review'
-      post 'reviews/:id/request_review', to: 'reviews#request_review', as: 'request_review'
-      post 'reviews/:id/feedback', to: 'reviews#create_feedback', as: 'create_feedback'
-      post 'reviews/:id/thanks', to: 'reviews#create_thanks', as: 'create_thanks'
-      resources :users, only: %i[create show]
-      resources :reviews, only: %i[index show create update destroy]
-      get 'current_user/notifications', to: 'notifications#current_user_notifications'
-      post 'reviews/:id/notifications/accepted', to: 'notifications#create_accepted_notification', as: 'create_accepted_notification'
-      post 'reviews/:id/notifications/feedback', to: 'notifications#create_feedback_notification', as: 'create_feedback_notification'
-      post 'reviews/:id/notifications/thanks', to: 'notifications#create_thanks_notification', as: 'create_thanks_notification'
-      patch 'notifications/:id', to: 'notifications#update', as: 'update_notification'
+      namespace :current_user do
+        resource :id, only: %i[show]
+        resources :pulls, only: %i[index]
+        resources :notifications, only: %i[index]
+      end
+
+      resources :users, only: %i[create show] do
+        resources :wanted_reviews, only: %i[index]
+        resources :accepted_reviews, only: %i[index]
+      end
+
+      resources :reviews, only: %i[index show create update destroy] do
+        resource :accepted, only: %i[create]
+        resource :request_review, only: %i[create]
+        resource :feedback, only: %i[create]
+        resource :thanks, only: %i[create]
+        namespace :notifications do
+          resource :accepted, only: %i[create]
+          resource :feedback, only: %i[create]
+          resource :thanks, only: %i[create]
+        end
+      end
+      
+      resources :notifications, only: %i[update]
     end
   end
 end

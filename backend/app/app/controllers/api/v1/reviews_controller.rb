@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require 'date'
-require 'octokit'
-
 module Api
   module V1
     class ReviewsController < ApplicationController
-      before_action :authenticate_user, only: %i[create accept_review]
+      before_action :authenticate_user, only: %i[create]
 
       def index
         @reviews = Review.all.order(created_at: 'DESC').map do |review|
@@ -110,49 +107,6 @@ module Api
           params[:languages].each do |language|
             @review.languages.create(name: language)
           end
-          render status: :created
-        else
-          render status: :unprocessable_entity
-        end
-      end
-
-      def accept_review
-        @review = Review.find(params[:id])
-        if @review.update(accepted_at: DateTime.now, reviewer_id: current_user.id)
-          render status: :created
-        else
-          render status: :unprocessable_entity
-        end
-      end
-
-      def request_review
-        @review = Review.find(params[:id])
-        @reviewee = User.find(@review.reviewee_id)
-        @reviewer = User.find(@review.reviewer_id)
-        reviewee = Octokit::Client.new(access_token: @reviewee.github_access_token)
-        reviewer = Octokit::Client.new(access_token: @reviewer.github_access_token)
-        repository = @review.pull_request_url.split('/')[4]
-        name_and_repository = "#{@reviewee.name}/#{repository}"
-        reviewee.add_collaborator(name_and_repository, @reviewer.name)
-        repository_invitations = reviewee.repository_invitations(name_and_repository)
-        reviewer.accept_repository_invitation(repository_invitations[0].id) unless repository_invitations.empty?
-        pull_request_number = @review.pull_request_url.split('/').last
-        reviewee.request_pull_request_review(name_and_repository, pull_request_number, reviewers: [@reviewer.name])
-        render status: :created
-      end
-
-      def create_feedback
-        @review = Review.find(params[:id])
-        if @review.update(feedback: params[:feedback])
-          render status: :created
-        else
-          render status: :unprocessable_entity
-        end
-      end
-
-      def create_thanks
-        @review = Review.find(params[:id])
-        if @review.update(thanks: params[:thanks])
           render status: :created
         else
           render status: :unprocessable_entity
