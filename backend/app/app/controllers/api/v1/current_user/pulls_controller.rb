@@ -17,8 +17,8 @@ module Api
           client = Octokit::Client.new(access_token: github_access_token)
           repos = client.repos(name).map(&:name)
           pulls = Parallel.map(repos, in_threads: 10) do |repo|
-            client.pulls("#{name}/#{repo}").map do |pull|
-              { title: "#{pull.head.repo.name}/#{pull.title}", url: pull.html_url }
+            client.pulls("#{name}/#{repo}").filter_map do |pull|
+              { title: "#{pull.head.repo.name}/#{pull.title}", url: pull.html_url } if pull.user.login == name
             end
           end.flatten
           render json: pulls, status: :ok
