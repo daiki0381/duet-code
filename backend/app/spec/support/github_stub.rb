@@ -12,7 +12,8 @@ module GithubStub
   def github_pulls_stub
     allow_any_instance_of(Octokit::Client).to receive(:pulls).and_return([
                                                                            double('pull',
-                                                                                  head: double('head', repo: double('repo', name: 'repo1')), title: 'title1', html_url: 'url1')
+                                                                                  head: double('head', repo: double('repo', name: 'repo1')),
+                                                                                  title: 'title1', html_url: 'url1', user: double('user', login: 'login1'))
                                                                          ])
   end
 
