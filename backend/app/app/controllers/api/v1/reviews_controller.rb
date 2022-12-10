@@ -6,70 +6,11 @@ module Api
       before_action :authenticate_user, only: %i[create]
 
       def index
-        @reviews = Review.all.order(created_at: 'DESC').map do |review|
-          reviewer = review.reviewer_id.nil? ? nil : User.find(review.reviewer_id)
-          name = reviewer ? reviewer.name : nil
-          avatar = reviewer ? reviewer.avatar : nil
-          languages = review.languages.map(&:name)
-          {
-            id: review.id,
-            reviewee: {
-              id: review.reviewee_id,
-              name: User.find(review.reviewee_id).name,
-              avatar: User.find(review.reviewee_id).avatar
-            },
-            reviewer: {
-              id: review.reviewer_id,
-              name: name,
-              avatar: avatar
-            },
-            title: review.title,
-            pull_request_title: review.pull_request_title,
-            pull_request_url: review.pull_request_url,
-            languages: languages,
-            pull_request_description: review.pull_request_description,
-            review_point: review.review_point,
-            feedback: review.feedback,
-            thanks: review.thanks,
-            accepted_at: review.accepted_at,
-            created_at: review.created_at,
-            updated_at: review.updated_at
-          }
-        end
-        render json: @reviews, status: :ok
+        @reviews = Review.all.order(created_at: 'DESC')
       end
 
       def show
         @review = Review.find(params[:id])
-        reviewer = @review.reviewer_id.nil? ? nil : User.find(@review.reviewer_id)
-        name = reviewer ? reviewer.name : nil
-        avatar = reviewer ? reviewer.avatar : nil
-        languages = @review.languages.map(&:name)
-        @review = {
-          id: @review.id,
-          reviewee: {
-            id: @review.reviewee_id,
-            name: User.find(@review.reviewee_id).name,
-            avatar: User.find(@review.reviewee_id).avatar
-          },
-          reviewer: {
-            id: @review.reviewer_id,
-            name: name,
-            avatar: avatar
-          },
-          title: @review.title,
-          pull_request_title: @review.pull_request_title,
-          pull_request_url: @review.pull_request_url,
-          languages: languages,
-          pull_request_description: @review.pull_request_description,
-          review_point: @review.review_point,
-          feedback: @review.feedback,
-          thanks: @review.thanks,
-          accepted_at: @review.accepted_at,
-          created_at: @review.created_at,
-          updated_at: @review.updated_at
-        }
-        render json: @review, status: :ok
       end
 
       def create
@@ -87,9 +28,9 @@ module Api
           params[:languages].each do |language|
             @review.languages.create(name: language)
           end
-          render status: :created
+          render json: { status_code: 201, status: 'created' }, status: :created
         else
-          render status: :unprocessable_entity
+          render json: { status_code: 422, status: 'unprocessable_entity' }, status: :unprocessable_entity
         end
       end
 
@@ -107,16 +48,16 @@ module Api
           params[:languages].each do |language|
             @review.languages.create(name: language)
           end
-          render status: :created
+          render json: { status_code: 201, status: 'created' }, status: :created
         else
-          render status: :unprocessable_entity
+          render json: { status_code: 422, status: 'unprocessable_entity' }, status: :unprocessable_entity
         end
       end
 
       def destroy
         @review = Review.find(params[:id])
         @review.destroy
-        render status: :no_content
+        render json: { status_code: 204, status: 'no_content' }, status: :no_content
       end
     end
   end

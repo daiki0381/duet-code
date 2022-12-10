@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   namespace :api do
-    namespace :v1 do
+    namespace :v1, defaults: { format: :json } do
       namespace :current_user do
         resource :id, only: %i[show]
         resources :pulls, only: %i[index]
@@ -25,7 +25,7 @@ Rails.application.routes.draw do
           resource :thanks, only: %i[create]
         end
       end
-      
+
       resources :notifications, only: %i[update]
     end
   end

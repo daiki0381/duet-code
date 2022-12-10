@@ -14,9 +14,9 @@ module Api
           @user.update(github_access_token: sign_up_params[:github_access_token]) if @user.github_access_token != sign_up_params[:github_access_token]
           @user.update(name: sign_up_params[:name]) if @user.name != sign_up_params[:name]
           @user.update(avatar: sign_up_params[:avatar]) if @user.avatar != sign_up_params[:avatar]
-          render status: :created
+          render json: { status_code: 201, status: 'created' }, status: :created
         else
-          render status: :unprocessable_entity
+          render json: { status_code: 422, status: 'unprocessable_entity' }, status: :unprocessable_entity
         end
       end
 

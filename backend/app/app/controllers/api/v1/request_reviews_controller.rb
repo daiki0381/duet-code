@@ -18,7 +18,7 @@ module Api
         reviewer.accept_repository_invitation(repository_invitations[0].id) unless repository_invitations.empty?
         pull_request_number = @review.pull_request_url.split('/').last
         reviewee.request_pull_request_review(name_and_repository, pull_request_number, reviewers: [@reviewer.name])
-        render status: :created
+        render json: { status_code: 201, status: 'created' }, status: :created
       end
     end
   end

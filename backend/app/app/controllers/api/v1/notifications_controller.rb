@@ -8,7 +8,7 @@ module Api
         if @notification.update(checked: true)
           render json: @notification, status: :ok
         else
-          render status: :unprocessable_entity
+          render json: { status_code: 422, status: 'unprocessable_entity' }, status: :unprocessable_entity
         end
       end
     end
