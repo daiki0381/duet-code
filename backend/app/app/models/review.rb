@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'octokit'
-
 class Review < ApplicationRecord
   belongs_to :reviewee, class_name: 'User', optional: true
   belongs_to :reviewer, class_name: 'User', optional: true

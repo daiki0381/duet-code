@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'octokit'
-require 'parallel'
-
 module Api
   module V1
     module CurrentUser
