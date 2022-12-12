@@ -32,4 +32,11 @@ module GithubStub
   def github_request_pull_request_review_stub
     allow_any_instance_of(Octokit::Client).to receive(:request_pull_request_review).and_return(true)
   end
+
+  def github_add_reviewer_stub
+    github_add_collaborator_stub
+    github_repository_invitations_stub
+    github_accept_repository_invitation_stub
+    github_request_pull_request_review_stub
+  end
 end
