@@ -7,7 +7,7 @@ class Review < ApplicationRecord
   has_many :languages, through: :review_languages
   has_many :notifications, dependent: :destroy
 
-  def request_review(reviewee, reviewer)
+  def add_reviewer!(reviewee, reviewer)
     reviewee_client = Octokit::Client.new(access_token: reviewee.github_access_token)
     reviewer_client = Octokit::Client.new(access_token: reviewer.github_access_token)
     repository = pull_request_url.split('/')[4]
