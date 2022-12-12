@@ -5,7 +5,7 @@ module Api
     class AcceptedReviewsController < ApplicationController
       def index
         @user = User.find(params[:user_id])
-        @accepted_reviews = Review.where(reviewer_id: @user.id).order(created_at: 'DESC')
+        @accepted_reviews = Review.where(reviewer_id: @user.id).order(created_at: :desc)
       end
     end
   end
