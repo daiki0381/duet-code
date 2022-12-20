@@ -48,7 +48,7 @@ const Top: NextPage = () => {
       <div className="mx-auto flex flex-col items-center py-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] lg:flex-row lg:justify-between lg:py-[120px]">
         <div className="mb-5 lg:mb-0 lg:w-[450px] lg:text-left">
           <h1 className="mb-5 text-2xl font-semibold leading-snug lg:mb-[30px] lg:text-[32px]">
-            ユーザー同士の
+            ユーザー間の
             <br />
             コードレビューサービス
           </h1>
