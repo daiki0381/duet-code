@@ -6,7 +6,7 @@ Duet Code というサービスは、① プライベートで書いたコード
 
 https://www.duet-code.com
 
-![duet-code](https://user-images.githubusercontent.com/98577773/204183233-e4833ffd-a553-4d98-ba5f-d0e339072620.png)
+![duet-code](https://user-images.githubusercontent.com/98577773/208648086-e240b1db-e9f1-41da-8ec1-5930b2f1f7c6.png)
 
 ## 使用技術
 
