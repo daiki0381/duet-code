@@ -50,7 +50,7 @@ const ReviewFeedback: NextPage = () => {
         defaultValue=""
         control={control}
         rules={{
-          required: '評価を入力してください',
+          required: 'フィードバックを入力してください',
         }}
         render={({ field }) => (
           <div className="mb-[30px]">

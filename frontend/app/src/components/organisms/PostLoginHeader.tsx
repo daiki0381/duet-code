@@ -165,7 +165,7 @@ const PostLoginHeader: NextPage<Props> = ({
                             return (
                               <div>
                                 {notification.sender.name}
-                                さんがレビューを承諾しました。プルリクエストにコメントがありましたら、返信をお願いします。
+                                さんがレビューするをクリックしました。プルリクエストにコメントがありましたら、返信をお願いします。
                               </div>
                             )
                           } else if (notification.action === 'feedback') {

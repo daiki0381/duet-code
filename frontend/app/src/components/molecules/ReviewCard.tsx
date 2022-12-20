@@ -1,6 +1,5 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import Image from 'next/image'
 import Chip from '@mui/material/Chip'
 import Avatar from '@mui/material/Avatar'
 
@@ -8,6 +7,7 @@ type Props = {
   reviewId: number
   title: string
   languages: string[]
+  pullRequestDescription: string
   revieweeName: string
   revieweeAvatar: string
   createdAt: string
@@ -17,6 +17,7 @@ const ReviewCard: NextPage<Props> = ({
   reviewId,
   title,
   languages,
+  pullRequestDescription,
   revieweeName,
   revieweeAvatar,
   createdAt,
@@ -42,24 +43,14 @@ const ReviewCard: NextPage<Props> = ({
       onClick={() => goToPostsDetails(reviewId)}
     >
       <div className="h-[160px] rounded-t-lg bg-blue p-[15px] sm:h-[175px]">
-        <div className="h-[130px] rounded-lg bg-white p-5 sm:h-[145px]">
-          <div className="mb-[5px] flex h-[56px]  items-center justify-center sm:h-[65px]">
-            <p className="break-all text-lg font-semibold text-black line-clamp-2">
-              {title}
-            </p>
-          </div>
-          <div className="flex items-end justify-end">
-            <Image
-              src="/header-logo.png"
-              width={100}
-              height={40}
-              alt="Duet Code"
-            />
-          </div>
+        <div className="flex h-[130px] items-center justify-center rounded-lg bg-white p-5 sm:h-[145px]">
+          <p className="break-all font-serif text-lg font-semibold text-black line-clamp-2">
+            {title}
+          </p>
         </div>
       </div>
-      <div className="p-[15px]">
-        <div className="mb-[15px] line-clamp-2">
+      <div className="py-5 px-[15px]">
+        <div className="mb-5 line-clamp-2">
           {languages.map((language) => (
             <Chip
               key={language}
@@ -69,14 +60,16 @@ const ReviewCard: NextPage<Props> = ({
             />
           ))}
         </div>
-        <div className="mb-[15px] break-all text-xl text-black line-clamp-2">
-          {title}
-        </div>
+        <p className="mb-5 break-all font-serif text-sm text-black line-clamp-2">
+          {pullRequestDescription}
+        </p>
         <div className="flex items-center justify-end">
           <Avatar src={revieweeAvatar} alt="アバター画像" />
-          <div className="ml-[10px] flex flex-col overflow-scroll">
-            <span className="text-sm text-gray">{revieweeName}</span>
-            <span className="text-sm text-gray">
+          <div className="ml-[10px] flex flex-col font-serif">
+            <span className="w-[100px] overflow-hidden text-ellipsis text-sm text-gray">
+              {revieweeName}
+            </span>
+            <span className="font-serif text-sm text-gray">
               {formatCreatedAt(createdAt)}
             </span>
           </div>

@@ -99,8 +99,8 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
               <AlertWithActionButton
                 name={review.reviewee?.name}
                 spanClick={() => goToUsersDetails(review.reviewee?.id)}
-                message="さんがレビューを募集しています。レビューを承諾する場合、承諾するをクリックしてください。承諾するをクリックすると、自動でリポジトリのコラボレーターに追加され、レビューリクエストが届きます。"
-                buttonText="承諾する"
+                message="さんがレビュアーを募集しています。レビューをする場合、レビューするをクリックしてください。レビューするをクリックすると、自動でリポジトリのコラボレーターに追加され、レビューリクエストが届きます。"
+                buttonText="レビューする"
                 buttonClick={acceptReview}
               />
             )
@@ -109,7 +109,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
             review.reviewee?.id === userId
           ) {
             return (
-              <AlertWithActionButton message="レビュアーを募集しています。レビュアーがレビューを承諾すると、自動でリポジトリのコラボレーターに追加され、レビュアーにレビューリクエストが届きます。" />
+              <AlertWithActionButton message="レビュアーを募集しています。レビュアーがレビューするをクリックすると、自動でリポジトリのコラボレーターに追加され、レビュアーにレビューリクエストが届きます。" />
             )
           } else if (
             review?.reviewer?.id === userId &&
@@ -117,8 +117,8 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
           ) {
             return (
               <AlertWithActionButton
-                message="からレビューリクエストが届いています。プルリクエストをApproveしたら、評価するをクリックして、レビューの評価をしてください。"
-                buttonText="評価する"
+                message="からレビューリクエストが届いています。プルリクエストをApproveしたら、フィードバックするをクリックして、レビューのフィードバックをしてください。"
+                buttonText="フィードバックする"
                 buttonClick={goToFeedback}
                 url={review?.pull_request_url}
               />
@@ -131,7 +131,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
               <AlertWithActionButton
                 name={review.reviewer?.name}
                 spanClick={() => goToUsersDetails(review.reviewer?.id)}
-                message="さんがレビューを承諾しました。プルリクエストにコメントがありましたら、返信をお願いします。"
+                message="さんがレビューするをクリックしました。プルリクエストにコメントがありましたら、返信をお願いします。"
               />
             )
           } else if (
@@ -155,7 +155,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
               <AlertWithActionButton
                 name={review?.reviewer?.name}
                 spanClick={() => goToUsersDetails(review?.reviewer?.id)}
-                message="さんがレビューに対する評価を送信しました。お礼するをクリックして、レビューに対するお礼をしてください。"
+                message="さんがレビューに対するフィードバックを送信しました。お礼するをクリックして、レビューに対するお礼をしてください。"
                 buttonText="お礼する"
                 buttonClick={goToThanks}
               />
@@ -274,7 +274,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
               key={language}
               variant="outlined"
               label={language}
-              className="mr-[5px] mb-[5px] font-serif"
+              className="mr-[5px] mb-[5px]"
             />
           ))}
         </div>
@@ -283,7 +283,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
         <div className="mb-[30px]">
           <ItemTitle>プルリクエストの説明</ItemTitle>
         </div>
-        <p className="whitespace-pre-wrap break-all text-sm text-black">
+        <p className="whitespace-pre-wrap break-all text-sm leading-normal text-black">
           {review?.pull_request_description}
         </p>
       </div>
@@ -291,7 +291,7 @@ const ReviewDetails: NextPage<Props> = ({ review, userId, authUser }) => {
         <div className="mb-[30px]">
           <ItemTitle>レビューしてほしい点</ItemTitle>
         </div>
-        <p className="whitespace-pre-wrap break-all text-sm text-black">
+        <p className="whitespace-pre-wrap break-all text-sm leading-normal text-black">
           {review?.review_point}
         </p>
       </div>

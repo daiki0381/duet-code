@@ -19,7 +19,7 @@ describe('Notifications', () => {
     })
     cy.get('[data-testid="NotificationsNoneIcon"]').click()
     cy.contains(
-      'daiki0381さんがレビューを承諾しました。プルリクエストにコメントがありましたら、返信をお願いします。',
+      'daiki0381さんがレビューするをクリックしました。プルリクエストにコメントがありましたら、返信をお願いします。',
     )
   })
 

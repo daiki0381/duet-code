@@ -18,6 +18,7 @@ module.exports = {
         'post-login-light-blue': '#F1F5F9',
         info: '#FFF4E5',
         success: '#EDF7ED',
+        error: '#D32F2F',
       },
       fontFamily: {
         serif: ['Times New Roman', 'serif'],

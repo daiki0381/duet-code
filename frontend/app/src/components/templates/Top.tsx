@@ -47,8 +47,8 @@ const Top: NextPage = () => {
     <>
       <div className="mx-auto flex flex-col items-center py-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] lg:flex-row lg:justify-between lg:py-[120px]">
         <div className="mb-5 lg:mb-0 lg:w-[450px] lg:text-left">
-          <h1 className="mb-5 text-2xl font-semibold lg:mb-[30px] lg:text-[32px]">
-            無料で使える
+          <h1 className="mb-5 text-2xl font-semibold leading-snug lg:mb-[30px] lg:text-[32px]">
+            ユーザー同士の
             <br />
             コードレビューサービス
           </h1>
@@ -69,7 +69,7 @@ const Top: NextPage = () => {
       <div className="mb-[60px] bg-pre-login-light-blue py-[60px] text-center lg:mb-[80px] lg:py-[80px]">
         <div className="mx-auto max-w-[1024px] px-4">
           <h2 className="mb-[30px] text-2xl font-semibold lg:mb-[50px] lg:text-[32px]">
-            特徴
+            サービスの特徴
           </h2>
           <div className="flex flex-col items-center lg:flex-row lg:justify-between">
             <div className="mb-[30px] lg:mb-0">
@@ -99,10 +99,9 @@ const Top: NextPage = () => {
           </div>
         </div>
       </div>
-
       <div className="mx-auto mb-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:mb-[80px] lg:max-w-[1024px]">
         <h2 className="mb-[30px] text-2xl font-semibold lg:mb-[80px] lg:text-[32px]">
-          メリット (レビュイー)
+          レビューをされるメリット
         </h2>
         <div className="mb-[30px] flex flex-col items-center lg:mb-[50px] lg:flex-row lg:justify-around">
           <div className="mb-5 lg:mb-0">
@@ -143,10 +142,9 @@ const Top: NextPage = () => {
           </div>
         </div>
       </div>
-
       <div className="mx-auto mb-[60px] px-4 text-center sm:max-w-[640px] md:max-w-[768px] lg:mb-[80px] lg:max-w-[1024px]">
         <h2 className="mb-[30px] text-2xl font-semibold lg:mb-[80px] lg:text-[32px]">
-          メリット (レビュアー)
+          レビューをするメリット
         </h2>
         <div className="mb-[30px] flex flex-col items-center lg:mb-[50px] lg:flex-row lg:justify-around">
           <div className="mb-5 lg:mb-0">

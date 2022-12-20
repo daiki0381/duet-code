@@ -40,6 +40,7 @@ const SelectMenu: NextPage<Props> = ({
         value={value}
         onChange={handleChange}
         {...field}
+        disabled={options.length === 0}
       >
         {options.map((option: any) => (
           <MenuItem key={option} value={option}>
@@ -48,6 +49,11 @@ const SelectMenu: NextPage<Props> = ({
         ))}
       </Select>
       {error && <FormHelperText>{helperText}</FormHelperText>}
+      {options.length === 0 && (
+        <p className="mx-[14px] mt-[3px] text-xs text-error">
+          Publicリポジトリにプルリクエストがありません
+        </p>
+      )}
     </FormControl>
   )
 }

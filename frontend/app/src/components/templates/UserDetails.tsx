@@ -226,6 +226,9 @@ const UserDetails: NextPage<Props> = ({
                             reviewId={wantedReview.id}
                             title={wantedReview.title}
                             languages={wantedReview.languages}
+                            pullRequestDescription={
+                              wantedReview.pull_request_description
+                            }
                             revieweeName={wantedReview.reviewee.name}
                             revieweeAvatar={wantedReview.reviewee.avatar}
                             createdAt={wantedReview.created_at}
@@ -250,6 +253,9 @@ const UserDetails: NextPage<Props> = ({
                             reviewId={acceptedReview.id}
                             title={acceptedReview.title}
                             languages={acceptedReview.languages}
+                            pullRequestDescription={
+                              acceptedReview.pull_request_description
+                            }
                             revieweeName={acceptedReview.reviewee.name}
                             revieweeAvatar={acceptedReview.reviewee.avatar}
                             createdAt={acceptedReview.created_at}

@@ -22,7 +22,7 @@ const ReviewList: NextPage<Props> = ({ wantedReviews, acceptedReviews }) => {
   return (
     <div className="relative flex-1 bg-post-login-light-blue pt-[50px]">
       <div className="mx-auto px-4 sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1280px]">
-        <div className="flex">
+        <div className="flex lg:ml-[75px] xl:ml-[35px]">
           <p
             onClick={clickWanted}
             className={
@@ -87,6 +87,9 @@ const ReviewList: NextPage<Props> = ({ wantedReviews, acceptedReviews }) => {
                           reviewId={wantedReview.id}
                           title={wantedReview.title}
                           languages={wantedReview.languages}
+                          pullRequestDescription={
+                            wantedReview.pull_request_description
+                          }
                           revieweeName={wantedReview.reviewee.name}
                           revieweeAvatar={wantedReview.reviewee.avatar}
                           createdAt={wantedReview.created_at}
@@ -111,6 +114,9 @@ const ReviewList: NextPage<Props> = ({ wantedReviews, acceptedReviews }) => {
                           reviewId={acceptedReview.id}
                           title={acceptedReview.title}
                           languages={acceptedReview.languages}
+                          pullRequestDescription={
+                            acceptedReview.pull_request_description
+                          }
                           revieweeName={acceptedReview.reviewee.name}
                           revieweeAvatar={acceptedReview.reviewee.avatar}
                           createdAt={acceptedReview.created_at}
