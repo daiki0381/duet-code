@@ -44,9 +44,7 @@ const ReviewCard: NextPage<Props> = ({
     >
       <div className="h-[160px] rounded-t-lg bg-blue p-[15px] sm:h-[175px]">
         <div className="flex h-[130px] items-center justify-center rounded-lg bg-white p-5 sm:h-[145px]">
-          <p className="break-all text-lg text-black line-clamp-2">
-            {title}
-          </p>
+          <p className="break-all text-lg text-black line-clamp-2">{title}</p>
         </div>
       </div>
       <div className="py-5 px-[15px]">
