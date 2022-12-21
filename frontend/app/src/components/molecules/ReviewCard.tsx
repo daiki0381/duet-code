@@ -44,7 +44,7 @@ const ReviewCard: NextPage<Props> = ({
     >
       <div className="h-[160px] rounded-t-lg bg-blue p-[15px] sm:h-[175px]">
         <div className="flex h-[130px] items-center justify-center rounded-lg bg-white p-5 sm:h-[145px]">
-          <p className="break-all font-serif text-lg font-semibold text-black line-clamp-2">
+          <p className="break-all text-lg text-black line-clamp-2">
             {title}
           </p>
         </div>
@@ -56,20 +56,20 @@ const ReviewCard: NextPage<Props> = ({
               key={language}
               variant="outlined"
               label={language}
-              className="mr-[5px] mb-[5px] cursor-pointer font-serif"
+              className="mr-[5px] mb-[5px] cursor-pointer"
             />
           ))}
         </div>
-        <p className="mb-5 break-all font-serif text-sm text-black line-clamp-2">
+        <p className="mb-5 break-all text-sm text-black line-clamp-2">
           {pullRequestDescription}
         </p>
         <div className="flex items-center justify-end">
           <Avatar src={revieweeAvatar} alt="アバター画像" />
-          <div className="ml-[10px] flex flex-col font-serif">
+          <div className="ml-[10px] flex flex-col">
             <span className="w-[100px] overflow-hidden text-ellipsis text-sm text-gray">
               {revieweeName}
             </span>
-            <span className="font-serif text-sm text-gray">
+            <span className="text-sm text-gray">
               {formatCreatedAt(createdAt)}
             </span>
           </div>

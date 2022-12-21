@@ -20,9 +20,6 @@ module.exports = {
         success: '#EDF7ED',
         error: '#D32F2F',
       },
-      fontFamily: {
-        serif: ['Times New Roman', 'serif'],
-      },
     },
   },
   plugins: [require('@tailwindcss/line-clamp')],
