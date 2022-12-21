@@ -21,7 +21,7 @@ https://www.duet-code.com
 - [Tailwind CSS](https://tailwindcss.com/)
 - [MUI](https://mui.com/)
 
-※API 関連のコードは [OpenAPI Generator TypeScript Axios](https://openapi-generator.tech/) で自動生成しています。
+※API 関連のコードは[OpenAPI Generator TypeScript Axios](https://openapi-generator.tech/)で自動生成しています。
 
 ### インフラ
 
@@ -40,6 +40,8 @@ https://www.duet-code.com
 ### CI/CD
 
 - [GitHub Actions](https://docs.github.com/ja/actions)
+
+※[Lefthook](https://github.com/evilmartians/lefthook)を使用してコミット前に[ESLint](https://eslint.org/)、[Prettier](https://prettier.io/)、[RuboCop](https://github.com/rubocop/rubocop)を実行し、コードの品質を保っています。
 
 ### 環境構築
 
