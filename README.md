@@ -10,6 +10,10 @@ https://www.duet-code.com
 
 https://zenn.dev/daiki03810218/articles/f3af2e5ff4455b
 
+▼ 技術スタック
+
+https://fbc-stack.vercel.app/posts/duet_code
+
 ![duet-code](https://user-images.githubusercontent.com/98577773/208648086-e240b1db-e9f1-41da-8ec1-5930b2f1f7c6.png)
 
 ## 使用技術
