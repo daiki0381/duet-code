@@ -7,7 +7,7 @@ module Api
         before_action :authenticate_user
 
         def index
-          @notifications = Notification.where(receiver_id: current_user.id).order(created_at: :desc)
+          @notifications = Notification.includes(:review, :sender, :receiver).where(receiver_id: current_user.id).order(created_at: :desc)
         end
       end
     end
