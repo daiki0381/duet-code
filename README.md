@@ -8,7 +8,7 @@ https://www.duet-code.com
 
 ▼ 記事
 
-https://zenn.dev/daiki03810218/articles/f3af2e5ff4455b
+https://daiki0381.hatenablog.com/entry/2022/12/21/021555
 
 ![duet-code](https://user-images.githubusercontent.com/98577773/208648086-e240b1db-e9f1-41da-8ec1-5930b2f1f7c6.png)
 
