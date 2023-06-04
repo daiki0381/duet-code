@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_04_211430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.boolean "checked", default: false, comment: "通知を確認したかどうか"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["receiver_id", "created_at"], name: "index_notifications_on_receiver_id_and_created_at"
     t.index ["receiver_id"], name: "index_notifications_on_receiver_id"
     t.index ["review_id"], name: "index_notifications_on_review_id"
     t.index ["sender_id"], name: "index_notifications_on_sender_id"
@@ -55,7 +56,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.datetime "accepted_at", precision: nil, comment: "レビューする側の承諾日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["reviewee_id", "created_at"], name: "index_reviews_on_reviewee_id_and_created_at"
     t.index ["reviewee_id"], name: "index_reviews_on_reviewee_id"
+    t.index ["reviewer_id", "created_at"], name: "index_reviews_on_reviewer_id_and_created_at"
     t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
   end
 
@@ -66,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_053005) do
     t.string "avatar", comment: "アバター画像"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_users_on_uid"
   end
 
   add_foreign_key "notifications", "reviews"
