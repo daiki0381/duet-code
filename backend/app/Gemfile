@@ -41,6 +41,7 @@ gem 'rack-cors'
 gem 'firebase-auth-rails'
 gem 'octokit'
 gem 'parallel'
+gem 'ruby-jmeter'
 gem 'skylight'
 
 group :development, :test do

@@ -6,7 +6,7 @@ module Api
       before_action :authenticate_user, only: %i[create]
 
       def index
-        @reviews = Review.includes(:reviewee, :reviewer, :languages).order(created_at: :desc)
+        @reviews = Review.all.order(created_at: :desc)
       end
 
       def show

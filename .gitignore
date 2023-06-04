@@ -22,6 +22,9 @@
 # Ignore master key for decrypting credentials and more.
 /backend/app/config/master.key
 
+# Ignore jmeter.jmx
+/backend/app/jmeter.jmx
+
 # dependencies
 /frontend/app/node_modules
 /frontend/app/.pnp
